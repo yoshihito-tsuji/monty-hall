@@ -1,0 +1,63 @@
+name: テストと公開
+
+# main への push で検証し、通ったものだけを GitHub Pages に公開する。
+# プルリクエストでは検証だけ行い、公開はしない。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: 検証
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python を用意する
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 翻訳の整合と反映を検査する
+        run: python3 tests/check_i18n.py
+
+      - name: 画面を実際に操作して検証する
+        run: |
+          # ランナーには Chrome が入っているが、無い場合に備えて Chromium を入れる
+          if ! command -v google-chrome >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends chromium-browser
+          fi
+          ./tests/run.sh
+
+  deploy:
+    name: 公開
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: 公開するファイルをまとめる
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: GitHub Pages へ公開する
+        id: deployment
+        uses: actions/deploy-pages@v4
