@@ -59,6 +59,17 @@ python3 tools/build_i18n.py
 
 日本語版とキー・プレースホルダ（`{n}` など）・HTMLタグが食い違っていると、エラーを表示して書き込みを中止します。
 
+### テストと自動公開
+
+`main` への push とプルリクエストのたびに、GitHub Actions が次を実行します。検証を通ったものだけが公開されます。
+
+```bash
+python3 tests/check_i18n.py   # 翻訳の整合と、index.html への反映漏れの検査
+./tests/run.sh                # ヘッドレスブラウザで実際に操作する5つのテスト
+```
+
+ブラウザテストは、司会者が新車の扉やあなたが選んだ扉を開けないこと、結果表示が実際の中身と一致すること、記録表の数が合うこと、連打で壊れないこと、12言語すべてが表示され遊べることを確認します。手元でも同じコマンドで実行できます（Chrome か Chromium が必要）。
+
 **翻訳の来歴について：** 日本語以外の11言語は生成AI（Claude）が訳し、言語ごとに別のAIが原文と突き合わせて検討・修正したものです。人間の母語話者による確認は経ていません。論理の誤りや文法の破綻は検討の過程で修正しましたが、語感の細部には改善の余地が残っている可能性があります。
 
 ### 制作
@@ -130,6 +141,17 @@ python3 tools/build_i18n.py
 ```
 
 The script refuses to write if any language is missing a key, or if its placeholders (`{n}`, `{c}`, …) or HTML tags differ from the Japanese source — those mismatches would otherwise surface as broken sentences at runtime.
+
+### Tests and automated deployment
+
+Every push to `main` and every pull request runs the following through GitHub Actions. Only a revision that passes is published.
+
+```bash
+python3 tests/check_i18n.py   # translation consistency, and whether index.html is up to date
+./tests/run.sh                # five suites driving the real page in headless Chrome
+```
+
+The browser tests confirm that the host never opens the car door or your own door, that the result message matches what is actually behind the chosen door, that the tallies add up, that rapid clicking cannot corrupt the state, and that all twelve languages render and play correctly. The same commands run locally (Chrome or Chromium required).
 
 **Provenance of the translations:** the eleven non-Japanese languages were produced by a generative AI (Claude) and then reviewed against the Japanese source by a separate AI reviewer per language, which corrected mistranslations, grammatical agreement that broke for particular numbers, and inconsistent terminology. They have **not** been checked by human native speakers. Corrections are welcome via issues or pull requests.
 
