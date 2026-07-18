@@ -4,7 +4,7 @@
   "meta.title": "The Monty Hall Problem: Try It Yourself",
 
   "header.title": "The Monty Hall Problem: Try It Yourself",
-  "header.sub": "Should you switch doors, or stay? Find out with your own hands.",
+  "header.sub": "Should you switch doors, or stay? Try it and see for yourself.",
 
   "steps.title": "How to play (4 steps)",
   "steps.s1": "Pick one door",
@@ -29,8 +29,8 @@
   "game.btnStayNote": "Keep Door {p}",
   "game.win": "🎉 You win! Door {n} had the new car!",
   "game.lose": "😢 Too bad... Door {n} had a goat. The new car was behind Door {c}.",
-  "game.afterSwitch_html": "You <strong>switched</strong> doors. The result has been added to the \"Your record\" table.<br>Play a few more times and you will start to see which plan wins more often.",
-  "game.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the \"Your record\" table.<br>Play a few more times and you will start to see which plan wins more often.",
+  "game.afterSwitch_html": "You <strong>switched</strong> doors. The result has been added to the \"Your record\" table.<br>Play a few more times and you'll start to see which plan wins more often.",
+  "game.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the \"Your record\" table.<br>Play a few more times and you'll start to see which plan wins more often.",
   "game.retry": "Play again",
 
   "record.title": "Your record",
@@ -80,9 +80,9 @@
   "ext.modeAllShort": "Open until 1 is left",
   "ext.modeOneShort": "Open just 1",
   "ext.intro_html": "There are <strong>{n} doors</strong>. Only 1 hides the new car; the other {m} hide goats.<br>Pick any door you like.",
-  "ext.opening_html": "You picked <strong>Door {p}</strong>. I know where the car is. Now I will open <strong>{k} doors</strong> with goats behind them...",
-  "ext.decideAll_html": "I opened {k} doors with goats. The only doors still closed are your <strong>Door {p}</strong> and <strong>Door {c}</strong>.<br>Click Door {c} to switch. If you are happy as you are, press \"Stay with this door\".",
-  "ext.decideOne_html": "I opened just 1 door with a goat. That leaves <strong>{c} doors</strong> still closed.<br>To switch, click one of the closed doors. If you are happy as you are, press \"Stay with this door\".",
+  "ext.opening_html": "You picked <strong>Door {p}</strong>. I know where the car is. Now I'll open <strong>{k} doors</strong> with goats behind them...",
+  "ext.decideAll_html": "I opened {k} doors with goats. The only doors still closed are your <strong>Door {p}</strong> and <strong>Door {c}</strong>.<br>Click Door {c} to switch. If you'd rather keep your door, press \"Stay with this door\".",
+  "ext.decideOne_html": "I opened just 1 door with a goat. That leaves <strong>{c} doors</strong> still closed.<br>To switch, click one of the closed doors. If you'd rather keep your door, press \"Stay with this door\".",
   "ext.afterSwitch_html": "You <strong>switched</strong> doors. The result has been added to the table below.",
   "ext.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the table below.",
   "ext.win": "🎉 You win! Door {n} had the new car!",
@@ -94,9 +94,9 @@
   "ext.simInit": "Let the computer repeat the game with the same settings, and check whether the results match the numbers we worked out.",
   "ext.simRan": "Added {n} rounds with {d} doors and \"{mode}\" ({t} of each in total).",
   "ext.chartTitle": "Win rate (%) — the dotted lines show the numbers we worked out (switch {s}% / stay {y}%)",
-  "ext.theoryAll_html": "Your very first pick wins only 1 time in {n} ({ty}%). The other <strong>{m}/{n}</strong> of the time the car is behind some other door, and the host carefully opens only doors with goats. So in those cases, the door left closed at the end is the car. That is why switching wins <strong>{s}%</strong> of the time.",
+  "ext.theoryAll_html": "Your very first pick wins only 1 time in {n} ({ty}%). The other <strong>{m}/{n}</strong> of the time the car is behind some other door, and the host avoids it, opening only doors with goats. So in those cases, the other door still closed at the end hides the car. That is why switching wins <strong>{s}%</strong> of the time.",
   "ext.theoryOne3_html": "With 3 doors, once the host opens 1 door only 1 closed door is left. This is exactly the basic game above: switching wins <strong>{s}%</strong> of the time, staying {ty}%.",
-  "ext.theoryOneN_html": "If the host opens only 1 door, {c} doors stay closed. Even if you switch, you cannot tell which of them hides the car. Switching wins <strong>{s}%</strong> of the time, staying {ty}%. Switching is still the better choice, but the more doors there are, the smaller the gap becomes.",
+  "ext.theoryOneN_html": "If the host opens only 1 door, {c} doors stay closed. Even if you switch, you can't tell which of them hides the car. Switching wins <strong>{s}%</strong> of the time, staying {ty}%. Switching is still the better choice, but the more doors there are, the smaller the gap becomes.",
 
   "footer.lab": "Tsuji Laboratory, Future University Hakodate",
   "footer.source": "Source code"

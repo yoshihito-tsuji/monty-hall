@@ -4,7 +4,7 @@
   "meta.title": "Monty Hall-problemet – prova själv!",
 
   "header.title": "Monty Hall-problemet – prova själv!",
-  "header.sub": "Ska man byta dörr eller inte? Ta reda på svaret med dina egna händer.",
+  "header.sub": "Ska man byta dörr eller inte? Prova själv och ta reda på svaret!",
 
   "steps.title": "Så gör du (4 steg)",
   "steps.s1": "Välj en dörr",
@@ -52,7 +52,7 @@
   "sim.statusInit": "Tryck på en knapp, så samlas resultaten här.",
   "sim.statusRan": "Vi provade {n} gånger till med varje strategi (totalt {t} med varje). Se om staplarna närmar sig de streckade linjerna.",
   "sim.statusCleared": "Resultaten är rensade. Prova gärna igen!",
-  "sim.chartTitle": "Andel vinster (%) – de streckade linjerna visar ”en gång av tre” (33.3 %) och ”två gånger av tre” (66.7 %)",
+  "sim.chartTitle": "Andel vinster (%) – de streckade linjerna visar ”en gång av tre” (33,3 %) och ”två gånger av tre” (66,7 %)",
   "sim.barSwitch": "Byta dörr",
   "sim.barStay": "Behålla dörren",
   "sim.barValue": "{r} % ({w} av {t})",
@@ -65,7 +65,7 @@
   "why.case1_html": "<strong>Fall 1:</strong> Bilen står bakom dörr 1<br>Byter du får du en get, alltså <span class=\"outcome-lose\">förlust</span> / behåller du dörren blir det <span class=\"outcome-win\">vinst</span>",
   "why.case2_html": "<strong>Fall 2:</strong> Bilen står bakom dörr 2<br>Programledaren måste öppna dörr 3, så byter du hamnar du på dörr 2 – alltså <span class=\"outcome-win\">vinst</span>",
   "why.case3_html": "<strong>Fall 3:</strong> Bilen står bakom dörr 3<br>Programledaren måste öppna dörr 2, så byter du hamnar du på dörr 3 – alltså <span class=\"outcome-win\">vinst</span>",
-  "why.concl_html": "Att byta dörr vinner i <strong>två av de tre fallen</strong>. Att behålla dörren vinner bara i ett. Därför är det <strong>dubbelt så stor chans</strong> att vinna om du byter. Det är också därför staplarna i simuleringen ovan närmar sig de streckade linjerna vid 66.7 % och 33.3 %.",
+  "why.concl_html": "Att byta dörr vinner i <strong>två av de tre fallen</strong>. Att behålla dörren vinner bara i ett. Därför är det <strong>dubbelt så stor chans</strong> att vinna om du byter. Det är också därför staplarna i simuleringen ovan närmar sig de streckade linjerna vid 66,7 % och 33,3 %.",
 
   "ext.title": "Prova med fler dörrar",
   "ext.lead_html": "Med bara tre dörrar kanske det känns som att chansen är lika stor på båda sätten. Prova då med fler dörrar! Tänk dig att du väljer en dörr av <strong>100</strong>, och att programledaren sedan öppnar hela 98 dörrar med getter bakom. Skulle du fortfarande hålla fast vid din första dörr?",
