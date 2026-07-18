@@ -368,10 +368,25 @@
   }
   footer a { color: var(--accent-dark); }
 
+  /* 狭い画面でも3つの扉は必ず1行に並べる（並べて見比べる教材のため） */
   @media (max-width: 560px) {
-    .door-frame { width: 104px; height: 150px; }
-    .bar-row .bar-name { width: 84px; font-size: 0.78rem; }
-    .bar-val { min-width: 0; font-size: 0.74rem; }
+    body { padding: 16px 8px 48px; }
+    .card { padding: 18px 12px; }
+    .stage { gap: 8px; }
+    .door-frame { width: 88px; height: 128px; }
+    .prize svg { width: 62px; }
+    .prize .prize-name { font-size: 0.75rem; }
+    .door-label { font-size: 0.78rem; padding: 1px 10px; }
+    .door-unit .tag { font-size: 0.7rem; }
+    /* 棒が細くなりすぎるので、名前と数値を上の行に、棒を全幅に置く */
+    .bar-row { flex-wrap: wrap; row-gap: 6px; margin-bottom: 22px; }
+    .bar-row .bar-name { order: 1; width: auto; flex: 1 1 auto; text-align: left; font-size: 0.8rem; }
+    .bar-val { order: 2; min-width: 0; font-size: 0.76rem; text-align: right; }
+    .bar-track { order: 3; flex: 1 0 100%; }
+    .host-face { width: 52px; }
+    .bubble { padding: 12px 14px; font-size: 0.92rem; }
+    th, td { padding: 7px 4px; font-size: 0.85rem; }
+    th { font-size: 0.75rem; }
   }
 </style>
 </head>
