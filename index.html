@@ -295,13 +295,13 @@
   }
   .bar-fill.switch { background: var(--series-switch); }
   .bar-fill.stay { background: var(--series-stay); }
-  .bar-value {
-    position: absolute;
-    left: 8px; top: 50%;
-    transform: translateY(-50%);
+  .bar-val {
+    flex: none;
+    min-width: 168px;
     font-size: 0.82rem;
     font-weight: bold;
     color: var(--ink);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
   .ref-line {
@@ -337,7 +337,15 @@
     margin-bottom: 12px;
     background: #fffdf5;
   }
-  .mini-doors { display: flex; gap: 6px; flex: none; }
+  .mini-doors-wrap { flex: none; }
+  .pick-caption {
+    font-size: 0.72rem;
+    font-weight: bold;
+    color: var(--accent-dark);
+    line-height: 1.4;
+    margin-bottom: 3px;
+  }
+  .mini-doors { display: flex; gap: 6px; }
   .mini-door {
     width: 44px; height: 60px;
     border-radius: 4px;
@@ -348,15 +356,6 @@
     position: relative;
   }
   .mini-door.revealed { background: #fdf9ee; }
-  .mini-door .pick-mark {
-    position: absolute;
-    top: -12px; left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.7rem;
-    color: var(--accent-dark);
-    font-weight: bold;
-    white-space: nowrap;
-  }
   .why-text { flex: 1; min-width: 220px; font-size: 0.9rem; }
   .why-text .outcome-win { color: var(--win); font-weight: bold; }
   .why-text .outcome-lose { color: #888; font-weight: bold; }
@@ -372,6 +371,7 @@
   @media (max-width: 560px) {
     .door-frame { width: 104px; height: 150px; }
     .bar-row .bar-name { width: 84px; font-size: 0.78rem; }
+    .bar-val { min-width: 0; font-size: 0.74rem; }
   }
 </style>
 </head>
@@ -470,8 +470,8 @@
           <div class="ref-line" style="left:33.33%"></div>
           <div class="ref-line" style="left:66.67%"></div>
           <div class="bar-fill switch" id="barSwitch"></div>
-          <span class="bar-value" id="barSwitchLabel">まだ試していません</span>
         </div>
+        <div class="bar-val" id="barSwitchLabel">まだ試していません</div>
       </div>
       <div class="bar-row" style="margin-bottom:4px;">
         <div class="bar-name"><span class="dot stay"></span>変えない作戦</div>
@@ -479,8 +479,8 @@
           <div class="ref-line" style="left:33.33%"><span class="ref-label" style="top:calc(100% + 4px);">33.3%</span></div>
           <div class="ref-line" style="left:66.67%"><span class="ref-label" style="top:calc(100% + 4px);">66.7%</span></div>
           <div class="bar-fill stay" id="barStay"></div>
-          <span class="bar-value" id="barStayLabel">まだ試していません</span>
         </div>
+        <div class="bar-val" id="barStayLabel">まだ試していません</div>
       </div>
     </div>
 
@@ -509,10 +509,13 @@
       どの場合も起こりやすさは同じです。司会者は答えを知っていて、<strong>かならずヤギの扉</strong>を開けます。
     </p>
     <div class="why-case">
-      <div class="mini-doors">
-        <div class="mini-door"><span class="pick-mark">▼えらんだ扉</span>🚗</div>
-        <div class="mini-door revealed">🐐</div>
-        <div class="mini-door">🐐</div>
+      <div class="mini-doors-wrap">
+        <div class="pick-caption">▼ えらんだ扉</div>
+        <div class="mini-doors">
+          <div class="mini-door">🚗</div>
+          <div class="mini-door revealed">🐐</div>
+          <div class="mini-door">🐐</div>
+        </div>
       </div>
       <div class="why-text">
         <strong>場合1：</strong>新車が扉1にある<br>
@@ -520,10 +523,13 @@
       </div>
     </div>
     <div class="why-case">
-      <div class="mini-doors">
-        <div class="mini-door"><span class="pick-mark">▼えらんだ扉</span>🐐</div>
-        <div class="mini-door">🚗</div>
-        <div class="mini-door revealed">🐐</div>
+      <div class="mini-doors-wrap">
+        <div class="pick-caption">▼ えらんだ扉</div>
+        <div class="mini-doors">
+          <div class="mini-door">🐐</div>
+          <div class="mini-door">🚗</div>
+          <div class="mini-door revealed">🐐</div>
+        </div>
       </div>
       <div class="why-text">
         <strong>場合2：</strong>新車が扉2にある<br>
@@ -531,10 +537,13 @@
       </div>
     </div>
     <div class="why-case">
-      <div class="mini-doors">
-        <div class="mini-door"><span class="pick-mark">▼えらんだ扉</span>🐐</div>
-        <div class="mini-door revealed">🐐</div>
-        <div class="mini-door">🚗</div>
+      <div class="mini-doors-wrap">
+        <div class="pick-caption">▼ えらんだ扉</div>
+        <div class="mini-doors">
+          <div class="mini-door">🐐</div>
+          <div class="mini-door revealed">🐐</div>
+          <div class="mini-door">🚗</div>
+        </div>
       </div>
       <div class="why-text">
         <strong>場合3：</strong>新車が扉3にある<br>
