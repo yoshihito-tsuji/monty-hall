@@ -141,4 +141,7 @@ Built at the Tsuji Laboratory, Future University Hakodate ([tsuji-lab.net](https
 
 ## ライセンス / License
 
-MIT License
+MIT License — Copyright (c) 2026 Yoshihito Tsuji
+
+全文は [LICENSE](LICENSE) を参照してください。著作権表示を残せば、改変も再配布も自由に行えます。
+See [LICENSE](LICENSE) for the full text. You are free to use, modify, and redistribute this work, provided the copyright notice is retained.
