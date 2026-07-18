@@ -2072,7 +2072,7 @@
     message.innerHTML = t("game.picked_html", { n: i + 1 });
 
     // ヤギのいる扉を1つ開ける（えらばれた扉と新車の扉は開けない）
-    const candidates = [0, 1, 2].filter((d) => d !== picked && d !== carDoor);
+    const candidates = [0, 1, 2].filter((d) => d !== picked);
     opened = candidates[Math.floor(Math.random() * candidates.length)];
 
     setTimeout(() => {
