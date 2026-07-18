@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>モンティホール問題 体験シミュレーター</title>
+<style>
+  :root {
+    --paper: #faf3e3;
+    --card: #fffdf7;
+    --card-border: #e8dcc3;
+    --ink: #4a3b2a;
+    --ink-soft: #8a7a63;
+    --wood: #c98544;
+    --wood-dark: #a5691f;
+    --wood-edge: #7a4e17;
+    --accent: #2a78d6;
+    --accent-dark: #1c5cab;
+    --win: #e34948;
+    --chart-surface: #fcfcfb;
+    --series-switch: #2a78d6;   /* 変える作戦 */
+    --series-stay: #008300;     /* 変えない作戦 */
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Hiragino Maru Gothic ProN", "BIZ UDGothic", "Yu Gothic", system-ui, sans-serif;
+    line-height: 1.8;
+    padding: 24px 16px 64px;
+  }
+  main { max-width: 860px; margin: 0 auto; }
+
+  /* ---------- 見出し ---------- */
+  header { text-align: center; margin-bottom: 24px; }
+  header h1 {
+    font-size: 1.7rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+  header p { color: var(--ink-soft); font-size: 0.95rem; margin-top: 4px; }
+
+  .card {
+    background: var(--card);
+    border: 2px solid var(--card-border);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .card > h2 {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+    padding-left: 12px;
+    border-left: 6px solid var(--wood);
+    line-height: 1.4;
+  }
+
+  /* ---------- 手順ステップ ---------- */
+  .steps { display: flex; gap: 8px; flex-wrap: wrap; }
+  .step {
+    flex: 1 1 150px;
+    display: flex; align-items: center; gap: 10px;
+    background: #f5eeda;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    transition: all 0.3s;
+  }
+  .step .num {
+    flex: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #d9cdb2;
+    color: #fff;
+    font-weight: bold;
+    display: grid; place-items: center;
+  }
+  .step.active {
+    background: #fff;
+    border-color: var(--accent);
+    color: var(--ink);
+    box-shadow: 0 3px 0 rgba(42,120,214,0.25);
+  }
+  .step.active .num { background: var(--accent); }
+  .step.done { color: var(--ink-soft); }
+  .step.done .num { background: #9fc78a; }
+  .step.done .num::before { content: "✓"; }
+  .step.done .num span { display: none; }
+
+  /* ---------- 司会者のふきだし ---------- */
+  .host-area { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 20px; }
+  .host-face { flex: none; width: 72px; }
+  .bubble {
+    position: relative;
+    flex: 1;
+    background: #fff;
+    border: 2px solid var(--card-border);
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    min-height: 72px;
+    display: flex; align-items: center;
+  }
+  .bubble::before {
+    content: "";
+    position: absolute;
+    left: -12px; top: 26px;
+    border: 8px solid transparent;
+    border-right-color: var(--card-border);
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: -9px; top: 27px;
+    border: 7px solid transparent;
+    border-right-color: #fff;
+  }
+  .bubble strong { color: var(--accent-dark); }
+
+  /* ---------- 扉 ---------- */
+  .stage {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 10px 0 4px;
+  }
+  .door-unit { text-align: center; }
+  .door-label {
+    display: inline-block;
+    background: var(--wood-dark);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 999px;
+    padding: 1px 16px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .door-frame {
+    position: relative;
+    width: 150px; height: 210px;
+    background: #efe6cf;
+    border: 3px solid var(--wood-edge);
+    border-radius: 10px 10px 4px 4px;
+    perspective: 700px;
+    overflow: visible;
+  }
+  .prize {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    border-radius: 7px 7px 2px 2px;
+    background: #fdf9ee;
+  }
+  .prize .prize-name { font-size: 0.85rem; font-weight: bold; color: var(--ink-soft); }
+  .door {
+    position: absolute; inset: 0;
+    background: linear-gradient(#d69352, var(--wood));
+    border: 3px solid var(--wood-edge);
+    border-radius: 8px 8px 2px 2px;
+    transform-origin: left center;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    backface-visibility: hidden;
+  }
+  .door .panel {
+    position: absolute;
+    left: 18%; width: 64%;
+    border: 3px solid var(--wood-dark);
+    border-radius: 4px;
+  }
+  .door .panel.top { top: 10%; height: 34%; }
+  .door .panel.bottom { top: 54%; height: 34%; }
+  .door .knob {
+    position: absolute;
+    right: 10px; top: 48%;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: #f4c95d;
+    border: 2px solid var(--wood-edge);
+  }
+  .door-unit.open .door { transform: rotateY(-105deg); cursor: default; }
+  .door-unit.selectable .door:hover { box-shadow: 0 0 0 5px rgba(42,120,214,0.45); }
+  .door-unit.chosen .door-frame { box-shadow: 0 0 0 5px var(--accent); }
+  .door-unit .tag {
+    margin-top: 8px;
+    font-size: 0.82rem;
+    font-weight: bold;
+    color: var(--accent-dark);
+    min-height: 1.6em;
+  }
+
+  /* ---------- 操作ボタン ---------- */
+  .actions {
+    display: flex; justify-content: center; gap: 16px;
+    flex-wrap: wrap; margin-top: 20px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 999px;
+    border: none;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  button:active { transform: translateY(2px); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 4px 0 var(--accent-dark);
+  }
+  .btn-secondary {
+    background: #fff; color: var(--ink);
+    border: 2px solid var(--card-border);
+    box-shadow: 0 4px 0 var(--card-border);
+  }
+  .btn-sim {
+    background: #fff; color: var(--accent-dark);
+    border: 2px solid var(--accent);
+    box-shadow: 0 3px 0 rgba(42,120,214,0.35);
+    padding: 10px 22px;
+  }
+  .btn-note {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: inherit;
+    opacity: 0.75;
+  }
+
+  /* ---------- 結果バナー ---------- */
+  .result-banner {
+    display: none;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 14px;
+    padding: 12px;
+    margin-top: 18px;
+  }
+  .result-banner.win { display: block; background: #fdeaea; color: var(--win); }
+  .result-banner.lose { display: block; background: #ececec; color: #666; }
+
+  /* ---------- 記録表 ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  th, td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--card-border);
+  }
+  th { color: var(--ink-soft); font-weight: normal; font-size: 0.85rem; }
+  td.strategy { text-align: left; font-weight: bold; }
+  .dot {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: baseline;
+  }
+  .dot.switch { background: var(--series-switch); }
+  .dot.stay { background: var(--series-stay); }
+  td.rate { font-weight: bold; font-variant-numeric: tabular-nums; }
+
+  /* ---------- グラフ ---------- */
+  .chart {
+    background: var(--chart-surface);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px 20px 30px;
+    margin-top: 16px;
+  }
+  .chart-title { font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 14px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .bar-row .bar-name { flex: none; width: 110px; font-size: 0.85rem; text-align: right; }
+  .bar-track {
+    position: relative;
+    flex: 1; height: 26px;
+    background: #f1f0ea;
+    border-radius: 4px;
+  }
+  .bar-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 0%;
+    border-radius: 0 4px 4px 0;
+    transition: width 0.7s ease;
+  }
+  .bar-fill.switch { background: var(--series-switch); }
+  .bar-fill.stay { background: var(--series-stay); }
+  .bar-value {
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.82rem;
+    font-weight: bold;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .ref-line {
+    position: absolute; top: -6px; bottom: -6px;
+    border-left: 2px dashed #b3a98f;
+  }
+  .ref-label {
+    position: absolute;
+    top: 100%;
+    transform: translateX(-50%);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+  .sim-status {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    min-height: 1.8em;
+    margin-top: 10px;
+  }
+
+  /* ---------- なぜ？の図解 ---------- */
+  .why-case {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    background: #fffdf5;
+  }
+  .mini-doors { display: flex; gap: 6px; flex: none; }
+  .mini-door {
+    width: 44px; height: 60px;
+    border-radius: 4px;
+    border: 2px solid var(--wood-edge);
+    display: grid; place-items: center;
+    font-size: 1.3rem;
+    background: linear-gradient(#d69352, var(--wood));
+    position: relative;
+  }
+  .mini-door.revealed { background: #fdf9ee; }
+  .mini-door .pick-mark {
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: var(--accent-dark);
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .why-text { flex: 1; min-width: 220px; font-size: 0.9rem; }
+  .why-text .outcome-win { color: var(--win); font-weight: bold; }
+  .why-text .outcome-lose { color: #888; font-weight: bold; }
+
+  footer {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    margin-top: 8px;
+  }
+  footer a { color: var(--accent-dark); }
+
+  @media (max-width: 560px) {
+    .door-frame { width: 104px; height: 150px; }
+    .bar-row .bar-name { width: 84px; font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🚪 モンティホール問題 体験シミュレーター</h1>
+    <p>「扉を変えるべきか、変えないべきか」を、自分の手でたしかめてみましょう</p>
+  </header>
+
+  <!-- 手順 -->
+  <section class="card" aria-label="あそびかた">
+    <h2>あそびかた（4つのステップ）</h2>
+    <div class="steps">
+      <div class="step" id="step1"><div class="num"><span>1</span></div><div>扉を1つえらぶ</div></div>
+      <div class="step" id="step2"><div class="num"><span>2</span></div><div>司会者がハズレの扉を開ける</div></div>
+      <div class="step" id="step3"><div class="num"><span>3</span></div><div>変えるかどうか決める</div></div>
+      <div class="step" id="step4"><div class="num"><span>4</span></div><div>結果を見る</div></div>
+    </div>
+  </section>
+
+  <!-- ゲーム本体 -->
+  <section class="card" aria-label="ゲーム">
+    <div class="host-area">
+      <svg class="host-face" viewBox="0 0 80 80" role="img" aria-label="司会者">
+        <circle cx="40" cy="34" r="24" fill="#ffe3c2" stroke="#4a3b2a" stroke-width="2.5"/>
+        <path d="M18 30 Q22 10 40 12 Q58 10 62 30 Q56 20 40 20 Q24 20 18 30 Z" fill="#5a4632" stroke="#4a3b2a" stroke-width="2"/>
+        <circle cx="32" cy="33" r="2.6" fill="#4a3b2a"/>
+        <circle cx="48" cy="33" r="2.6" fill="#4a3b2a"/>
+        <path d="M33 44 Q40 50 47 44" fill="none" stroke="#4a3b2a" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M28 62 L40 66 L52 62 L52 76 L28 76 Z" fill="#3f6bb5" stroke="#4a3b2a" stroke-width="2.5"/>
+        <path d="M34 62 L40 66 L46 62 L40 58 Z" fill="#e34948" stroke="#4a3b2a" stroke-width="2"/>
+      </svg>
+      <div class="bubble"><p id="message" aria-live="polite">ようこそ！ 3つの扉のうち、<strong>1つだけ</strong>に新車がかくれています。のこりの2つはヤギです。<br>まずは、好きな扉を1つクリックしてください。</p></div>
+    </div>
+
+    <div class="stage" id="stage">
+      <!-- 扉はJSで生成 -->
+    </div>
+
+    <div class="actions" id="decisionArea" style="display:none;">
+      <button class="btn-primary" id="btnSwitch">扉を変える<span class="btn-note" id="switchNote"></span></button>
+      <button class="btn-secondary" id="btnStay">変えない<span class="btn-note" id="stayNote"></span></button>
+    </div>
+
+    <div class="result-banner" id="resultBanner"></div>
+
+    <div class="actions" id="retryArea" style="display:none;">
+      <button class="btn-primary" id="btnRetry">もう一度あそぶ</button>
+    </div>
+  </section>
+
+  <!-- 手であそんだ記録 -->
+  <section class="card" aria-label="あなたの記録">
+    <h2>あなたの記録</h2>
+    <p style="font-size:0.9rem; color:var(--ink-soft); margin-bottom:10px;">
+      何回かあそぶと、「変えた場合」と「変えなかった場合」で、あたりやすさにちがいが出てくるでしょうか？
+    </p>
+    <table>
+      <thead>
+        <tr><th style="text-align:left;">作戦</th><th>あそんだ回数</th><th>あたった回数</th><th>あたる割合</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="strategy"><span class="dot switch"></span>扉を変えた</td>
+          <td id="mSwitchTotal">0 回</td><td id="mSwitchWin">0 回</td><td class="rate" id="mSwitchRate">—</td>
+        </tr>
+        <tr>
+          <td class="strategy"><span class="dot stay"></span>変えなかった</td>
+          <td id="mStayTotal">0 回</td><td id="mStayWin">0 回</td><td class="rate" id="mStayRate">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 一括シミュレーション -->
+  <section class="card" aria-label="コンピュータにたくさん試してもらう">
+    <h2>コンピュータにたくさん試してもらう</h2>
+    <p style="font-size:0.9rem; margin-bottom:14px;">
+      手であそぶだけでは、回数が少なくて偶然に左右されます。そこで、コンピュータに同じゲームを何回もくり返してもらいましょう。
+      「変える作戦」と「変えない作戦」を同じ回数ずつためして、あたった割合をくらべます。
+    </p>
+    <div class="actions" style="margin-top:0;">
+      <button class="btn-sim" data-trials="10">10回ためす</button>
+      <button class="btn-sim" data-trials="100">100回ためす</button>
+      <button class="btn-sim" data-trials="1000">1000回ためす</button>
+      <button class="btn-secondary" id="btnSimReset" style="padding:10px 22px;">記録を消す</button>
+    </div>
+    <p class="sim-status" id="simStatus" aria-live="polite">ボタンを押すと、ここに結果が積みかさなっていきます。</p>
+
+    <div class="chart" aria-label="作戦ごとのあたる割合">
+      <p class="chart-title">あたった割合（％）— 点線は「3回に1回」（33.3％）と「3回に2回」（66.7％）の目印です</p>
+      <div class="bar-row">
+        <div class="bar-name"><span class="dot switch"></span>変える作戦</div>
+        <div class="bar-track">
+          <div class="ref-line" style="left:33.33%"></div>
+          <div class="ref-line" style="left:66.67%"></div>
+          <div class="bar-fill switch" id="barSwitch"></div>
+          <span class="bar-value" id="barSwitchLabel">まだ試していません</span>
+        </div>
+      </div>
+      <div class="bar-row" style="margin-bottom:4px;">
+        <div class="bar-name"><span class="dot stay"></span>変えない作戦</div>
+        <div class="bar-track">
+          <div class="ref-line" style="left:33.33%"><span class="ref-label" style="top:calc(100% + 4px);">33.3%</span></div>
+          <div class="ref-line" style="left:66.67%"><span class="ref-label" style="top:calc(100% + 4px);">66.7%</span></div>
+          <div class="bar-fill stay" id="barStay"></div>
+          <span class="bar-value" id="barStayLabel">まだ試していません</span>
+        </div>
+      </div>
+    </div>
+
+    <table style="margin-top:16px;">
+      <thead>
+        <tr><th style="text-align:left;">作戦</th><th>ためした回数</th><th>あたった回数</th><th>あたる割合</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="strategy"><span class="dot switch"></span>変える作戦</td>
+          <td id="sSwitchTotal">0 回</td><td id="sSwitchWin">0 回</td><td class="rate" id="sSwitchRate">—</td>
+        </tr>
+        <tr>
+          <td class="strategy"><span class="dot stay"></span>変えない作戦</td>
+          <td id="sStayTotal">0 回</td><td id="sStayWin">0 回</td><td class="rate" id="sStayRate">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- なぜ？ -->
+  <section class="card" aria-label="どうして変えたほうがあたりやすいの">
+    <h2>どうして「変えたほうがあたりやすい」の？</h2>
+    <p style="font-size:0.92rem; margin-bottom:14px;">
+      あなたが<strong>扉1</strong>をえらんだとしましょう。新車がどこにあるかで、3つの場合が考えられます。
+      どの場合も起こりやすさは同じです。司会者は答えを知っていて、<strong>かならずヤギの扉</strong>を開けます。
+    </p>
+    <div class="why-case">
+      <div class="mini-doors">
+        <div class="mini-door"><span class="pick-mark">▼えらんだ扉</span>🚗</div>
+        <div class="mini-door revealed">🐐</div>
+        <div class="mini-door">🐐</div>
+      </div>
+      <div class="why-text">
+        <strong>場合1：</strong>新車が扉1にある<br>
+        変えると… ヤギに当たって <span class="outcome-lose">はずれ</span>／変えないと <span class="outcome-win">あたり</span>
+      </div>
+    </div>
+    <div class="why-case">
+      <div class="mini-doors">
+        <div class="mini-door"><span class="pick-mark">▼えらんだ扉</span>🐐</div>
+        <div class="mini-door">🚗</div>
+        <div class="mini-door revealed">🐐</div>
+      </div>
+      <div class="why-text">
+        <strong>場合2：</strong>新車が扉2にある<br>
+        司会者は扉3を開けるしかないので、変えると扉2、つまり <span class="outcome-win">あたり</span>
+      </div>
+    </div>
+    <div class="why-case">
+      <div class="mini-doors">
+        <div class="mini-door"><span class="pick-mark">▼えらんだ扉</span>🐐</div>
+        <div class="mini-door revealed">🐐</div>
+        <div class="mini-door">🚗</div>
+      </div>
+      <div class="why-text">
+        <strong>場合3：</strong>新車が扉3にある<br>
+        司会者は扉2を開けるしかないので、変えると扉3、つまり <span class="outcome-win">あたり</span>
+      </div>
+    </div>
+    <p style="font-size:0.92rem; margin-top:14px;">
+      「変える作戦」は、3つの場合のうち<strong>2つであたり</strong>ます。「変えない作戦」であたるのは1つだけです。
+      だから、変えたほうが<strong>2倍あたりやすい</strong>のです。上のシミュレーションの棒グラフが、66.7％と33.3％の点線に近づいていくのは、このためです。
+    </p>
+  </section>
+
+  <footer>
+    モンティホール問題 体験シミュレーター ／ ソースコード：<a href="https://github.com/yoshihito-tsuji/monty-hall">GitHub</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- 賞品のSVG ---------- */
+  const carSVG = `
+    <svg viewBox="0 0 120 70" width="86" role="img" aria-label="新車">
+      <path d="M18 44 Q20 28 38 26 L46 16 Q48 12 54 12 L78 12 Q83 12 86 17 L92 26 Q106 28 108 40 L108 48 Q108 52 104 52 L16 52 Q12 52 12 48 L12 48 Q12 45 18 44 Z"
+            fill="#e34948" stroke="#4a3b2a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M50 16 L54 26 L70 26 L70 16 Z" fill="#cfe6ff" stroke="#4a3b2a" stroke-width="2.5"/>
+      <path d="M74 16 L74 26 L86 26 L82 18 Q80 16 78 16 Z" fill="#cfe6ff" stroke="#4a3b2a" stroke-width="2.5"/>
+      <circle cx="34" cy="52" r="10" fill="#4a4a4a" stroke="#4a3b2a" stroke-width="3"/>
+      <circle cx="34" cy="52" r="4" fill="#d8d8d8"/>
+      <circle cx="88" cy="52" r="10" fill="#4a4a4a" stroke="#4a3b2a" stroke-width="3"/>
+      <circle cx="88" cy="52" r="4" fill="#d8d8d8"/>
+      <rect x="104" y="38" width="6" height="5" rx="2" fill="#f4c95d" stroke="#4a3b2a" stroke-width="2"/>
+    </svg>`;
+  const goatSVG = `
+    <svg viewBox="0 0 120 90" width="80" role="img" aria-label="ヤギ">
+      <ellipse cx="55" cy="52" rx="30" ry="20" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="3"/>
+      <rect x="36" y="66" width="7" height="16" rx="3" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="2.5"/>
+      <rect x="66" y="66" width="7" height="16" rx="3" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="2.5"/>
+      <path d="M24 50 Q18 54 20 60" fill="none" stroke="#4a3b2a" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="86" cy="36" r="15" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="3"/>
+      <path d="M78 24 Q72 14 78 8" fill="none" stroke="#8a7a63" stroke-width="4" stroke-linecap="round"/>
+      <path d="M92 23 Q97 13 92 7" fill="none" stroke="#8a7a63" stroke-width="4" stroke-linecap="round"/>
+      <path d="M74 34 Q66 32 64 38 Q70 42 75 39 Z" fill="#e8dcc3" stroke="#4a3b2a" stroke-width="2"/>
+      <circle cx="90" cy="34" r="2.4" fill="#4a3b2a"/>
+      <path d="M97 44 Q98 50 94 52" fill="none" stroke="#4a3b2a" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="98" cy="41" rx="3" ry="2" fill="#f0b9b9" stroke="#4a3b2a" stroke-width="1.5"/>
+    </svg>`;
+
+  /* ---------- 状態 ---------- */
+  let carDoor = 0;       // 新車のある扉 (0-2)
+  let picked = -1;       // プレイヤーがえらんだ扉
+  let opened = -1;       // 司会者が開けた扉
+  let phase = "pick";    // pick → decide → result
+  const manual = { switch: { total: 0, win: 0 }, stay: { total: 0, win: 0 } };
+  const sim = { switch: { total: 0, win: 0 }, stay: { total: 0, win: 0 } };
+
+  const $ = (id) => document.getElementById(id);
+  const stage = $("stage");
+  const message = $("message");
+
+  /* ---------- 扉の生成 ---------- */
+  function buildDoors() {
+    stage.innerHTML = "";
+    for (let i = 0; i < 3; i++) {
+      const unit = document.createElement("div");
+      unit.className = "door-unit selectable";
+      unit.dataset.index = i;
+      unit.innerHTML = `
+        <div class="door-label">扉${i + 1}</div>
+        <div class="door-frame">
+          <div class="prize">${i === carDoor ? carSVG : goatSVG}
+            <span class="prize-name">${i === carDoor ? "新車" : "ヤギ"}</span></div>
+          <div class="door" role="button" tabindex="0" aria-label="扉${i + 1}をえらぶ">
+            <div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
+          </div>
+        </div>
+        <div class="tag"></div>`;
+      const door = unit.querySelector(".door");
+      door.addEventListener("click", () => pickDoor(i));
+      door.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickDoor(i); }
+      });
+      stage.appendChild(unit);
+    }
+  }
+
+  function unitAt(i) { return stage.children[i]; }
+
+  function setSteps(current) {
+    for (let n = 1; n <= 4; n++) {
+      const el = $("step" + n);
+      el.classList.toggle("active", n === current);
+      el.classList.toggle("done", n < current);
+    }
+  }
+
+  /* ---------- 1ゲームの流れ ---------- */
+  function newGame() {
+    carDoor = Math.floor(Math.random() * 3);
+    picked = -1; opened = -1; phase = "pick";
+    buildDoors();
+    setSteps(1);
+    $("decisionArea").style.display = "none";
+    $("retryArea").style.display = "none";
+    const banner = $("resultBanner");
+    banner.className = "result-banner"; banner.textContent = "";
+    message.innerHTML = "ようこそ！ 3つの扉のうち、<strong>1つだけ</strong>に新車がかくれています。のこりの2つはヤギです。<br>まずは、好きな扉を1つクリックしてください。";
+  }
+
+  function pickDoor(i) {
+    if (phase !== "pick") return;
+    phase = "hostOpening";
+    picked = i;
+    for (let k = 0; k < 3; k++) unitAt(k).classList.remove("selectable");
+    unitAt(i).classList.add("chosen");
+    unitAt(i).querySelector(".tag").textContent = "あなたがえらんだ扉";
+    setSteps(2);
+    message.innerHTML = `あなたは <strong>扉${i + 1}</strong> をえらびましたね。<br>私は答えを知っています。のこりの扉から、ヤギがいる扉を1つ開けてみせましょう…`;
+
+    // ヤギのいる扉を1つ開ける（えらばれた扉と新車の扉は開けない）
+    const candidates = [0, 1, 2].filter((d) => d !== picked && d !== carDoor);
+    opened = candidates[Math.floor(Math.random() * candidates.length)];
+
+    setTimeout(() => {
+      unitAt(opened).classList.add("open");
+      unitAt(opened).querySelector(".tag").textContent = "司会者が開けた扉";
+      setTimeout(showDecision, 900);
+    }, 1200);
+  }
+
+  function showDecision() {
+    phase = "decide";
+    setSteps(3);
+    const other = [0, 1, 2].find((d) => d !== picked && d !== opened);
+    message.innerHTML = `ごらんのとおり、<strong>扉${opened + 1}</strong> はヤギでした。<br>さあ、どうしますか？ 最初にえらんだ <strong>扉${picked + 1}</strong> のままにしますか？ それとも、閉まっているもう1つの <strong>扉${other + 1}</strong> に変えますか？`;
+    $("switchNote").textContent = `扉${other + 1} にする`;
+    $("stayNote").textContent = `扉${picked + 1} のまま`;
+    $("decisionArea").style.display = "flex";
+  }
+
+  function decide(didSwitch) {
+    if (phase !== "decide") return;
+    phase = "result";
+    $("decisionArea").style.display = "none";
+    setSteps(4);
+
+    const finalDoor = didSwitch
+      ? [0, 1, 2].find((d) => d !== picked && d !== opened)
+      : picked;
+    const won = finalDoor === carDoor;
+
+    if (didSwitch) {
+      unitAt(picked).classList.remove("chosen");
+      unitAt(finalDoor).classList.add("chosen");
+      unitAt(picked).querySelector(".tag").textContent = "最初にえらんだ扉";
+      unitAt(finalDoor).querySelector(".tag").textContent = "変えたあとの扉";
+    }
+
+    // 全部の扉を開けて答え合わせ
+    for (let k = 0; k < 3; k++) unitAt(k).classList.add("open");
+
+    const key = didSwitch ? "switch" : "stay";
+    manual[key].total += 1;
+    if (won) manual[key].win += 1;
+    renderManual();
+
+    const banner = $("resultBanner");
+    banner.className = "result-banner " + (won ? "win" : "lose");
+    banner.textContent = won
+      ? `🎉 あたり！ 扉${finalDoor + 1} には新車がありました！`
+      : `😢 ざんねん… 扉${finalDoor + 1} にいたのはヤギでした。新車は 扉${carDoor + 1} でした。`;
+
+    message.innerHTML = (didSwitch
+      ? `あなたは扉を<strong>変えました</strong>。`
+      : `あなたは扉を<strong>変えませんでした</strong>。`)
+      + `結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。`;
+
+    $("retryArea").style.display = "flex";
+  }
+
+  /* ---------- 記録の表示 ---------- */
+  function pct(win, total) {
+    return total === 0 ? "—" : (100 * win / total).toFixed(1) + " %";
+  }
+  function renderManual() {
+    $("mSwitchTotal").textContent = manual.switch.total + " 回";
+    $("mSwitchWin").textContent = manual.switch.win + " 回";
+    $("mSwitchRate").textContent = pct(manual.switch.win, manual.switch.total);
+    $("mStayTotal").textContent = manual.stay.total + " 回";
+    $("mStayWin").textContent = manual.stay.win + " 回";
+    $("mStayRate").textContent = pct(manual.stay.win, manual.stay.total);
+  }
+
+  /* ---------- 一括シミュレーション ---------- */
+  function runTrials(n) {
+    // 各試行：新車の位置と最初の選択をランダムに決める。
+    // 「変えない作戦」は最初の選択が新車ならあたり。
+    // 「変える作戦」は最初の選択が新車でなければ、司会者がもう1つの
+    // ヤギを開けるため、のこる扉はかならず新車 → あたり。
+    for (let t = 0; t < n; t++) {
+      const car = Math.floor(Math.random() * 3);
+      const pick = Math.floor(Math.random() * 3);
+      sim.stay.total += 1;
+      if (pick === car) sim.stay.win += 1;
+      sim.switch.total += 1;
+      if (pick !== car) sim.switch.win += 1;
+    }
+    renderSim();
+    $("simStatus").textContent =
+      `${n}回ずつ追加でためしました（累計 ${sim.switch.total} 回ずつ）。棒グラフが点線に近づいていくか、見てみましょう。`;
+  }
+
+  function renderSim() {
+    const swRate = sim.switch.total ? 100 * sim.switch.win / sim.switch.total : 0;
+    const stRate = sim.stay.total ? 100 * sim.stay.win / sim.stay.total : 0;
+    $("barSwitch").style.width = swRate + "%";
+    $("barStay").style.width = stRate + "%";
+    $("barSwitchLabel").textContent = sim.switch.total
+      ? `${swRate.toFixed(1)} %（${sim.switch.win}勝 / ${sim.switch.total}回）` : "まだ試していません";
+    $("barStayLabel").textContent = sim.stay.total
+      ? `${stRate.toFixed(1)} %（${sim.stay.win}勝 / ${sim.stay.total}回）` : "まだ試していません";
+    $("sSwitchTotal").textContent = sim.switch.total + " 回";
+    $("sSwitchWin").textContent = sim.switch.win + " 回";
+    $("sSwitchRate").textContent = pct(sim.switch.win, sim.switch.total);
+    $("sStayTotal").textContent = sim.stay.total + " 回";
+    $("sStayWin").textContent = sim.stay.win + " 回";
+    $("sStayRate").textContent = pct(sim.stay.win, sim.stay.total);
+  }
+
+  /* ---------- イベント ---------- */
+  $("btnSwitch").addEventListener("click", () => decide(true));
+  $("btnStay").addEventListener("click", () => decide(false));
+  $("btnRetry").addEventListener("click", newGame);
+  document.querySelectorAll(".btn-sim").forEach((b) =>
+    b.addEventListener("click", () => runTrials(parseInt(b.dataset.trials, 10))));
+  $("btnSimReset").addEventListener("click", () => {
+    sim.switch.total = 0; sim.switch.win = 0;
+    sim.stay.total = 0; sim.stay.win = 0;
+    renderSim();
+    $("simStatus").textContent = "記録を消しました。もう一度ためしてみましょう。";
+  });
+
+  newGame();
+})();
+</script>
+</body>
+</html>
