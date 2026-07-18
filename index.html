@@ -50,8 +50,8 @@
   .card > h2 {
     font-size: 1.15rem;
     margin-bottom: 12px;
-    padding-left: 12px;
-    border-left: 6px solid var(--wood);
+    padding-inline-start: 12px;
+    border-inline-start: 6px solid var(--wood);
     line-height: 1.4;
   }
 
@@ -176,7 +176,7 @@
   .door .panel.bottom { top: 54%; height: 34%; }
   .door .knob {
     position: absolute;
-    right: 10px; top: 48%;
+    inset-inline-end: 10px; top: 48%;
     width: 13px; height: 13px;
     border-radius: 50%;
     background: #f4c95d;
@@ -258,12 +258,12 @@
     border-bottom: 1px solid var(--card-border);
   }
   th { color: var(--ink-soft); font-weight: normal; font-size: 0.85rem; }
-  td.strategy { text-align: left; font-weight: bold; }
+  td.strategy { text-align: start; font-weight: bold; }
   .dot {
     display: inline-block;
     width: 12px; height: 12px;
     border-radius: 3px;
-    margin-right: 6px;
+    margin-inline-end: 6px;
     vertical-align: baseline;
   }
   .dot.switch { background: var(--series-switch); }
@@ -280,7 +280,7 @@
   }
   .chart-title { font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 14px; }
   .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .bar-row .bar-name { flex: none; width: 110px; font-size: 0.85rem; text-align: right; }
+  .bar-row .bar-name { flex: none; width: 110px; font-size: 0.85rem; text-align: end; }
   .bar-track {
     position: relative;
     flex: 1; height: 26px;
@@ -288,7 +288,7 @@
     border-radius: 4px;
   }
   .bar-fill {
-    position: absolute; left: 0; top: 0; bottom: 0;
+    position: absolute; inset-inline-start: 0; top: 0; bottom: 0;
     width: 0%;
     border-radius: 0 4px 4px 0;
     transition: width 0.7s ease;
@@ -297,6 +297,7 @@
   .bar-fill.stay { background: var(--series-stay); }
   .bar-val {
     flex: none;
+    text-align: end;
     min-width: 168px;
     font-size: 0.82rem;
     font-weight: bold;
@@ -306,7 +307,7 @@
   }
   .ref-line {
     position: absolute; top: -6px; bottom: -6px;
-    border-left: 2px dashed #b3a98f;
+    border-inline-start: 2px dashed #b3a98f;
   }
   .ref-label {
     position: absolute;
@@ -428,7 +429,7 @@
   }
   .mini .knob-dot {
     position: absolute;
-    right: 12%; top: 46%;
+    inset-inline-end: 12%; top: 46%;
     width: 5px; height: 5px;
     border-radius: 50%;
     background: #f4c95d;
@@ -452,6 +453,50 @@
     color: var(--ink-soft);
     margin-top: 8px;
   }
+
+  /* ---------- 言語切り替え ---------- */
+  .langbar { display: flex; justify-content: flex-end; margin-bottom: 8px; position: relative; }
+  .lang-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 0.88rem; font-weight: normal;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--ink);
+    border: 2px solid var(--card-border);
+    box-shadow: none;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+  .lang-btn .caret { font-size: 0.7rem; opacity: 0.7; }
+  .lang-menu {
+    position: absolute; top: calc(100% + 6px); inset-inline-end: 0;
+    z-index: 20;
+    list-style: none;
+    background: var(--card);
+    border: 2px solid var(--card-border);
+    border-radius: 14px;
+    padding: 6px;
+    min-width: 180px;
+    max-height: 70vh; overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(74,59,42,0.14);
+  }
+  .lang-menu li {
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .lang-menu li:hover { background: #f5eeda; }
+  .lang-menu li.on { background: var(--accent); color: #fff; font-weight: bold; }
+
+  /* ---------- 右から左に読む言語（アラビア語） ---------- */
+  [dir="rtl"] .bubble::before { left: auto; right: -12px; border-right-color: transparent; border-left-color: var(--card-border); }
+  [dir="rtl"] .bubble::after  { left: auto; right: -9px;  border-right-color: transparent; border-left-color: #fff; }
+  [dir="rtl"] .bar-fill { border-radius: 4px 0 0 4px; }
+  [dir="rtl"] .door { transform-origin: right center; }
+  [dir="rtl"] .door-unit.open .door { transform: rotateY(105deg); }
+  [dir="rtl"] .mini.open { transform: rotateY(32deg) scale(0.94); }
 
   footer {
     text-align: center;
@@ -487,26 +532,39 @@
 </head>
 <body>
 <main>
+  <div class="langbar">
+    <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        <ellipse cx="12" cy="12" rx="4" ry="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M3.2 9.2h17.6M3.2 14.8h17.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+      <span id="langBtnLabel">Language</span>
+      <span class="caret" aria-hidden="true">▾</span>
+    </button>
+    <ul class="lang-menu" id="langMenu" role="listbox" aria-label="Language" hidden></ul>
+  </div>
+
   <header>
-    <h1>🚪 モンティホール問題 体験シミュレーター</h1>
-    <p>「扉を変えるべきか、変えないべきか」を、自分の手でたしかめてみましょう</p>
+    <h1><span aria-hidden="true">🚪</span> <span data-i18n="header.title"></span></h1>
+    <p data-i18n="header.sub"></p>
   </header>
 
   <!-- 手順 -->
-  <section class="card" aria-label="あそびかた">
-    <h2>あそびかた（4つのステップ）</h2>
+  <section class="card">
+    <h2 data-i18n="steps.title"></h2>
     <div class="steps">
-      <div class="step" id="step1"><div class="num"><span>1</span></div><div>扉を1つえらぶ</div></div>
-      <div class="step" id="step2"><div class="num"><span>2</span></div><div>司会者がハズレの扉を開ける</div></div>
-      <div class="step" id="step3"><div class="num"><span>3</span></div><div>変えるかどうか決める</div></div>
-      <div class="step" id="step4"><div class="num"><span>4</span></div><div>結果を見る</div></div>
+      <div class="step" id="step1"><div class="num"><span>1</span></div><div data-i18n="steps.s1"></div></div>
+      <div class="step" id="step2"><div class="num"><span>2</span></div><div data-i18n="steps.s2"></div></div>
+      <div class="step" id="step3"><div class="num"><span>3</span></div><div data-i18n="steps.s3"></div></div>
+      <div class="step" id="step4"><div class="num"><span>4</span></div><div data-i18n="steps.s4"></div></div>
     </div>
   </section>
 
   <!-- ゲーム本体 -->
-  <section class="card" aria-label="ゲーム">
+  <section class="card">
     <div class="host-area">
-      <svg class="host-face" viewBox="0 0 80 80" role="img" aria-label="司会者">
+      <svg class="host-face" viewBox="0 0 80 80" role="img" aria-label="Host">
         <circle cx="40" cy="34" r="24" fill="#ecebe8" stroke="#84837e" stroke-width="2.5"/>
         <path d="M18 30 Q22 10 40 12 Q58 10 62 30 Q56 20 40 20 Q24 20 18 30 Z" fill="#adaca7" stroke="#84837e" stroke-width="2"/>
         <circle cx="32" cy="33" r="2.6" fill="#84837e"/>
@@ -515,186 +573,160 @@
         <path d="M28 62 L40 66 L52 62 L52 76 L28 76 Z" fill="#c7c6c2" stroke="#84837e" stroke-width="2.5"/>
         <path d="M34 62 L40 66 L46 62 L40 58 Z" fill="#adaca7" stroke="#84837e" stroke-width="2"/>
       </svg>
-      <div class="bubble"><p id="message" aria-live="polite">ようこそ！ 3つの扉のうち、<strong>1つだけ</strong>に新車がかくれています。のこりの2つはヤギです。<br>まずは、好きな扉を1つクリックしてください。</p></div>
+      <div class="bubble"><p id="message" aria-live="polite"></p></div>
     </div>
 
-    <div class="stage" id="stage">
-      <!-- 扉はJSで生成 -->
-    </div>
+    <div class="stage" id="stage"></div>
 
     <div class="actions" id="decisionArea" style="display:none;">
-      <button class="btn-primary" id="btnSwitch">扉を変える<span class="btn-note" id="switchNote"></span></button>
-      <button class="btn-secondary" id="btnStay">変えない<span class="btn-note" id="stayNote"></span></button>
+      <button class="btn-primary" id="btnSwitch"><span data-i18n="game.btnSwitch"></span><span class="btn-note" id="switchNote"></span></button>
+      <button class="btn-secondary" id="btnStay"><span data-i18n="game.btnStay"></span><span class="btn-note" id="stayNote"></span></button>
     </div>
 
     <div class="result-banner" id="resultBanner"></div>
 
     <div class="actions" id="retryArea" style="display:none;">
-      <button class="btn-primary" id="btnRetry">もう一度あそぶ</button>
+      <button class="btn-primary" id="btnRetry" data-i18n="game.retry"></button>
     </div>
   </section>
 
   <!-- 手であそんだ記録 -->
-  <section class="card" aria-label="あなたの記録">
-    <h2>あなたの記録</h2>
-    <p style="font-size:0.9rem; color:var(--ink-soft); margin-bottom:10px;">
-      何回かあそぶと、「変えた場合」と「変えなかった場合」で、あたりやすさにちがいが出てくるでしょうか？
-    </p>
+  <section class="card">
+    <h2 data-i18n="record.title"></h2>
+    <p style="font-size:0.9rem; color:var(--ink-soft); margin-bottom:10px;" data-i18n="record.lead"></p>
     <table>
       <thead>
-        <tr><th style="text-align:left;">作戦</th><th>あそんだ回数</th><th>あたった回数</th><th>あたる割合</th></tr>
+        <tr><th style="text-align:left;" data-i18n="record.thStrategy"></th><th data-i18n="record.thPlayed"></th><th data-i18n="record.thWon"></th><th data-i18n="record.thRate"></th></tr>
       </thead>
       <tbody>
         <tr>
-          <td class="strategy"><span class="dot switch"></span>扉を変えた</td>
-          <td id="mSwitchTotal">0 回</td><td id="mSwitchWin">0 回</td><td class="rate" id="mSwitchRate">—</td>
+          <td class="strategy"><span class="dot switch"></span><span data-i18n="record.rowSwitch"></span></td>
+          <td id="mSwitchTotal"></td><td id="mSwitchWin"></td><td class="rate" id="mSwitchRate">—</td>
         </tr>
         <tr>
-          <td class="strategy"><span class="dot stay"></span>変えなかった</td>
-          <td id="mStayTotal">0 回</td><td id="mStayWin">0 回</td><td class="rate" id="mStayRate">—</td>
+          <td class="strategy"><span class="dot stay"></span><span data-i18n="record.rowStay"></span></td>
+          <td id="mStayTotal"></td><td id="mStayWin"></td><td class="rate" id="mStayRate">—</td>
         </tr>
       </tbody>
     </table>
   </section>
 
   <!-- 一括シミュレーション -->
-  <section class="card" aria-label="コンピュータにたくさん試してもらう">
-    <h2>コンピュータにたくさん試してもらう</h2>
-    <p style="font-size:0.9rem; margin-bottom:14px;">
-      手であそぶだけでは、回数が少なくて偶然に左右されます。そこで、コンピュータに同じゲームを何回もくり返してもらいましょう。
-      「変える作戦」と「変えない作戦」を同じ回数ずつためして、あたった割合をくらべます。
-    </p>
+  <section class="card">
+    <h2 data-i18n="sim.title"></h2>
+    <p style="font-size:0.9rem; margin-bottom:14px;" data-i18n="sim.lead"></p>
     <div class="actions" style="margin-top:0;">
-      <button class="btn-sim" data-trials="10">さらに10回ためす</button>
-      <button class="btn-sim" data-trials="100">さらに100回ためす</button>
-      <button class="btn-sim" data-trials="1000">さらに1000回ためす</button>
-      <button class="btn-secondary" id="btnSimReset" style="padding:10px 22px;">記録を消す</button>
+      <button class="btn-sim" data-trials="10" data-i18n="sim.btn10"></button>
+      <button class="btn-sim" data-trials="100" data-i18n="sim.btn100"></button>
+      <button class="btn-sim" data-trials="1000" data-i18n="sim.btn1000"></button>
+      <button class="btn-secondary" id="btnSimReset" style="padding:10px 22px;" data-i18n="sim.btnClear"></button>
     </div>
-    <p class="sim-status" id="simStatus" aria-live="polite">ボタンを押すと、ここに結果が積みかさなっていきます。</p>
+    <p class="sim-status" id="simStatus" aria-live="polite"></p>
 
-    <div class="chart" aria-label="作戦ごとのあたる割合">
-      <p class="chart-title">あたった割合（％）— 点線は「3回に1回」（33.3％）と「3回に2回」（66.7％）の目印です</p>
+    <div class="chart">
+      <p class="chart-title" data-i18n="sim.chartTitle"></p>
       <div class="bar-row">
-        <div class="bar-name"><span class="dot switch"></span>変える作戦</div>
+        <div class="bar-name"><span class="dot switch"></span><span data-i18n="sim.barSwitch"></span></div>
         <div class="bar-track">
           <div class="ref-line" style="left:33.33%"></div>
           <div class="ref-line" style="left:66.67%"></div>
           <div class="bar-fill switch" id="barSwitch"></div>
         </div>
-        <div class="bar-val" id="barSwitchLabel">まだ試していません</div>
+        <div class="bar-val" id="barSwitchLabel"></div>
       </div>
       <div class="bar-row" style="margin-bottom:4px;">
-        <div class="bar-name"><span class="dot stay"></span>変えない作戦</div>
+        <div class="bar-name"><span class="dot stay"></span><span data-i18n="sim.barStay"></span></div>
         <div class="bar-track">
           <div class="ref-line" style="left:33.33%"><span class="ref-label" style="top:calc(100% + 4px);">33.3%</span></div>
           <div class="ref-line" style="left:66.67%"><span class="ref-label" style="top:calc(100% + 4px);">66.7%</span></div>
           <div class="bar-fill stay" id="barStay"></div>
         </div>
-        <div class="bar-val" id="barStayLabel">まだ試していません</div>
+        <div class="bar-val" id="barStayLabel"></div>
       </div>
     </div>
 
     <table style="margin-top:16px;">
       <thead>
-        <tr><th style="text-align:left;">作戦</th><th>ためした回数</th><th>あたった回数</th><th>あたる割合</th></tr>
+        <tr><th style="text-align:left;" data-i18n="record.thStrategy"></th><th data-i18n="sim.thTried"></th><th data-i18n="record.thWon"></th><th data-i18n="record.thRate"></th></tr>
       </thead>
       <tbody>
         <tr>
-          <td class="strategy"><span class="dot switch"></span>変える作戦</td>
-          <td id="sSwitchTotal">0 回</td><td id="sSwitchWin">0 回</td><td class="rate" id="sSwitchRate">—</td>
+          <td class="strategy"><span class="dot switch"></span><span data-i18n="sim.barSwitch"></span></td>
+          <td id="sSwitchTotal"></td><td id="sSwitchWin"></td><td class="rate" id="sSwitchRate">—</td>
         </tr>
         <tr>
-          <td class="strategy"><span class="dot stay"></span>変えない作戦</td>
-          <td id="sStayTotal">0 回</td><td id="sStayWin">0 回</td><td class="rate" id="sStayRate">—</td>
+          <td class="strategy"><span class="dot stay"></span><span data-i18n="sim.barStay"></span></td>
+          <td id="sStayTotal"></td><td id="sStayWin"></td><td class="rate" id="sStayRate">—</td>
         </tr>
       </tbody>
     </table>
   </section>
 
   <!-- なぜ？ -->
-  <section class="card" aria-label="どうして変えたほうがあたりやすいの">
-    <h2>どうして「変えたほうがあたりやすい」の？</h2>
-    <p style="font-size:0.92rem; margin-bottom:14px;">
-      あなたが<strong>扉1</strong>をえらんだとしましょう。新車がどこにあるかで、3つの場合が考えられます。
-      どの場合も起こりやすさは同じです。司会者は答えを知っていて、<strong>かならずヤギの扉</strong>を開けます。
-    </p>
+  <section class="card">
+    <h2 data-i18n="why.title"></h2>
+    <p style="font-size:0.92rem; margin-bottom:14px;" data-i18n-html="why.lead_html"></p>
     <div class="why-case">
       <div class="mini-doors-wrap">
-        <div class="pick-caption">▼ えらんだ扉</div>
+        <div class="pick-caption" data-i18n="why.chosen"></div>
         <div class="mini-doors">
           <div class="mini-door">🚗</div>
           <div class="mini-door revealed">🐐</div>
           <div class="mini-door">🐐</div>
         </div>
       </div>
-      <div class="why-text">
-        <strong>場合1：</strong>新車が扉1にある<br>
-        変えると… ヤギに当たって <span class="outcome-lose">はずれ</span>／変えないと <span class="outcome-win">あたり</span>
-      </div>
+      <div class="why-text" data-i18n-html="why.case1_html"></div>
     </div>
     <div class="why-case">
       <div class="mini-doors-wrap">
-        <div class="pick-caption">▼ えらんだ扉</div>
+        <div class="pick-caption" data-i18n="why.chosen"></div>
         <div class="mini-doors">
           <div class="mini-door">🐐</div>
           <div class="mini-door">🚗</div>
           <div class="mini-door revealed">🐐</div>
         </div>
       </div>
-      <div class="why-text">
-        <strong>場合2：</strong>新車が扉2にある<br>
-        司会者は扉3を開けるしかないので、変えると扉2、つまり <span class="outcome-win">あたり</span>
-      </div>
+      <div class="why-text" data-i18n-html="why.case2_html"></div>
     </div>
     <div class="why-case">
       <div class="mini-doors-wrap">
-        <div class="pick-caption">▼ えらんだ扉</div>
+        <div class="pick-caption" data-i18n="why.chosen"></div>
         <div class="mini-doors">
           <div class="mini-door">🐐</div>
           <div class="mini-door revealed">🐐</div>
           <div class="mini-door">🚗</div>
         </div>
       </div>
-      <div class="why-text">
-        <strong>場合3：</strong>新車が扉3にある<br>
-        司会者は扉2を開けるしかないので、変えると扉3、つまり <span class="outcome-win">あたり</span>
-      </div>
+      <div class="why-text" data-i18n-html="why.case3_html"></div>
     </div>
-    <p style="font-size:0.92rem; margin-top:14px;">
-      「変える作戦」は、3つの場合のうち<strong>2つであたり</strong>ます。「変えない作戦」であたるのは1つだけです。
-      だから、変えたほうが<strong>2倍あたりやすい</strong>のです。上のシミュレーションの棒グラフが、66.7％と33.3％の点線に近づいていくのは、このためです。
-    </p>
+    <p style="font-size:0.92rem; margin-top:14px;" data-i18n-html="why.concl_html"></p>
   </section>
 
   <!-- 扉の数を変える拡張版 -->
-  <section class="card" aria-label="扉の数を増やしてみる">
-    <h2>扉の数を増やしてみる</h2>
-    <p style="font-size:0.92rem; margin-bottom:16px;">
-      3枚だと「どちらも五分五分では？」と感じるかもしれません。そこで、扉の数を増やしてみましょう。
-      たとえば<strong>100枚</strong>の扉から1枚をえらび、司会者がヤギの扉を98枚も開けてみせたら、
-      あなたは最初にえらんだ1枚に、それでもこだわりますか？
-    </p>
+  <section class="card">
+    <h2 data-i18n="ext.title"></h2>
+    <p style="font-size:0.92rem; margin-bottom:16px;" data-i18n-html="ext.lead_html"></p>
 
     <div class="ext-controls">
       <div class="ctrl-row">
-        <span class="ctrl-label">扉の数</span>
-        <button class="chip" data-n="3">3枚</button>
-        <button class="chip" data-n="5">5枚</button>
-        <button class="chip" data-n="10">10枚</button>
-        <button class="chip" data-n="100">100枚</button>
-        <label class="num-wrap">自分で決める
-          <input type="number" id="extNInput" min="3" max="200" step="1" value="3" aria-label="扉の数を自分で入力する">枚
+        <span class="ctrl-label" data-i18n="ext.labelDoors"></span>
+        <button class="chip" data-n="3"></button>
+        <button class="chip" data-n="5"></button>
+        <button class="chip" data-n="10"></button>
+        <button class="chip" data-n="100"></button>
+        <label class="num-wrap"><span data-i18n="ext.custom"></span>
+          <input type="number" id="extNInput" min="3" max="200" step="1" value="3"><span data-i18n="ext.unit"></span>
         </label>
       </div>
       <div class="ctrl-row">
-        <span class="ctrl-label">司会者の開け方</span>
-        <button class="chip" data-mode="all">閉じた扉が残り1枚になるまで開ける</button>
-        <button class="chip" data-mode="one">ヤギの扉を1枚だけ開ける</button>
+        <span class="ctrl-label" data-i18n="ext.labelHost"></span>
+        <button class="chip" data-mode="all" data-i18n="ext.modeAll"></button>
+        <button class="chip" data-mode="one" data-i18n="ext.modeOne"></button>
       </div>
     </div>
 
     <div class="host-area" style="margin-top:18px;">
-      <svg class="host-face" viewBox="0 0 80 80" role="img" aria-label="司会者">
+      <svg class="host-face" viewBox="0 0 80 80" role="img" aria-label="Host">
         <circle cx="40" cy="34" r="24" fill="#ecebe8" stroke="#84837e" stroke-width="2.5"/>
         <path d="M18 30 Q22 10 40 12 Q58 10 62 30 Q56 20 40 20 Q24 20 18 30 Z" fill="#adaca7" stroke="#84837e" stroke-width="2"/>
         <circle cx="32" cy="33" r="2.6" fill="#84837e"/>
@@ -709,54 +741,55 @@
     <div class="ext-stage" id="extStage"></div>
 
     <div class="actions" id="extActions" style="display:none;">
-      <button class="btn-secondary" id="btnExtStay">このまま変えない</button>
+      <button class="btn-secondary" id="btnExtStay" data-i18n="ext.stay"></button>
     </div>
     <div class="result-banner" id="extBanner"></div>
     <div class="actions" id="extRetryArea" style="display:none;">
-      <button class="btn-primary" id="btnExtRetry">もう一度あそぶ</button>
+      <button class="btn-primary" id="btnExtRetry" data-i18n="ext.retry"></button>
     </div>
 
     <table style="margin-top:20px;">
       <thead>
-        <tr><th style="text-align:left;">作戦</th><th>あそんだ回数</th><th>あたった回数</th><th>あたる割合</th></tr>
+        <tr><th style="text-align:left;" data-i18n="record.thStrategy"></th><th data-i18n="record.thPlayed"></th><th data-i18n="record.thWon"></th><th data-i18n="record.thRate"></th></tr>
       </thead>
       <tbody>
         <tr>
-          <td class="strategy"><span class="dot switch"></span>扉を変えた</td>
-          <td id="eSwitchTotal">0 回</td><td id="eSwitchWin">0 回</td><td class="rate" id="eSwitchRate">—</td>
+          <td class="strategy"><span class="dot switch"></span><span data-i18n="record.rowSwitch"></span></td>
+          <td id="eSwitchTotal"></td><td id="eSwitchWin"></td><td class="rate" id="eSwitchRate">—</td>
         </tr>
         <tr>
-          <td class="strategy"><span class="dot stay"></span>変えなかった</td>
-          <td id="eStayTotal">0 回</td><td id="eStayWin">0 回</td><td class="rate" id="eStayRate">—</td>
+          <td class="strategy"><span class="dot stay"></span><span data-i18n="record.rowStay"></span></td>
+          <td id="eStayTotal"></td><td id="eStayWin"></td><td class="rate" id="eStayRate">—</td>
         </tr>
       </tbody>
     </table>
 
     <div class="actions" style="margin-top:18px;">
-      <button class="btn-sim" data-ext-trials="100">この設定でさらに100回ためす</button>
-      <button class="btn-sim" data-ext-trials="1000">この設定でさらに1000回ためす</button>
-      <button class="btn-secondary" id="btnExtSimReset" style="padding:10px 22px;">記録を消す</button>
+      <button class="btn-sim" data-ext-trials="100" data-i18n="ext.sim100"></button>
+      <button class="btn-sim" data-ext-trials="1000" data-i18n="ext.sim1000"></button>
+      <button class="btn-secondary" id="btnExtSimReset" style="padding:10px 22px;" data-i18n="sim.btnClear"></button>
     </div>
-    <p class="sim-status" id="extSimStatus">コンピュータに同じ設定でくり返してもらい、計算で求めた割合と合うかをたしかめられます。</p>
+    <p class="sim-status" id="extSimStatus"></p>
 
     <div class="chart">
       <p class="chart-title" id="extChartTitle"></p>
       <div class="bar-row">
-        <div class="bar-name"><span class="dot switch"></span>変える作戦</div>
+        <div class="bar-name"><span class="dot switch"></span><span data-i18n="sim.barSwitch"></span></div>
         <div class="bar-track"><div class="ref-line" id="extRefSwitch"></div><div class="bar-fill switch" id="extBarSwitch"></div></div>
-        <div class="bar-val" id="extBarSwitchLabel">まだ試していません</div>
+        <div class="bar-val" id="extBarSwitchLabel"></div>
       </div>
       <div class="bar-row" style="margin-bottom:4px;">
-        <div class="bar-name"><span class="dot stay"></span>変えない作戦</div>
+        <div class="bar-name"><span class="dot stay"></span><span data-i18n="sim.barStay"></span></div>
         <div class="bar-track"><div class="ref-line" id="extRefStay"></div><div class="bar-fill stay" id="extBarStay"></div></div>
-        <div class="bar-val" id="extBarStayLabel">まだ試していません</div>
+        <div class="bar-val" id="extBarStayLabel"></div>
       </div>
       <p style="font-size:0.78rem; color:var(--ink-soft); margin-top:10px;" id="extTheory"></p>
     </div>
   </section>
 
   <footer>
-    モンティホール問題 体験シミュレーター ／ ソースコード：<a href="https://github.com/yoshihito-tsuji/monty-hall">GitHub</a>
+    <p id="footerLab"></p>
+    <p style="margin-top:4px;"><span data-i18n="footer.source"></span>：<a href="https://github.com/yoshihito-tsuji/monty-hall">GitHub</a></p>
   </footer>
 </main>
 
@@ -764,9 +797,1184 @@
 (function () {
   "use strict";
 
+  /* ================= 多言語対応 ================= */
+  /* 辞書は i18n/*.json が正本。tools/build_i18n.py で下のブロックを再生成する。 */
+  const LANG_ORDER = ["ja", "en", "zh-Hans", "zh-Hant", "ko", "ru", "es", "th", "hi", "fr", "ar", "sv"];
+  const RTL_LANGS = ["ar"];
+  let LANG = "ja";
+
+/* === I18N-DATA-START === */
+  const I18N = {
+    "ja": {
+      "lang.name": "日本語",
+      "lang.button": "言語",
+      "meta.title": "モンティホール問題 体験シミュレーター",
+      "header.title": "モンティホール問題 体験シミュレーター",
+      "header.sub": "「扉を変えるべきか、変えないべきか」を、自分の手でたしかめてみましょう",
+      "steps.title": "あそびかた（4つのステップ）",
+      "steps.s1": "扉を1つえらぶ",
+      "steps.s2": "司会者がハズレの扉を開ける",
+      "steps.s3": "変えるかどうか決める",
+      "steps.s4": "結果を見る",
+      "game.doorLabel": "扉{n}",
+      "game.prizeCar": "新車",
+      "game.prizeGoat": "ヤギ",
+      "game.pickAria": "扉{n}をえらぶ",
+      "game.intro_html": "ようこそ！ 3つの扉のうち、<strong>1つだけ</strong>に新車がかくれています。のこりの2つはヤギです。<br>まずは、好きな扉を1つクリックしてください。",
+      "game.picked_html": "あなたは <strong>扉{n}</strong> をえらびましたね。<br>私は答えを知っています。のこりの扉から、ヤギがいる扉を1つ開けてみせましょう…",
+      "game.decide_html": "ごらんのとおり、<strong>扉{o}</strong> はヤギでした。<br>さあ、どうしますか？ 最初にえらんだ <strong>扉{p}</strong> のままにしますか？ それとも、閉まっているもう1つの <strong>扉{c}</strong> に変えますか？",
+      "game.tagYours": "あなたがえらんだ扉",
+      "game.tagOpened": "司会者が開けた扉",
+      "game.tagFirst": "最初にえらんだ扉",
+      "game.tagAfter": "変えたあとの扉",
+      "game.btnSwitch": "扉を変える",
+      "game.btnSwitchNote": "扉{c} にする",
+      "game.btnStay": "変えない",
+      "game.btnStayNote": "扉{p} のまま",
+      "game.win": "🎉 あたり！ 扉{n} には新車がありました！",
+      "game.lose": "😢 ざんねん… 扉{n} にいたのはヤギでした。新車は 扉{c} でした。",
+      "game.afterSwitch_html": "あなたは扉を<strong>変えました</strong>。結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。",
+      "game.afterStay_html": "あなたは扉を<strong>変えませんでした</strong>。結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。",
+      "game.retry": "もう一度あそぶ",
+      "record.title": "あなたの記録",
+      "record.lead": "何回かあそぶと、「変えた場合」と「変えなかった場合」で、あたりやすさにちがいが出てくるでしょうか？",
+      "record.thStrategy": "作戦",
+      "record.thPlayed": "あそんだ回数",
+      "record.thWon": "あたった回数",
+      "record.thRate": "あたる割合",
+      "record.rowSwitch": "扉を変えた",
+      "record.rowStay": "変えなかった",
+      "common.times": "{n} 回",
+      "sim.title": "コンピュータにたくさん試してもらう",
+      "sim.lead": "手であそぶだけでは、回数が少なくて偶然に左右されます。そこで、コンピュータに同じゲームを何回もくり返してもらいましょう。「変える作戦」と「変えない作戦」を同じ回数ずつためして、あたった割合をくらべます。",
+      "sim.btn10": "さらに10回ためす",
+      "sim.btn100": "さらに100回ためす",
+      "sim.btn1000": "さらに1000回ためす",
+      "sim.btnClear": "記録を消す",
+      "sim.statusInit": "ボタンを押すと、ここに結果が積みかさなっていきます。",
+      "sim.statusRan": "{n}回ずつ追加でためしました（累計 {t} 回ずつ）。棒グラフが点線に近づいていくか、見てみましょう。",
+      "sim.statusCleared": "記録を消しました。もう一度ためしてみましょう。",
+      "sim.chartTitle": "あたった割合（％）— 点線は「3回に1回」（33.3％）と「3回に2回」（66.7％）の目印です",
+      "sim.barSwitch": "変える作戦",
+      "sim.barStay": "変えない作戦",
+      "sim.barValue": "{r} %（{w}勝 / {t}回）",
+      "sim.notYet": "まだ試していません",
+      "sim.thTried": "ためした回数",
+      "why.title": "どうして「変えたほうがあたりやすい」の？",
+      "why.lead_html": "あなたが<strong>扉1</strong>をえらんだとしましょう。新車がどこにあるかで、3つの場合が考えられます。どの場合も起こりやすさは同じです。司会者は答えを知っていて、<strong>かならずヤギの扉</strong>を開けます。",
+      "why.chosen": "▼ えらんだ扉",
+      "why.case1_html": "<strong>場合1：</strong>新車が扉1にある<br>変えると… ヤギに当たって <span class=\"outcome-lose\">はずれ</span>／変えないと <span class=\"outcome-win\">あたり</span>",
+      "why.case2_html": "<strong>場合2：</strong>新車が扉2にある<br>司会者は扉3を開けるしかないので、変えると扉2、つまり <span class=\"outcome-win\">あたり</span>",
+      "why.case3_html": "<strong>場合3：</strong>新車が扉3にある<br>司会者は扉2を開けるしかないので、変えると扉3、つまり <span class=\"outcome-win\">あたり</span>",
+      "why.concl_html": "「変える作戦」は、3つの場合のうち<strong>2つであたり</strong>ます。「変えない作戦」であたるのは1つだけです。だから、変えたほうが<strong>2倍あたりやすい</strong>のです。上のシミュレーションの棒グラフが、66.7％と33.3％の点線に近づいていくのは、このためです。",
+      "ext.title": "扉の数を増やしてみる",
+      "ext.lead_html": "3枚だと「どちらも五分五分では？」と感じるかもしれません。そこで、扉の数を増やしてみましょう。たとえば<strong>100枚</strong>の扉から1枚をえらび、司会者がヤギの扉を98枚も開けてみせたら、あなたは最初にえらんだ1枚に、それでもこだわりますか？",
+      "ext.labelDoors": "扉の数",
+      "ext.labelHost": "司会者の開け方",
+      "ext.chipDoors": "{n}枚",
+      "ext.custom": "自分で決める",
+      "ext.unit": "枚",
+      "ext.customAria": "扉の数を自分で入力する",
+      "ext.modeAll": "閉じた扉が残り1枚になるまで開ける",
+      "ext.modeOne": "ヤギの扉を1枚だけ開ける",
+      "ext.modeAllShort": "残り1枚になるまで開ける",
+      "ext.modeOneShort": "1枚だけ開ける",
+      "ext.intro_html": "扉が <strong>{n}枚</strong> あります。1枚だけに新車、のこりの {m}枚 はヤギです。<br>好きな扉を1つえらんでください。",
+      "ext.opening_html": "<strong>扉{p}</strong> をえらびましたね。私は答えを知っています。これからヤギの扉を <strong>{k}枚</strong> 開けます…",
+      "ext.decideAll_html": "ヤギの扉を {k}枚 開けました。閉じているのは、あなたの <strong>扉{p}</strong> と <strong>扉{c}</strong> だけです。<br>扉{c} をクリックすれば変えられます。このままでよければ「変えない」を押してください。",
+      "ext.decideOne_html": "ヤギの扉を1枚だけ開けました。まだ <strong>{c}枚</strong> が閉じたままです。<br>変えるなら閉じている扉をクリックしてください。このままでよければ「変えない」を押してください。",
+      "ext.afterSwitch_html": "扉を <strong>変えました</strong>。結果を下の表にたしました。",
+      "ext.afterStay_html": "扉を <strong>変えませんでした</strong>。結果を下の表にたしました。",
+      "ext.win": "🎉 あたり！ 扉{n} に新車がありました！",
+      "ext.lose": "😢 ざんねん… 扉{n} はヤギでした。新車は 扉{c} でした。",
+      "ext.stay": "このまま変えない",
+      "ext.retry": "もう一度あそぶ",
+      "ext.sim100": "この設定でさらに100回ためす",
+      "ext.sim1000": "この設定でさらに1000回ためす",
+      "ext.simInit": "コンピュータに同じ設定でくり返してもらい、計算で求めた割合と合うかをたしかめられます。",
+      "ext.simRan": "扉{d}枚・{mode} の設定で {n}回 追加しました（累計 {t} 回ずつ）。",
+      "ext.chartTitle": "あたった割合（％）— 点線は、計算で求めた割合（変える {s}％ / 変えない {y}％）です",
+      "ext.theoryAll_html": "最初にえらんだ1枚があたるのは {n}回に1回（{ty}％）だけです。のこりの <strong>{m}／{n}</strong> では新車はほかの扉にあり、司会者はそれを避けてヤギの扉だけを開けます。つまりその場合、最後まで閉じたまま残る扉が新車です。だから変えると <strong>{s}％</strong> であたります。",
+      "ext.theoryOne3_html": "扉が3枚のときは、司会者が1枚開ければ閉じた扉は1枚しか残りません。上の基本のゲームとまったく同じで、変えると <strong>{s}％</strong>、変えないと {ty}％ です。",
+      "ext.theoryOneN_html": "司会者が1枚しか開けないと、閉じた扉が {c}枚 のこります。変えても、その中のどれが新車かは分かりません。変えると <strong>{s}％</strong>、変えないと {ty}％ です。変えたほうが有利なことに変わりはありませんが、扉が多いほどその差は小さくなります。",
+      "footer.lab": "公立はこだて未来大学　辻研究室",
+      "footer.source": "ソースコード"
+    },
+    "en": {
+      "lang.name": "English",
+      "lang.button": "Language",
+      "meta.title": "The Monty Hall Problem: Try It Yourself",
+      "header.title": "The Monty Hall Problem: Try It Yourself",
+      "header.sub": "Should you switch doors, or stay? Find out with your own hands.",
+      "steps.title": "How to play (4 steps)",
+      "steps.s1": "Pick one door",
+      "steps.s2": "The host opens a losing door",
+      "steps.s3": "Decide whether to switch",
+      "steps.s4": "See what happens",
+      "game.doorLabel": "Door {n}",
+      "game.prizeCar": "New car",
+      "game.prizeGoat": "Goat",
+      "game.pickAria": "Pick door {n}",
+      "game.intro_html": "Welcome! Behind <strong>just one</strong> of these 3 doors is a new car. The other 2 hide goats.<br>To start, click any door you like.",
+      "game.picked_html": "You picked <strong>Door {n}</strong>.<br>I know where the car is. Let me open one of the other doors and show you a goat...",
+      "game.decide_html": "As you can see, <strong>Door {o}</strong> had a goat.<br>So, what will you do? Stay with <strong>Door {p}</strong>, the one you picked first? Or switch to the other closed door, <strong>Door {c}</strong>?",
+      "game.tagYours": "Your door",
+      "game.tagOpened": "Opened by the host",
+      "game.tagFirst": "Your first pick",
+      "game.tagAfter": "Your door after switching",
+      "game.btnSwitch": "Switch doors",
+      "game.btnSwitchNote": "Go to Door {c}",
+      "game.btnStay": "Stay",
+      "game.btnStayNote": "Keep Door {p}",
+      "game.win": "🎉 You win! Door {n} had the new car!",
+      "game.lose": "😢 Too bad... Door {n} had a goat. The new car was behind Door {c}.",
+      "game.afterSwitch_html": "You <strong>switched</strong> doors. The result has been added to the \"Your record\" table.<br>Play a few more times and you will start to see which plan wins more often.",
+      "game.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the \"Your record\" table.<br>Play a few more times and you will start to see which plan wins more often.",
+      "game.retry": "Play again",
+      "record.title": "Your record",
+      "record.lead": "Play a few rounds. Does switching win more often than staying?",
+      "record.thStrategy": "Plan",
+      "record.thPlayed": "Times played",
+      "record.thWon": "Times won",
+      "record.thRate": "Win rate",
+      "record.rowSwitch": "Switched doors",
+      "record.rowStay": "Stayed",
+      "common.times": "{n} times",
+      "sim.title": "Let the computer try it many times",
+      "sim.lead": "Playing by hand gives you only a few rounds, so luck has a big say. Let's have the computer play the same game over and over. It tries the switch plan and the stay plan the same number of times, then compares how often each one wins.",
+      "sim.btn10": "Try 10 more times",
+      "sim.btn100": "Try 100 more times",
+      "sim.btn1000": "Try 1000 more times",
+      "sim.btnClear": "Clear the record",
+      "sim.statusInit": "Press a button and the results will pile up here.",
+      "sim.statusRan": "Added {n} more rounds of each ({t} of each in total). Watch whether the bars move closer to the dotted lines.",
+      "sim.statusCleared": "The record has been cleared. Let's try again.",
+      "sim.chartTitle": "Win rate (%) — the dotted lines mark \"1 time in 3\" (33.3%) and \"2 times in 3\" (66.7%)",
+      "sim.barSwitch": "Switch plan",
+      "sim.barStay": "Stay plan",
+      "sim.barValue": "{r} % ({w} wins / {t} tries)",
+      "sim.notYet": "Not tried yet",
+      "sim.thTried": "Times tried",
+      "why.title": "Why does switching win more often?",
+      "why.lead_html": "Say you picked <strong>Door 1</strong>. The car can be in one of 3 places, and each is just as likely. The host knows where it is, and <strong>always opens a door with a goat</strong>.",
+      "why.chosen": "▼ Your door",
+      "why.case1_html": "<strong>Case 1:</strong> the car is behind Door 1<br>Switch, and you get a goat — <span class=\"outcome-lose\">you lose</span> / Stay, and <span class=\"outcome-win\">you win</span>",
+      "why.case2_html": "<strong>Case 2:</strong> the car is behind Door 2<br>The host can only open Door 3, so switching takes you to Door 2 — <span class=\"outcome-win\">you win</span>",
+      "why.case3_html": "<strong>Case 3:</strong> the car is behind Door 3<br>The host can only open Door 2, so switching takes you to Door 3 — <span class=\"outcome-win\">you win</span>",
+      "why.concl_html": "The switch plan wins in <strong>2 of the 3 cases</strong>. The stay plan wins in only 1. That is why switching wins <strong>twice as often</strong>. It is also why the bars in the simulation above creep toward the 66.7% and 33.3% dotted lines.",
+      "ext.title": "Try more doors",
+      "ext.lead_html": "With 3 doors it may still feel like a 50-50 guess. So let's add more doors. Imagine picking 1 door out of <strong>100</strong>, and then the host opens 98 doors with goats behind them. Would you still hold on to your first pick?",
+      "ext.labelDoors": "Number of doors",
+      "ext.labelHost": "How the host opens doors",
+      "ext.chipDoors": "{n} doors",
+      "ext.custom": "Choose your own",
+      "ext.unit": "doors",
+      "ext.customAria": "Type your own number of doors",
+      "ext.modeAll": "Open doors until only 1 closed door is left",
+      "ext.modeOne": "Open just 1 door with a goat",
+      "ext.modeAllShort": "Open until 1 is left",
+      "ext.modeOneShort": "Open just 1",
+      "ext.intro_html": "There are <strong>{n} doors</strong>. Only 1 hides the new car; the other {m} hide goats.<br>Pick any door you like.",
+      "ext.opening_html": "You picked <strong>Door {p}</strong>. I know where the car is. Now I will open <strong>{k} doors</strong> with goats behind them...",
+      "ext.decideAll_html": "I opened {k} doors with goats. The only doors still closed are your <strong>Door {p}</strong> and <strong>Door {c}</strong>.<br>Click Door {c} to switch. If you are happy as you are, press \"Stay with this door\".",
+      "ext.decideOne_html": "I opened just 1 door with a goat. That leaves <strong>{c} doors</strong> still closed.<br>To switch, click one of the closed doors. If you are happy as you are, press \"Stay with this door\".",
+      "ext.afterSwitch_html": "You <strong>switched</strong> doors. The result has been added to the table below.",
+      "ext.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the table below.",
+      "ext.win": "🎉 You win! Door {n} had the new car!",
+      "ext.lose": "😢 Too bad... Door {n} had a goat. The new car was behind Door {c}.",
+      "ext.stay": "Stay with this door",
+      "ext.retry": "Play again",
+      "ext.sim100": "Try 100 more times with these settings",
+      "ext.sim1000": "Try 1000 more times with these settings",
+      "ext.simInit": "Let the computer repeat the game with the same settings, and check whether the results match the numbers we worked out.",
+      "ext.simRan": "Added {n} rounds with {d} doors and \"{mode}\" ({t} of each in total).",
+      "ext.chartTitle": "Win rate (%) — the dotted lines show the numbers we worked out (switch {s}% / stay {y}%)",
+      "ext.theoryAll_html": "Your very first pick wins only 1 time in {n} ({ty}%). The other <strong>{m}/{n}</strong> of the time the car is behind some other door, and the host carefully opens only doors with goats. So in those cases, the door left closed at the end is the car. That is why switching wins <strong>{s}%</strong> of the time.",
+      "ext.theoryOne3_html": "With 3 doors, once the host opens 1 door only 1 closed door is left. This is exactly the basic game above: switching wins <strong>{s}%</strong> of the time, staying {ty}%.",
+      "ext.theoryOneN_html": "If the host opens only 1 door, {c} doors stay closed. Even if you switch, you cannot tell which of them hides the car. Switching wins <strong>{s}%</strong> of the time, staying {ty}%. Switching is still the better choice, but the more doors there are, the smaller the gap becomes.",
+      "footer.lab": "Tsuji Laboratory, Future University Hakodate",
+      "footer.source": "Source code"
+    },
+    "zh-Hans": {
+      "lang.name": "简体中文",
+      "lang.button": "语言",
+      "meta.title": "蒙提霍尔问题 体验模拟器",
+      "header.title": "蒙提霍尔问题 体验模拟器",
+      "header.sub": "“到底该不该换门？”自己动手来试一试吧",
+      "steps.title": "玩法（4个步骤）",
+      "steps.s1": "选一扇门",
+      "steps.s2": "主持人打开一扇有山羊的门",
+      "steps.s3": "决定换还是不换",
+      "steps.s4": "看结果",
+      "game.doorLabel": "{n}号门",
+      "game.prizeCar": "新车",
+      "game.prizeGoat": "山羊",
+      "game.pickAria": "选择{n}号门",
+      "game.intro_html": "欢迎！三扇门里，<strong>只有一扇</strong>藏着新车。另外两扇后面是山羊。<br>先点一下你喜欢的那扇门吧。",
+      "game.picked_html": "你选了 <strong>{n}号门</strong>。<br>我知道答案。我从剩下的门里，打开一扇有山羊的门给你看……",
+      "game.decide_html": "你看，<strong>{o}号门</strong> 后面是山羊。<br>那么，你打算怎么办？还是保持最初选的 <strong>{p}号门</strong>？还是换成另一扇关着的 <strong>{c}号门</strong>？",
+      "game.tagYours": "你选的门",
+      "game.tagOpened": "主持人打开的门",
+      "game.tagFirst": "最初选的门",
+      "game.tagAfter": "换过之后的门",
+      "game.btnSwitch": "换一扇门",
+      "game.btnSwitchNote": "换成{c}号门",
+      "game.btnStay": "不换",
+      "game.btnStayNote": "保持{p}号门",
+      "game.win": "🎉 中了！{n}号门后面是新车！",
+      "game.lose": "😢 可惜……{n}号门后面是山羊。新车在{c}号门。",
+      "game.afterSwitch_html": "你<strong>换</strong>了门。结果已经加到“你的记录”表里。<br>多玩几次，就能看出哪种办法更容易中。",
+      "game.afterStay_html": "你<strong>没有换</strong>门。结果已经加到“你的记录”表里。<br>多玩几次，就能看出哪种办法更容易中。",
+      "game.retry": "再玩一次",
+      "record.title": "你的记录",
+      "record.lead": "多玩几次，“换了门”和“没有换”在中的容易程度上，会不会出现差别呢？",
+      "record.thStrategy": "办法",
+      "record.thPlayed": "玩的次数",
+      "record.thWon": "中的次数",
+      "record.thRate": "中的比例",
+      "record.rowSwitch": "换了门",
+      "record.rowStay": "没有换",
+      "common.times": "{n} 次",
+      "sim.title": "让电脑试很多次",
+      "sim.lead": "只靠自己动手玩，次数太少，很容易被运气左右。所以，让电脑把同样的游戏重复很多次吧。“换门”和“不换门”各试同样的次数，再比一比中的比例。",
+      "sim.btn10": "再试10次",
+      "sim.btn100": "再试100次",
+      "sim.btn1000": "再试1000次",
+      "sim.btnClear": "清除记录",
+      "sim.statusInit": "按下按钮，结果就会在这里一次次累积起来。",
+      "sim.statusRan": "又各试了{n}次（一共各{t}次）。看看柱子有没有靠近虚线吧。",
+      "sim.statusCleared": "记录已经清除。再来试一次吧。",
+      "sim.chartTitle": "中的比例（%）— 虚线是“3次中1次”（33.3%）和“3次中2次”（66.7%）的标记",
+      "sim.barSwitch": "换门",
+      "sim.barStay": "不换门",
+      "sim.barValue": "{r} %（中{w}次 / 共{t}次）",
+      "sim.notYet": "还没有试过",
+      "sim.thTried": "试过的次数",
+      "why.title": "为什么“换门更容易中”呢？",
+      "why.lead_html": "假设你选了<strong>1号门</strong>。按新车放在哪里，可以分成三种情况。每种情况出现的可能性都一样。主持人知道答案，<strong>一定会打开有山羊的门</strong>。",
+      "why.chosen": "▼ 你选的门",
+      "why.case1_html": "<strong>情况1：</strong>新车在1号门<br>换了就碰到山羊，<span class=\"outcome-lose\">没中</span>／不换就<span class=\"outcome-win\">中了</span>",
+      "why.case2_html": "<strong>情况2：</strong>新车在2号门<br>主持人只能打开3号门，所以换了就是2号门，也就是<span class=\"outcome-win\">中了</span>",
+      "why.case3_html": "<strong>情况3：</strong>新车在3号门<br>主持人只能打开2号门，所以换了就是3号门，也就是<span class=\"outcome-win\">中了</span>",
+      "why.concl_html": "“换门”这个办法，在三种情况里<strong>有两种能中</strong>。“不换门”能中的只有一种。所以，换门中的机会是<strong>两倍</strong>。上面模拟里的柱子会慢慢靠近66.7%和33.3%的虚线，原因就在这里。",
+      "ext.title": "试着增加门的数量",
+      "ext.lead_html": "只有3扇门时，也许你会觉得“不就是一半一半吗？”。那就把门的数量加多试试。比如从<strong>100扇</strong>门里选一扇，主持人一口气打开98扇有山羊的门，你还会坚持最初选的那一扇吗？",
+      "ext.labelDoors": "门的数量",
+      "ext.labelHost": "主持人的开门方式",
+      "ext.chipDoors": "{n}扇",
+      "ext.custom": "自己设定",
+      "ext.unit": "扇",
+      "ext.customAria": "自己输入门的数量",
+      "ext.modeAll": "一直开到只剩1扇关着的门",
+      "ext.modeOne": "只打开1扇有山羊的门",
+      "ext.modeAllShort": "开到只剩1扇",
+      "ext.modeOneShort": "只开1扇",
+      "ext.intro_html": "一共有 <strong>{n}扇</strong> 门。只有一扇后面是新车，剩下的 {m}扇 都是山羊。<br>请选一扇你喜欢的门。",
+      "ext.opening_html": "你选了 <strong>{p}号门</strong>。我知道答案。接下来我要打开 <strong>{k}扇</strong> 有山羊的门……",
+      "ext.decideAll_html": "我打开了 {k}扇 有山羊的门。还关着的，只有你的 <strong>{p}号门</strong> 和 <strong>{c}号门</strong>。<br>点一下{c}号门就能换。想保持原样，就按“不换”。",
+      "ext.decideOne_html": "我只打开了1扇有山羊的门。还有 <strong>{c}扇</strong> 关着。<br>想换的话，请点关着的门。想保持原样，就按“不换”。",
+      "ext.afterSwitch_html": "你 <strong>换</strong> 了门。结果已经加到下面的表里。",
+      "ext.afterStay_html": "你 <strong>没有换</strong> 门。结果已经加到下面的表里。",
+      "ext.win": "🎉 中了！{n}号门后面是新车！",
+      "ext.lose": "😢 可惜……{n}号门后面是山羊。新车在{c}号门。",
+      "ext.stay": "就这样不换",
+      "ext.retry": "再玩一次",
+      "ext.sim100": "用这个设定再试100次",
+      "ext.sim1000": "用这个设定再试1000次",
+      "ext.simInit": "让电脑用同样的设定重复很多次，就能看看结果和算出来的比例合不合得上。",
+      "ext.simRan": "用{d}扇门・{mode} 的设定又加了{n}次（一共各{t}次）。",
+      "ext.chartTitle": "中的比例（%）— 虚线是算出来的比例（换门 {s}% / 不换门 {y}%）",
+      "ext.theoryAll_html": "最初选的那一扇能中的，只有 {n}次里的1次（{ty}%）。剩下的 <strong>{m}／{n}</strong> 里，新车在别的门后面，而主持人会避开它，只打开有山羊的门。也就是说，这时一直关到最后的那扇门就是新车。所以换门就有 <strong>{s}%</strong> 会中。",
+      "ext.theoryOne3_html": "门只有3扇时，主持人打开1扇，关着的就只剩1扇了。这和上面的基本游戏完全一样，换门是 <strong>{s}%</strong>，不换是 {ty}%。",
+      "ext.theoryOneN_html": "主持人只打开1扇的话，关着的门还有 {c}扇。就算换，也不知道其中哪一扇是新车。换门是 <strong>{s}%</strong>，不换是 {ty}%。换门更有利这一点没有变，不过门越多，这个差别就越小。",
+      "footer.lab": "公立函馆未来大学　辻研究室",
+      "footer.source": "源代码"
+    },
+    "zh-Hant": {
+      "lang.name": "繁體中文",
+      "lang.button": "語言",
+      "meta.title": "蒙提霍爾問題 體驗模擬器",
+      "header.title": "蒙提霍爾問題 體驗模擬器",
+      "header.sub": "「到底該換門，還是不換？」自己動手試試看吧",
+      "steps.title": "怎麼玩（4 個步驟）",
+      "steps.s1": "選一扇門",
+      "steps.s2": "主持人打開一扇沒中獎的門",
+      "steps.s3": "決定要不要換",
+      "steps.s4": "看結果",
+      "game.doorLabel": "{n} 號門",
+      "game.prizeCar": "新車",
+      "game.prizeGoat": "山羊",
+      "game.pickAria": "選 {n} 號門",
+      "game.intro_html": "歡迎！三扇門裡，<strong>只有一扇</strong>藏著新車，另外兩扇後面是山羊。<br>先點一下你喜歡的那扇門吧。",
+      "game.picked_html": "你選了 <strong>{n} 號門</strong> 呢。<br>我知道答案喔。我從剩下的門裡，打開一扇有山羊的門給你看…",
+      "game.decide_html": "你看，<strong>{o} 號門</strong> 後面是山羊。<br>那麼，你要怎麼做呢？就維持一開始選的 <strong>{p} 號門</strong> 嗎？還是要換成另一扇還關著的 <strong>{c} 號門</strong> 呢？",
+      "game.tagYours": "你選的門",
+      "game.tagOpened": "主持人打開的門",
+      "game.tagFirst": "一開始選的門",
+      "game.tagAfter": "換過之後的門",
+      "game.btnSwitch": "換門",
+      "game.btnSwitchNote": "換成 {c} 號門",
+      "game.btnStay": "不換",
+      "game.btnStayNote": "維持 {p} 號門",
+      "game.win": "🎉 中獎！{n} 號門後面就是新車！",
+      "game.lose": "😢 好可惜…{n} 號門後面是山羊。新車在 {c} 號門。",
+      "game.afterSwitch_html": "你<strong>換了門</strong>。結果已經加進「你的紀錄」表裡了。<br>多玩幾次，就會慢慢看出哪一種作法比較容易中獎。",
+      "game.afterStay_html": "你<strong>沒有換門</strong>。結果已經加進「你的紀錄」表裡了。<br>多玩幾次，就會慢慢看出哪一種作法比較容易中獎。",
+      "game.retry": "再玩一次",
+      "record.title": "你的紀錄",
+      "record.lead": "多玩幾次之後，「換門」和「不換門」的中獎機會，會出現差別嗎？",
+      "record.thStrategy": "作法",
+      "record.thPlayed": "玩過的次數",
+      "record.thWon": "中獎的次數",
+      "record.thRate": "中獎的比例",
+      "record.rowSwitch": "換了門",
+      "record.rowStay": "沒有換",
+      "common.times": "{n} 次",
+      "sim.title": "讓電腦試很多次",
+      "sim.lead": "只靠自己動手玩，次數太少，結果很容易被運氣左右。所以，我們讓電腦把同樣的遊戲重複很多次。「換門」和「不換門」各試一樣多次，再比比看中獎的比例。",
+      "sim.btn10": "再試 10 次",
+      "sim.btn100": "再試 100 次",
+      "sim.btn1000": "再試 1000 次",
+      "sim.btnClear": "清除紀錄",
+      "sim.statusInit": "按下按鈕，結果就會一直累積在這裡。",
+      "sim.statusRan": "各追加試了 {n} 次（累計各 {t} 次）。看看長條圖有沒有越來越靠近虛線。",
+      "sim.statusCleared": "紀錄已經清除了。再試一次看看吧。",
+      "sim.chartTitle": "中獎的比例（%）— 虛線是「3 次中 1 次」（33.3%）和「3 次中 2 次」（66.7%）的記號",
+      "sim.barSwitch": "換門",
+      "sim.barStay": "不換門",
+      "sim.barValue": "{r} %（{w} 勝 / {t} 次）",
+      "sim.notYet": "還沒試過",
+      "sim.thTried": "試過的次數",
+      "why.title": "為什麼「換門比較容易中獎」呢？",
+      "why.lead_html": "假設你選了 <strong>1 號門</strong>。新車放在哪裡，可以分成 3 種情況，每一種發生的機會都一樣。主持人知道答案，而且<strong>一定會打開有山羊的門</strong>。",
+      "why.chosen": "▼ 你選的門",
+      "why.case1_html": "<strong>情況 1：</strong>新車在 1 號門<br>換門的話…會碰到山羊，<span class=\"outcome-lose\">沒中</span>／不換的話 <span class=\"outcome-win\">中獎</span>",
+      "why.case2_html": "<strong>情況 2：</strong>新車在 2 號門<br>主持人只能打開 3 號門，所以換過去就是 2 號門，也就是 <span class=\"outcome-win\">中獎</span>",
+      "why.case3_html": "<strong>情況 3：</strong>新車在 3 號門<br>主持人只能打開 2 號門，所以換過去就是 3 號門，也就是 <span class=\"outcome-win\">中獎</span>",
+      "why.concl_html": "「換門」在 3 種情況裡，有<strong>2 種會中獎</strong>。「不換門」只有 1 種會中。所以換門的中獎機會是<strong>2 倍</strong>。上面模擬的長條圖會越來越靠近 66.7% 和 33.3% 的虛線，就是這個原因。",
+      "ext.title": "試著把門變多",
+      "ext.lead_html": "只有 3 扇門的時候，你也許會覺得「不就是一半一半嗎？」。那麼，我們把門變多看看。比方說從 <strong>100 扇</strong>門裡選 1 扇，主持人一口氣打開了 98 扇有山羊的門，這樣你還會堅持一開始選的那一扇嗎？",
+      "ext.labelDoors": "門的數量",
+      "ext.labelHost": "主持人的開門方式",
+      "ext.chipDoors": "{n} 扇",
+      "ext.custom": "自己決定",
+      "ext.unit": "扇",
+      "ext.customAria": "自己輸入門的數量",
+      "ext.modeAll": "一直開到只剩 1 扇關著的門",
+      "ext.modeOne": "只打開 1 扇有山羊的門",
+      "ext.modeAllShort": "開到只剩 1 扇",
+      "ext.modeOneShort": "只開 1 扇",
+      "ext.intro_html": "這裡有 <strong>{n} 扇門</strong>。只有 1 扇後面是新車，另外 {m} 扇後面是山羊。<br>請選一扇你喜歡的門。",
+      "ext.opening_html": "你選了 <strong>{p} 號門</strong> 呢。我知道答案喔。接下來我要打開 <strong>{k} 扇</strong> 有山羊的門…",
+      "ext.decideAll_html": "我打開了 {k} 扇有山羊的門。現在還關著的，只剩你的 <strong>{p} 號門</strong> 和 <strong>{c} 號門</strong>。<br>點一下 {c} 號門就可以換過去。想維持原樣的話，請按「不換」。",
+      "ext.decideOne_html": "我只打開了 1 扇有山羊的門，還有 <strong>{c} 扇</strong> 關著。<br>想換的話，請點一下還關著的門。想維持原樣的話，請按「不換」。",
+      "ext.afterSwitch_html": "你 <strong>換了門</strong>。結果已經加進下面的表裡了。",
+      "ext.afterStay_html": "你 <strong>沒有換門</strong>。結果已經加進下面的表裡了。",
+      "ext.win": "🎉 中獎！{n} 號門後面就是新車！",
+      "ext.lose": "😢 好可惜…{n} 號門後面是山羊。新車在 {c} 號門。",
+      "ext.stay": "就這樣不換",
+      "ext.retry": "再玩一次",
+      "ext.sim100": "用這個設定再試 100 次",
+      "ext.sim1000": "用這個設定再試 1000 次",
+      "ext.simInit": "可以讓電腦用同樣的設定重複很多次，看看結果跟算出來的比例合不合。",
+      "ext.simRan": "用 {d} 扇門・{mode} 的設定，各追加了 {n} 次（累計各 {t} 次）。",
+      "ext.chartTitle": "中獎的比例（%）— 虛線是算出來的比例（換門 {s}% / 不換門 {y}%）",
+      "ext.theoryAll_html": "一開始選的那 1 扇會中獎的機會，只有 {n} 次中 1 次（{ty}%）。剩下的 <strong>{m}／{n}</strong> 情況裡，新車都在別的門後面，而主持人會避開那扇門，只打開有山羊的門。也就是說，這時候一直關到最後的那扇門就是新車。所以換門的話，有 <strong>{s}%</strong> 會中獎。",
+      "ext.theoryOne3_html": "門只有 3 扇的時候，主持人打開 1 扇，關著的門就只剩 1 扇了。這跟上面的基本遊戲完全一樣，換門是 <strong>{s}%</strong>，不換門是 {ty}%。",
+      "ext.theoryOneN_html": "主持人只打開 1 扇的話，還會剩下 {c} 扇關著的門。就算換了，也不知道裡面哪一扇才是新車。換門是 <strong>{s}%</strong>，不換門是 {ty}%。換門還是比較有利，這一點沒有變，但門越多，這個差距就越小。",
+      "footer.lab": "公立函館未來大學　辻研究室",
+      "footer.source": "原始碼"
+    },
+    "ko": {
+      "lang.name": "한국어",
+      "lang.button": "언어",
+      "meta.title": "몬티 홀 문제 체험 시뮬레이터",
+      "header.title": "몬티 홀 문제 체험 시뮬레이터",
+      "header.sub": "「문을 바꾸는 게 좋을까, 그냥 두는 게 좋을까」를 직접 확인해 봐요",
+      "steps.title": "노는 방법 (4단계)",
+      "steps.s1": "문을 하나 고르기",
+      "steps.s2": "진행자가 꽝인 문을 열기",
+      "steps.s3": "바꿀지 말지 정하기",
+      "steps.s4": "결과 보기",
+      "game.doorLabel": "{n}번 문",
+      "game.prizeCar": "새 차",
+      "game.prizeGoat": "염소",
+      "game.pickAria": "{n}번 문을 고르기",
+      "game.intro_html": "어서 오세요! 문 3개 중 <strong>딱 하나</strong>에 새 차가 숨어 있어요. 나머지 2개는 염소예요.<br>먼저 마음에 드는 문을 하나 눌러 주세요.",
+      "game.picked_html": "당신은 <strong>{n}번 문</strong>을 골랐네요.<br>저는 정답을 알고 있어요. 남은 문 중에서 염소가 있는 문을 하나 열어 볼게요…",
+      "game.decide_html": "보시다시피 <strong>{o}번 문</strong>은 염소였어요.<br>자, 어떻게 할까요? 처음에 고른 <strong>{p}번 문</strong> 그대로 둘까요? 아니면 아직 닫혀 있는 <strong>{c}번 문</strong>으로 바꿀까요?",
+      "game.tagYours": "당신이 고른 문",
+      "game.tagOpened": "진행자가 연 문",
+      "game.tagFirst": "처음에 고른 문",
+      "game.tagAfter": "바꾼 뒤의 문",
+      "game.btnSwitch": "문을 바꿀래요",
+      "game.btnSwitchNote": "{c}번 문으로",
+      "game.btnStay": "안 바꿀래요",
+      "game.btnStayNote": "{p}번 문 그대로",
+      "game.win": "🎉 당첨! {n}번 문에 새 차가 있었어요!",
+      "game.lose": "😢 아쉬워요… {n}번 문에 있던 건 염소였어요. 새 차는 {c}번 문이었어요.",
+      "game.afterSwitch_html": "당신은 문을 <strong>바꿨어요</strong>. 결과를 「나의 기록」 표에 더했어요.<br>여러 번 반복하면 어느 작전이 더 잘 맞는지 보이기 시작할 거예요.",
+      "game.afterStay_html": "당신은 문을 <strong>바꾸지 않았어요</strong>. 결과를 「나의 기록」 표에 더했어요.<br>여러 번 반복하면 어느 작전이 더 잘 맞는지 보이기 시작할 거예요.",
+      "game.retry": "한 번 더 하기",
+      "record.title": "나의 기록",
+      "record.lead": "여러 번 해 보면 「바꾼 경우」와 「바꾸지 않은 경우」 사이에 당첨되는 정도의 차이가 나타날까요?",
+      "record.thStrategy": "작전",
+      "record.thPlayed": "해 본 횟수",
+      "record.thWon": "당첨된 횟수",
+      "record.thRate": "당첨 비율",
+      "record.rowSwitch": "문을 바꿨다",
+      "record.rowStay": "바꾸지 않았다",
+      "common.times": "{n} 번",
+      "sim.title": "컴퓨터에게 많이 해 보게 하기",
+      "sim.lead": "직접 하는 것만으로는 횟수가 적어서 우연에 좌우돼요. 그래서 컴퓨터에게 같은 게임을 여러 번 반복하게 해 봐요. 「바꾸는 작전」과 「바꾸지 않는 작전」을 같은 횟수만큼 해 보고, 당첨된 비율을 비교해요.",
+      "sim.btn10": "10번 더 해 보기",
+      "sim.btn100": "100번 더 해 보기",
+      "sim.btn1000": "1000번 더 해 보기",
+      "sim.btnClear": "기록 지우기",
+      "sim.statusInit": "버튼을 누르면 여기에 결과가 쌓여 가요.",
+      "sim.statusRan": "{n}번씩 더 해 봤어요 (모두 {t} 번씩). 막대그래프가 점선에 가까워지는지 살펴봐요.",
+      "sim.statusCleared": "기록을 지웠어요. 한 번 더 해 봐요.",
+      "sim.chartTitle": "당첨된 비율 (%) — 점선은 「3번에 1번」(33.3%)과 「3번에 2번」(66.7%)을 나타내는 표시예요",
+      "sim.barSwitch": "바꾸는 작전",
+      "sim.barStay": "바꾸지 않는 작전",
+      "sim.barValue": "{r} % ({w}번 당첨 / {t}번)",
+      "sim.notYet": "아직 해 보지 않았어요",
+      "sim.thTried": "해 본 횟수",
+      "why.title": "왜 「바꾸는 쪽이 더 잘 맞을까요」?",
+      "why.lead_html": "당신이 <strong>1번 문</strong>을 골랐다고 해 봐요. 새 차가 어디에 있느냐에 따라 세 가지 경우를 생각할 수 있어요. 어느 경우든 일어날 가능성은 똑같아요. 진행자는 정답을 알고 있어서 <strong>반드시 염소가 있는 문</strong>을 열어요.",
+      "why.chosen": "▼ 고른 문",
+      "why.case1_html": "<strong>경우 1:</strong> 새 차가 1번 문에 있음<br>바꾸면… 염소가 걸려서 <span class=\"outcome-lose\">꽝</span> / 바꾸지 않으면 <span class=\"outcome-win\">당첨</span>",
+      "why.case2_html": "<strong>경우 2:</strong> 새 차가 2번 문에 있음<br>진행자는 3번 문을 열 수밖에 없으니, 바꾸면 2번 문, 즉 <span class=\"outcome-win\">당첨</span>",
+      "why.case3_html": "<strong>경우 3:</strong> 새 차가 3번 문에 있음<br>진행자는 2번 문을 열 수밖에 없으니, 바꾸면 3번 문, 즉 <span class=\"outcome-win\">당첨</span>",
+      "why.concl_html": "「바꾸는 작전」은 세 가지 경우 중 <strong>두 가지에서 당첨</strong>돼요. 「바꾸지 않는 작전」으로 당첨되는 건 한 가지뿐이에요. 그래서 바꾸는 쪽이 <strong>2배 더 잘 맞아요</strong>. 위 시뮬레이션의 막대그래프가 66.7%와 33.3% 점선에 가까워지는 건 이 때문이에요.",
+      "ext.title": "문의 개수를 늘려 보기",
+      "ext.lead_html": "문이 3개면 「둘 다 반반 아닐까?」 하고 느낄지도 몰라요. 그래서 문의 개수를 늘려 봐요. 예를 들어 <strong>100개</strong>의 문에서 하나를 골랐는데, 진행자가 염소가 있는 문을 98개나 열어 보인다면, 그래도 처음에 고른 그 하나를 고집할 건가요?",
+      "ext.labelDoors": "문의 개수",
+      "ext.labelHost": "진행자가 여는 방식",
+      "ext.chipDoors": "{n}개",
+      "ext.custom": "직접 정하기",
+      "ext.unit": "개",
+      "ext.customAria": "문의 개수를 직접 입력하기",
+      "ext.modeAll": "닫힌 문이 1개만 남을 때까지 열기",
+      "ext.modeOne": "염소가 있는 문을 1개만 열기",
+      "ext.modeAllShort": "1개 남을 때까지 열기",
+      "ext.modeOneShort": "1개만 열기",
+      "ext.intro_html": "문이 <strong>{n}개</strong> 있어요. 딱 1개에만 새 차가 있고, 나머지 {m}개는 염소예요.<br>마음에 드는 문을 하나 골라 주세요.",
+      "ext.opening_html": "<strong>{p}번 문</strong>을 골랐네요. 저는 정답을 알고 있어요. 지금부터 염소가 있는 문을 <strong>{k}개</strong> 열게요…",
+      "ext.decideAll_html": "염소가 있는 문을 {k}개 열었어요. 닫혀 있는 건 당신의 <strong>{p}번 문</strong>과 <strong>{c}번 문</strong>뿐이에요.<br>{c}번 문을 누르면 바꿀 수 있어요. 이대로가 좋으면 「이대로 안 바꿀래요」를 눌러 주세요.",
+      "ext.decideOne_html": "염소가 있는 문을 1개만 열었어요. 아직 <strong>{c}개</strong>가 닫힌 채로 있어요.<br>바꾸려면 닫혀 있는 문을 눌러 주세요. 이대로가 좋으면 「이대로 안 바꿀래요」를 눌러 주세요.",
+      "ext.afterSwitch_html": "문을 <strong>바꿨어요</strong>. 결과를 아래 표에 더했어요.",
+      "ext.afterStay_html": "문을 <strong>바꾸지 않았어요</strong>. 결과를 아래 표에 더했어요.",
+      "ext.win": "🎉 당첨! {n}번 문에 새 차가 있었어요!",
+      "ext.lose": "😢 아쉬워요… {n}번 문은 염소였어요. 새 차는 {c}번 문이었어요.",
+      "ext.stay": "이대로 안 바꿀래요",
+      "ext.retry": "한 번 더 하기",
+      "ext.sim100": "이 설정으로 100번 더 해 보기",
+      "ext.sim1000": "이 설정으로 1000번 더 해 보기",
+      "ext.simInit": "컴퓨터에게 같은 설정으로 반복하게 해서, 계산으로 구한 비율과 맞는지 확인할 수 있어요.",
+      "ext.simRan": "문 {d}개・{mode} 설정으로 {n}번 더했어요 (모두 {t} 번씩).",
+      "ext.chartTitle": "당첨된 비율 (%) — 점선은 계산으로 구한 비율이에요 (바꾸기 {s}% / 안 바꾸기 {y}%)",
+      "ext.theoryAll_html": "처음에 고른 1개가 당첨될 때는 {n}번에 1번({ty}%)뿐이에요. 나머지 <strong>{m}／{n}</strong>에서는 새 차가 다른 문에 있고, 진행자는 그 문을 피해서 염소가 있는 문만 열어요. 그러니 그 경우에는 끝까지 닫힌 채 남은 문이 새 차예요. 그래서 바꾸면 <strong>{s}%</strong>로 당첨돼요.",
+      "ext.theoryOne3_html": "문이 3개일 때는 진행자가 1개를 열면 닫힌 문이 1개밖에 남지 않아요. 위의 기본 게임과 똑같아서, 바꾸면 <strong>{s}%</strong>, 바꾸지 않으면 {ty}%예요.",
+      "ext.theoryOneN_html": "진행자가 1개만 열면 닫힌 문이 {c}개 남아요. 바꿔도 그중 어느 것이 새 차인지는 알 수 없어요. 바꾸면 <strong>{s}%</strong>, 바꾸지 않으면 {ty}%예요. 바꾸는 쪽이 유리한 건 변함없지만, 문이 많을수록 그 차이는 작아져요.",
+      "footer.lab": "Future University Hakodate 츠지 연구실",
+      "footer.source": "소스 코드"
+    },
+    "ru": {
+      "lang.name": "Русский",
+      "lang.button": "Язык",
+      "meta.title": "Парадокс Монти Холла — игровой симулятор",
+      "header.title": "Парадокс Монти Холла — игровой симулятор",
+      "header.sub": "Менять дверь или не менять? Проверьте сами",
+      "steps.title": "Как играть (4 шага)",
+      "steps.s1": "Выберите одну дверь",
+      "steps.s2": "Ведущий откроет дверь с козой",
+      "steps.s3": "Решите: менять или нет",
+      "steps.s4": "Посмотрите результат",
+      "game.doorLabel": "Дверь {n}",
+      "game.prizeCar": "Новая машина",
+      "game.prizeGoat": "Коза",
+      "game.pickAria": "Выбрать дверь {n}",
+      "game.intro_html": "Добро пожаловать! Здесь три двери, и <strong>только за одной</strong> спрятана новая машина. За двумя другими — козы.<br>Для начала нажмите на любую дверь.",
+      "game.picked_html": "Вы выбрали <strong>дверь {n}</strong>.<br>Я знаю, где что находится. Сейчас я открою одну из оставшихся дверей — ту, за которой коза…",
+      "game.decide_html": "Как видите, за <strong>дверью {o}</strong> была коза.<br>Что вы решите? Останетесь при своей <strong>двери {p}</strong>? Или поменяете её на другую закрытую — <strong>дверь {c}</strong>?",
+      "game.tagYours": "Ваша дверь",
+      "game.tagOpened": "Открыл ведущий",
+      "game.tagFirst": "Выбрана сначала",
+      "game.tagAfter": "Дверь после замены",
+      "game.btnSwitch": "Сменить дверь",
+      "game.btnSwitchNote": "Взять дверь {c}",
+      "game.btnStay": "Не менять",
+      "game.btnStayNote": "Остаться при двери {p}",
+      "game.win": "🎉 Победа! За дверью {n} была новая машина!",
+      "game.lose": "😢 Увы… За дверью {n} стояла коза. Машина была за дверью {c}.",
+      "game.afterSwitch_html": "Вы <strong>сменили</strong> дверь. Результат записан в таблицу «Ваши результаты».<br>Сыграйте ещё несколько раз — и станет видно, какая тактика чаще приносит победу.",
+      "game.afterStay_html": "Вы <strong>не стали менять</strong> дверь. Результат записан в таблицу «Ваши результаты».<br>Сыграйте ещё несколько раз — и станет видно, какая тактика чаще приносит победу.",
+      "game.retry": "Сыграть ещё раз",
+      "record.title": "Ваши результаты",
+      "record.lead": "Сыграйте несколько раз. Появится ли разница между тем, когда вы меняли дверь, и тем, когда не меняли?",
+      "record.thStrategy": "Тактика",
+      "record.thPlayed": "Сыграно",
+      "record.thWon": "Побед",
+      "record.thRate": "Доля побед",
+      "record.rowSwitch": "Менял дверь",
+      "record.rowStay": "Не менял",
+      "common.times": "раз: {n}",
+      "sim.title": "Пусть компьютер сыграет много раз",
+      "sim.lead": "Вручную получается мало игр, и многое решает случай. Поэтому попросим компьютер повторить ту же игру много раз. Он одинаковое число раз применит тактику «менять» и тактику «не менять», а мы сравним доли побед.",
+      "sim.btn10": "Ещё 10 игр",
+      "sim.btn100": "Ещё 100 игр",
+      "sim.btn1000": "Ещё 1000 игр",
+      "sim.btnClear": "Очистить результаты",
+      "sim.statusInit": "Нажмите кнопку — и здесь будут накапливаться результаты.",
+      "sim.statusRan": "Добавлено игр для каждой тактики: {n} (всего: {t}). Посмотрите, приближаются ли столбики к пунктирным линиям.",
+      "sim.statusCleared": "Результаты очищены. Попробуйте снова.",
+      "sim.chartTitle": "Доля побед (%) — пунктир показывает «одну победу из трёх» (33,3 %) и «две победы из трёх» (66,7 %)",
+      "sim.barSwitch": "Тактика «менять»",
+      "sim.barStay": "Тактика «не менять»",
+      "sim.barValue": "{r} % (побед: {w} из {t})",
+      "sim.notYet": "Пока не сыграно",
+      "sim.thTried": "Сыграно",
+      "why.title": "Почему выгоднее менять дверь?",
+      "why.lead_html": "Допустим, вы выбрали <strong>дверь 1</strong>. Машина может стоять в трёх разных местах, и все три случая одинаково вероятны. Ведущий знает, где что, и <strong>всегда открывает дверь с козой</strong>.",
+      "why.chosen": "▼ Ваша дверь",
+      "why.case1_html": "<strong>Случай 1.</strong> Машина за дверью 1<br>Меняем — попадаем на козу, <span class=\"outcome-lose\">проигрыш</span> / не меняем — <span class=\"outcome-win\">победа</span>",
+      "why.case2_html": "<strong>Случай 2.</strong> Машина за дверью 2<br>Ведущему остаётся открыть только дверь 3, поэтому при замене мы берём дверь 2 — <span class=\"outcome-win\">победа</span>",
+      "why.case3_html": "<strong>Случай 3.</strong> Машина за дверью 3<br>Ведущему остаётся открыть только дверь 2, поэтому при замене мы берём дверь 3 — <span class=\"outcome-win\">победа</span>",
+      "why.concl_html": "Тактика «менять» побеждает <strong>в двух случаях из трёх</strong>. Тактика «не менять» — только в одном. Значит, если менять дверь, победа приходит <strong>вдвое чаще</strong>. Поэтому столбики в опыте наверху и подходят к пунктирным линиям 66,7 % и 33,3 %.",
+      "ext.title": "А если дверей будет больше?",
+      "ext.lead_html": "С тремя дверями может показаться, что шансы равны. Тогда давайте увеличим число дверей. Представьте: дверей <strong>100</strong>, вы выбрали одну, а ведущий открыл 98 дверей с козами. Так и останетесь при своей первой двери?",
+      "ext.labelDoors": "Число дверей",
+      "ext.labelHost": "Как открывает ведущий",
+      "ext.chipDoors": "{n} шт.",
+      "ext.custom": "Задать самому",
+      "ext.unit": "шт.",
+      "ext.customAria": "Ввести число дверей вручную",
+      "ext.modeAll": "Открывать, пока не останется одна закрытая дверь",
+      "ext.modeOne": "Открыть только одну дверь с козой",
+      "ext.modeAllShort": "открывать до одной закрытой",
+      "ext.modeOneShort": "открыть только одну",
+      "ext.intro_html": "Число дверей: <strong>{n}</strong>. Новая машина только за одной, за остальными — козы, и таких дверей {m}.<br>Выберите любую дверь.",
+      "ext.opening_html": "Вы выбрали <strong>дверь {p}</strong>. Я знаю, где что находится. Сейчас я открою двери с козами, их будет <strong>{k}</strong>…",
+      "ext.decideAll_html": "Дверей с козами открыто: {k}. Закрытыми остались только ваша <strong>дверь {p}</strong> и <strong>дверь {c}</strong>.<br>Нажмите на дверь {c}, чтобы поменять. Если хотите остаться при своей, нажмите «Не менять».",
+      "ext.decideOne_html": "Открыта всего одна дверь с козой. Закрытых дверей осталось: <strong>{c}</strong>.<br>Хотите поменять — нажмите на любую закрытую дверь. Если хотите остаться при своей, нажмите «Не менять».",
+      "ext.afterSwitch_html": "Вы <strong>сменили</strong> дверь. Результат добавлен в таблицу ниже.",
+      "ext.afterStay_html": "Вы <strong>не стали менять</strong> дверь. Результат добавлен в таблицу ниже.",
+      "ext.win": "🎉 Победа! За дверью {n} была новая машина!",
+      "ext.lose": "😢 Увы… За дверью {n} была коза. Машина стояла за дверью {c}.",
+      "ext.stay": "Не менять",
+      "ext.retry": "Сыграть ещё раз",
+      "ext.sim100": "Ещё 100 игр с этими настройками",
+      "ext.sim1000": "Ещё 1000 игр с этими настройками",
+      "ext.simInit": "Компьютер повторит игру с теми же настройками, и вы увидите, совпадает ли результат с расчётом.",
+      "ext.simRan": "Настройки: дверей — {d}, {mode}. Добавлено игр для каждой тактики: {n} (всего: {t}).",
+      "ext.chartTitle": "Доля побед (%) — пунктир показывает расчётные значения (менять — {s} %, не менять — {y} %)",
+      "ext.theoryAll_html": "Первая выбранная дверь оказывается выигрышной лишь 1 раз из {n} ({ty} %). В остальных случаях — а это <strong>{m} из {n}</strong> — машина стоит за другой дверью, и ведущий обходит её стороной, открывая только двери с козами. Значит, машина и есть та дверь, которая остаётся закрытой до конца. Поэтому при замене победа приходит в <strong>{s} %</strong> случаев.",
+      "ext.theoryOne3_html": "Когда дверей всего 3, ведущий открывает одну — и закрытой остаётся ровно одна. Это в точности та же игра, что и наверху: меняем — <strong>{s} %</strong>, не меняем — {ty} %.",
+      "ext.theoryOneN_html": "Если ведущий открывает только одну дверь, закрытых остаётся {c}. Даже поменяв дверь, вы не знаете, за какой из них машина. Меняем — <strong>{s} %</strong>, не меняем — {ty} %. Менять по-прежнему выгоднее, но чем больше дверей, тем меньше эта разница.",
+      "footer.lab": "Future University Hakodate, лаборатория Цудзи",
+      "footer.source": "Исходный код"
+    },
+    "es": {
+      "lang.name": "Español",
+      "lang.button": "Idioma",
+      "meta.title": "El problema de Monty Hall: simulador para experimentar",
+      "header.title": "El problema de Monty Hall: simulador para experimentar",
+      "header.sub": "¿Conviene cambiar de puerta o quedarse con la primera? Compruébalo con tus propias manos",
+      "steps.title": "Cómo se juega (4 pasos)",
+      "steps.s1": "Elige una puerta",
+      "steps.s2": "El presentador abre una puerta con cabra",
+      "steps.s3": "Decide si cambias o no",
+      "steps.s4": "Mira el resultado",
+      "game.doorLabel": "Puerta {n}",
+      "game.prizeCar": "Auto nuevo",
+      "game.prizeGoat": "Cabra",
+      "game.pickAria": "Elegir la puerta {n}",
+      "game.intro_html": "¡Bienvenido! Detrás de <strong>una sola</strong> de las 3 puertas hay un auto nuevo. Detrás de las otras dos hay cabras.<br>Para empezar, haz clic en la puerta que quieras.",
+      "game.picked_html": "Elegiste la <strong>puerta {n}</strong>.<br>Yo sé dónde está el auto. De las puertas que quedan, voy a abrir una que tiene una cabra…",
+      "game.decide_html": "Como ves, detrás de la <strong>puerta {o}</strong> había una cabra.<br>¿Y ahora qué haces? ¿Te quedas con la <strong>puerta {p}</strong> que elegiste al principio? ¿O cambias a la otra puerta cerrada, la <strong>puerta {c}</strong>?",
+      "game.tagYours": "La puerta que elegiste",
+      "game.tagOpened": "La puerta que abrió el presentador",
+      "game.tagFirst": "Tu primera puerta",
+      "game.tagAfter": "La puerta después de cambiar",
+      "game.btnSwitch": "Cambiar de puerta",
+      "game.btnSwitchNote": "Pasar a la puerta {c}",
+      "game.btnStay": "No cambiar",
+      "game.btnStayNote": "Quedarte con la puerta {p}",
+      "game.win": "🎉 ¡Acertaste! ¡Detrás de la puerta {n} estaba el auto nuevo!",
+      "game.lose": "😢 Qué lástima… Detrás de la puerta {n} había una cabra. El auto nuevo estaba en la puerta {c}.",
+      "game.afterSwitch_html": "<strong>Cambiaste</strong> de puerta. Sumamos el resultado a la tabla «Tus resultados».<br>Si repites varias veces, empezarás a ver qué estrategia acierta más.",
+      "game.afterStay_html": "<strong>No cambiaste</strong> de puerta. Sumamos el resultado a la tabla «Tus resultados».<br>Si repites varias veces, empezarás a ver qué estrategia acierta más.",
+      "game.retry": "Jugar otra vez",
+      "record.title": "Tus resultados",
+      "record.lead": "Si juegas varias veces, ¿aparecerá alguna diferencia entre cambiar de puerta y no cambiar?",
+      "record.thStrategy": "Estrategia",
+      "record.thPlayed": "Partidas jugadas",
+      "record.thWon": "Partidas ganadas",
+      "record.thRate": "Porcentaje de aciertos",
+      "record.rowSwitch": "Cambiaste de puerta",
+      "record.rowStay": "No cambiaste",
+      "common.times": "{n} partida(s)",
+      "sim.title": "Deja que la computadora pruebe muchas veces",
+      "sim.lead": "Jugando a mano son pocas partidas y la suerte manda mucho. Por eso vamos a pedirle a la computadora que repita el mismo juego muchísimas veces. Probará la estrategia de cambiar y la de no cambiar el mismo número de veces, y luego compararemos los aciertos.",
+      "sim.btn10": "Probar 10 veces más",
+      "sim.btn100": "Probar 100 veces más",
+      "sim.btn1000": "Probar 1000 veces más",
+      "sim.btnClear": "Borrar los resultados",
+      "sim.statusInit": "Pulsa un botón y aquí se irán acumulando los resultados.",
+      "sim.statusRan": "Probamos {n} partidas más con cada estrategia (en total, {t} con cada una). Mira si las barras se acercan a las líneas punteadas.",
+      "sim.statusCleared": "Borramos los resultados. Prueba otra vez.",
+      "sim.chartTitle": "Porcentaje de aciertos (%) — las líneas punteadas marcan «1 de cada 3» (33,3 %) y «2 de cada 3» (66,7 %)",
+      "sim.barSwitch": "Estrategia de cambiar",
+      "sim.barStay": "Estrategia de no cambiar",
+      "sim.barValue": "{r} % ({w} aciertos de {t})",
+      "sim.notYet": "Todavía sin pruebas",
+      "sim.thTried": "Partidas probadas",
+      "why.title": "¿Por qué se acierta más cambiando de puerta?",
+      "why.lead_html": "Imagina que elegiste la <strong>puerta 1</strong>. Según dónde esté el auto nuevo, hay 3 casos posibles, y todos ocurren con la misma facilidad. El presentador sabe dónde está el auto y <strong>siempre abre una puerta con cabra</strong>.",
+      "why.chosen": "▼ Tu puerta",
+      "why.case1_html": "<strong>Caso 1:</strong> el auto está en la puerta 1<br>Si cambias… te toca una cabra y <span class=\"outcome-lose\">pierdes</span> / si no cambias, <span class=\"outcome-win\">ganas</span>",
+      "why.case2_html": "<strong>Caso 2:</strong> el auto está en la puerta 2<br>El presentador solo puede abrir la puerta 3, así que al cambiar te toca la puerta 2 y <span class=\"outcome-win\">ganas</span>",
+      "why.case3_html": "<strong>Caso 3:</strong> el auto está en la puerta 3<br>El presentador solo puede abrir la puerta 2, así que al cambiar te toca la puerta 3 y <span class=\"outcome-win\">ganas</span>",
+      "why.concl_html": "La estrategia de cambiar gana en <strong>2 de los 3 casos</strong>. La de no cambiar gana solo en 1. Por eso cambiando aciertas <strong>el doble de veces</strong>. Y por eso las barras de la simulación de arriba se acercan a las líneas punteadas del 66,7 % y del 33,3 %.",
+      "ext.title": "Prueba con más puertas",
+      "ext.lead_html": "Con 3 puertas quizá pienses «pero si es mitad y mitad, ¿no?». Vamos a poner más puertas. Imagina que eliges 1 entre <strong>100 puertas</strong> y el presentador abre 98 puertas con cabras. ¿Seguirías quedándote con la puerta que elegiste al principio?",
+      "ext.labelDoors": "Número de puertas",
+      "ext.labelHost": "Cómo abre el presentador",
+      "ext.chipDoors": "{n} puertas",
+      "ext.custom": "Elegir yo",
+      "ext.unit": "puertas",
+      "ext.customAria": "Escribe tú el número de puertas",
+      "ext.modeAll": "Abrir hasta que quede 1 sola puerta cerrada",
+      "ext.modeOne": "Abrir solo 1 puerta con cabra",
+      "ext.modeAllShort": "abrir hasta que quede 1",
+      "ext.modeOneShort": "abrir solo 1",
+      "ext.intro_html": "Hay <strong>{n} puertas</strong>. Solo una esconde el auto nuevo; en las otras {m} hay cabras.<br>Elige la puerta que quieras.",
+      "ext.opening_html": "Elegiste la <strong>puerta {p}</strong>. Yo sé dónde está el auto. Ahora voy a abrir <strong>{k} de ellas</strong>, y en todas hay una cabra…",
+      "ext.decideAll_html": "Abrí {k} de las puertas y en todas había una cabra. Solo siguen cerradas tu <strong>puerta {p}</strong> y la <strong>puerta {c}</strong>.<br>Haz clic en la puerta {c} para cambiar. Si prefieres quedarte como estás, pulsa «No cambiar».",
+      "ext.decideOne_html": "Abrí solo 1 puerta con cabra. Todavía quedan <strong>{c}</strong> sin abrir.<br>Si quieres cambiar, haz clic en una puerta cerrada. Si prefieres quedarte como estás, pulsa «No cambiar».",
+      "ext.afterSwitch_html": "<strong>Cambiaste</strong> de puerta. Sumamos el resultado a la tabla de abajo.",
+      "ext.afterStay_html": "<strong>No cambiaste</strong> de puerta. Sumamos el resultado a la tabla de abajo.",
+      "ext.win": "🎉 ¡Acertaste! ¡El auto nuevo estaba en la puerta {n}!",
+      "ext.lose": "😢 Qué lástima… En la puerta {n} había una cabra. El auto nuevo estaba en la puerta {c}.",
+      "ext.stay": "No cambiar",
+      "ext.retry": "Jugar otra vez",
+      "ext.sim100": "Probar 100 veces más con esta configuración",
+      "ext.sim1000": "Probar 1000 veces más con esta configuración",
+      "ext.simInit": "Puedes pedirle a la computadora que repita el juego con esta misma configuración y ver si coincide con el porcentaje calculado.",
+      "ext.simRan": "Añadimos {n} partidas con {d} puertas y la opción «{mode}» (en total, {t} con cada estrategia).",
+      "ext.chartTitle": "Porcentaje de aciertos (%) — las líneas punteadas marcan el porcentaje calculado (cambiar {s} % / no cambiar {y} %)",
+      "ext.theoryAll_html": "La puerta que elegiste al principio acierta solo 1 de cada {n} veces ({ty} %). En los otros <strong>{m}/{n}</strong> el auto está detrás de otra puerta, y el presentador la evita y abre solo puertas con cabra. Por eso, en esos casos, la puerta que queda cerrada hasta el final es la del auto. Así que cambiando aciertas el <strong>{s} %</strong> de las veces.",
+      "ext.theoryOne3_html": "Con 3 puertas, si el presentador abre una, solo queda 1 puerta cerrada. Es exactamente igual que el juego básico de arriba: cambiando aciertas el <strong>{s} %</strong> y sin cambiar, el {ty} %.",
+      "ext.theoryOneN_html": "Si el presentador abre solo una, quedan {c} sin abrir. Aunque cambies, no sabes cuál de ellas esconde el auto. Cambiando aciertas el <strong>{s} %</strong> y sin cambiar, el {ty} %. Cambiar sigue siendo lo mejor, pero cuantas más puertas haya, más pequeña se vuelve la diferencia.",
+      "footer.lab": "Future University Hakodate, Laboratorio Tsuji",
+      "footer.source": "Código fuente"
+    },
+    "th": {
+      "lang.name": "ไทย",
+      "lang.button": "ภาษา",
+      "meta.title": "ปัญหามอนตี ฮอลล์ เกมทดลองด้วยตัวเอง",
+      "header.title": "ปัญหามอนตี ฮอลล์ เกมทดลองด้วยตัวเอง",
+      "header.sub": "\"ควรเปลี่ยนประตู หรือไม่ควรเปลี่ยน\" มาลองพิสูจน์ด้วยมือของเราเอง",
+      "steps.title": "วิธีเล่น (4 ขั้นตอน)",
+      "steps.s1": "เลือกประตู 1 บาน",
+      "steps.s2": "พิธีกรเปิดประตูที่ไม่มีรางวัล",
+      "steps.s3": "ตัดสินใจว่าจะเปลี่ยนหรือไม่",
+      "steps.s4": "ดูผล",
+      "game.doorLabel": "ประตู {n}",
+      "game.prizeCar": "รถใหม่",
+      "game.prizeGoat": "แพะ",
+      "game.pickAria": "เลือกประตู {n}",
+      "game.intro_html": "ยินดีต้อนรับ! ในประตูทั้ง 3 บาน มี<strong>เพียง 1 บาน</strong>ที่ซ่อนรถใหม่ไว้ อีก 2 บานเป็นแพะ<br>เริ่มจากคลิกเลือกประตูที่ชอบ 1 บานก่อนเลย",
+      "game.picked_html": "คุณเลือก <strong>ประตู {n}</strong> ใช่ไหม<br>ผมรู้คำตอบอยู่แล้ว ผมจะเปิดประตูที่มีแพะให้ดู 1 บาน จากประตูที่เหลือ…",
+      "game.decide_html": "อย่างที่เห็น <strong>ประตู {o}</strong> เป็นแพะ<br>แล้วคุณจะทำอย่างไร จะอยู่กับ <strong>ประตู {p}</strong> ที่เลือกไว้ตอนแรก หรือจะเปลี่ยนไป <strong>ประตู {c}</strong> ที่ยังปิดอยู่",
+      "game.tagYours": "ประตูที่คุณเลือก",
+      "game.tagOpened": "ประตูที่พิธีกรเปิด",
+      "game.tagFirst": "ประตูที่เลือกตอนแรก",
+      "game.tagAfter": "ประตูหลังเปลี่ยน",
+      "game.btnSwitch": "เปลี่ยนประตู",
+      "game.btnSwitchNote": "ไปที่ประตู {c}",
+      "game.btnStay": "ไม่เปลี่ยน",
+      "game.btnStayNote": "อยู่ที่ประตู {p}",
+      "game.win": "🎉 ถูก! ประตู {n} มีรถใหม่อยู่จริง!",
+      "game.lose": "😢 เสียดาย… ในประตู {n} เป็นแพะ รถใหม่อยู่ที่ประตู {c}",
+      "game.afterSwitch_html": "คุณ<strong>เปลี่ยน</strong>ประตู ผลถูกบันทึกลงในตาราง \"บันทึกของคุณ\" แล้ว<br>ถ้าลองเล่นซ้ำหลาย ๆ ครั้ง จะเริ่มเห็นว่าวิธีไหนถูกง่ายกว่ากัน",
+      "game.afterStay_html": "คุณ<strong>ไม่เปลี่ยน</strong>ประตู ผลถูกบันทึกลงในตาราง \"บันทึกของคุณ\" แล้ว<br>ถ้าลองเล่นซ้ำหลาย ๆ ครั้ง จะเริ่มเห็นว่าวิธีไหนถูกง่ายกว่ากัน",
+      "game.retry": "เล่นอีกครั้ง",
+      "record.title": "บันทึกของคุณ",
+      "record.lead": "ถ้าเล่นหลายครั้ง โอกาสถูกของ \"ตอนที่เปลี่ยน\" กับ \"ตอนที่ไม่เปลี่ยน\" จะต่างกันไหม",
+      "record.thStrategy": "วิธีเล่น",
+      "record.thPlayed": "จำนวนครั้งที่เล่น",
+      "record.thWon": "จำนวนครั้งที่ถูก",
+      "record.thRate": "สัดส่วนที่ถูก",
+      "record.rowSwitch": "เปลี่ยนประตู",
+      "record.rowStay": "ไม่เปลี่ยน",
+      "common.times": "{n} ครั้ง",
+      "sim.title": "ให้คอมพิวเตอร์ลองเล่นเยอะ ๆ",
+      "sim.lead": "ถ้าเล่นด้วยมืออย่างเดียว จำนวนครั้งยังน้อย ผลจึงขึ้นกับความบังเอิญ ลองให้คอมพิวเตอร์เล่นเกมเดิมซ้ำหลาย ๆ ครั้งดู เราจะลอง \"วิธีเปลี่ยน\" กับ \"วิธีไม่เปลี่ยน\" จำนวนครั้งเท่ากัน แล้วเทียบสัดส่วนที่ถูก",
+      "sim.btn10": "ลองเพิ่มอีก 10 ครั้ง",
+      "sim.btn100": "ลองเพิ่มอีก 100 ครั้ง",
+      "sim.btn1000": "ลองเพิ่มอีก 1000 ครั้ง",
+      "sim.btnClear": "ลบบันทึก",
+      "sim.statusInit": "กดปุ่มแล้วผลจะสะสมขึ้นมาตรงนี้",
+      "sim.statusRan": "ลองเพิ่มอย่างละ {n} ครั้งแล้ว (รวมอย่างละ {t} ครั้ง) ลองดูว่ากราฟแท่งเข้าใกล้เส้นประหรือเปล่า",
+      "sim.statusCleared": "ลบบันทึกแล้ว มาลองใหม่อีกครั้ง",
+      "sim.chartTitle": "สัดส่วนที่ถูก (%) — เส้นประคือจุดสังเกตที่ \"1 ใน 3 ครั้ง\" (33.3%) และ \"2 ใน 3 ครั้ง\" (66.7%)",
+      "sim.barSwitch": "วิธีเปลี่ยน",
+      "sim.barStay": "วิธีไม่เปลี่ยน",
+      "sim.barValue": "{r} % ({w} ชนะ / {t} ครั้ง)",
+      "sim.notYet": "ยังไม่ได้ลอง",
+      "sim.thTried": "จำนวนครั้งที่ลอง",
+      "why.title": "ทำไม \"เปลี่ยนแล้วถูกง่ายกว่า\"",
+      "why.lead_html": "สมมติว่าคุณเลือก<strong>ประตู 1</strong> รถใหม่จะอยู่ที่ไหนก็ได้ จึงมี 3 กรณี ทุกกรณีมีโอกาสเกิดเท่ากัน พิธีกรรู้คำตอบ และจะ<strong>เปิดประตูที่มีแพะเสมอ</strong>",
+      "why.chosen": "▼ ประตูที่เลือก",
+      "why.case1_html": "<strong>กรณีที่ 1:</strong> รถใหม่อยู่ที่ประตู 1<br>ถ้าเปลี่ยน… จะเจอแพะ คือ <span class=\"outcome-lose\">ผิด</span> / ถ้าไม่เปลี่ยน คือ <span class=\"outcome-win\">ถูก</span>",
+      "why.case2_html": "<strong>กรณีที่ 2:</strong> รถใหม่อยู่ที่ประตู 2<br>พิธีกรเปิดได้แค่ประตู 3 เท่านั้น ถ้าเปลี่ยนก็ได้ประตู 2 คือ <span class=\"outcome-win\">ถูก</span>",
+      "why.case3_html": "<strong>กรณีที่ 3:</strong> รถใหม่อยู่ที่ประตู 3<br>พิธีกรเปิดได้แค่ประตู 2 เท่านั้น ถ้าเปลี่ยนก็ได้ประตู 3 คือ <span class=\"outcome-win\">ถูก</span>",
+      "why.concl_html": "\"วิธีเปลี่ยน\" ถูกใน <strong>2 กรณี</strong> จาก 3 กรณี ส่วน \"วิธีไม่เปลี่ยน\" ถูกแค่ 1 กรณี ดังนั้นการเปลี่ยนจึง<strong>ถูกง่ายกว่า 2 เท่า</strong> นี่คือเหตุผลที่กราฟแท่งด้านบนค่อย ๆ เข้าใกล้เส้นประ 66.7% และ 33.3%",
+      "ext.title": "ลองเพิ่มจำนวนประตู",
+      "ext.lead_html": "แค่ 3 บาน คุณอาจรู้สึกว่า \"ก็ครึ่งต่อครึ่งไม่ใช่หรือ\" งั้นลองเพิ่มจำนวนประตูดู เช่น เลือก 1 บานจากประตู <strong>100 บาน</strong> แล้วพิธีกรเปิดประตูที่มีแพะให้ดูถึง 98 บาน คุณยังจะยืนยันอยู่กับบานแรกที่เลือกไว้อีกไหม",
+      "ext.labelDoors": "จำนวนประตู",
+      "ext.labelHost": "วิธีเปิดของพิธีกร",
+      "ext.chipDoors": "{n} บาน",
+      "ext.custom": "กำหนดเอง",
+      "ext.unit": "บาน",
+      "ext.customAria": "กรอกจำนวนประตูเอง",
+      "ext.modeAll": "เปิดจนเหลือประตูที่ปิดอยู่ 1 บาน",
+      "ext.modeOne": "เปิดประตูที่มีแพะแค่ 1 บาน",
+      "ext.modeAllShort": "เปิดจนเหลือ 1 บาน",
+      "ext.modeOneShort": "เปิดแค่ 1 บาน",
+      "ext.intro_html": "มีประตู <strong>{n} บาน</strong> มีแค่บานเดียวที่เป็นรถใหม่ อีก {m} บาน เป็นแพะ<br>เลือกประตูที่ชอบ 1 บานได้เลย",
+      "ext.opening_html": "คุณเลือก <strong>ประตู {p}</strong> ใช่ไหม ผมรู้คำตอบอยู่แล้ว ต่อไปผมจะเปิดประตูที่มีแพะ <strong>{k} บาน</strong>…",
+      "ext.decideAll_html": "เปิดประตูที่มีแพะไปแล้ว {k} บาน ตอนนี้ที่ยังปิดอยู่มีแค่ <strong>ประตู {p}</strong> ของคุณ กับ <strong>ประตู {c}</strong><br>ถ้าอยากเปลี่ยน ให้คลิกประตู {c} ถ้าพอใจแบบนี้แล้ว ให้กด \"ไม่เปลี่ยน\"",
+      "ext.decideOne_html": "เปิดประตูที่มีแพะไปแค่ 1 บาน ยังมีอีก <strong>{c} บาน</strong> ที่ปิดอยู่<br>ถ้าอยากเปลี่ยน ให้คลิกประตูที่ยังปิดอยู่ ถ้าพอใจแบบนี้แล้ว ให้กด \"ไม่เปลี่ยน\"",
+      "ext.afterSwitch_html": "คุณ <strong>เปลี่ยน</strong> ประตูแล้ว ผลถูกบันทึกลงตารางด้านล่าง",
+      "ext.afterStay_html": "คุณ <strong>ไม่เปลี่ยน</strong> ประตู ผลถูกบันทึกลงตารางด้านล่าง",
+      "ext.win": "🎉 ถูก! ประตู {n} มีรถใหม่อยู่!",
+      "ext.lose": "😢 เสียดาย… ประตู {n} เป็นแพะ รถใหม่อยู่ที่ประตู {c}",
+      "ext.stay": "ไม่เปลี่ยน",
+      "ext.retry": "เล่นอีกครั้ง",
+      "ext.sim100": "ลองการตั้งค่านี้เพิ่มอีก 100 ครั้ง",
+      "ext.sim1000": "ลองการตั้งค่านี้เพิ่มอีก 1000 ครั้ง",
+      "ext.simInit": "ให้คอมพิวเตอร์เล่นซ้ำด้วยการตั้งค่าเดียวกัน แล้วดูว่าตรงกับสัดส่วนที่คำนวณไว้หรือไม่",
+      "ext.simRan": "เพิ่มอีก {n} ครั้ง ด้วยการตั้งค่าประตู {d} บาน แบบ {mode} (รวมอย่างละ {t} ครั้ง)",
+      "ext.chartTitle": "สัดส่วนที่ถูก (%) — เส้นประคือสัดส่วนที่คำนวณได้ (เปลี่ยน {s}% / ไม่เปลี่ยน {y}%)",
+      "ext.theoryAll_html": "บานแรกที่เลือกจะถูกแค่ 1 ใน {n} ครั้ง ({ty}%) ส่วนอีก <strong>{m}/{n}</strong> รถใหม่จะอยู่ที่ประตูอื่น และพิธีกรจะเลี่ยงบานนั้น เปิดแต่ประตูที่มีแพะ นั่นแปลว่าประตูที่ปิดอยู่จนถึงตอนสุดท้ายคือรถใหม่ ดังนั้นถ้าเปลี่ยน จะถูก <strong>{s}%</strong>",
+      "ext.theoryOne3_html": "เมื่อมีประตู 3 บาน พิธีกรเปิด 1 บานแล้วจะเหลือประตูที่ปิดอยู่แค่บานเดียว เหมือนกับเกมพื้นฐานด้านบนทุกอย่าง ถ้าเปลี่ยนจะถูก <strong>{s}%</strong> ถ้าไม่เปลี่ยนจะถูก {ty}%",
+      "ext.theoryOneN_html": "ถ้าพิธีกรเปิดแค่ 1 บาน จะเหลือประตูที่ปิดอยู่ {c} บาน ต่อให้เปลี่ยน เราก็ไม่รู้ว่าบานไหนในนั้นเป็นรถใหม่ ถ้าเปลี่ยนจะถูก <strong>{s}%</strong> ถ้าไม่เปลี่ยนจะถูก {ty}% การเปลี่ยนยังได้เปรียบอยู่เหมือนเดิม แต่ยิ่งประตูเยอะ ส่วนต่างก็ยิ่งน้อยลง",
+      "footer.lab": "Future University Hakodate ห้องปฏิบัติการ Tsuji",
+      "footer.source": "ซอร์สโค้ด"
+    },
+    "hi": {
+      "lang.name": "हिन्दी",
+      "lang.button": "भाषा",
+      "meta.title": "मॉन्टी हॉल पहेली — खेलकर समझें",
+      "header.title": "मॉन्टी हॉल पहेली — खेलकर समझें",
+      "header.sub": "‘दरवाज़ा बदलें या न बदलें?’ — इसे खुद खेलकर जाँचिए",
+      "steps.title": "कैसे खेलें (4 आसान कदम)",
+      "steps.s1": "एक दरवाज़ा चुनें",
+      "steps.s2": "होस्ट एक ख़ाली दरवाज़ा खोलता है",
+      "steps.s3": "तय करें — बदलें या नहीं",
+      "steps.s4": "नतीजा देखें",
+      "game.doorLabel": "दरवाज़ा {n}",
+      "game.prizeCar": "नई कार",
+      "game.prizeGoat": "बकरी",
+      "game.pickAria": "दरवाज़ा {n} चुनें",
+      "game.intro_html": "स्वागत है! तीन दरवाज़ों में से <strong>सिर्फ़ एक</strong> के पीछे नई कार छिपी है। बाकी दो के पीछे बकरियाँ हैं।<br>पहले अपनी पसंद का एक दरवाज़ा चुनिए।",
+      "game.picked_html": "आपने <strong>दरवाज़ा {n}</strong> चुना।<br>मुझे पता है कार कहाँ है। बाकी दरवाज़ों में से एक ऐसा दरवाज़ा खोलकर दिखाता हूँ जिसके पीछे बकरी है…",
+      "game.decide_html": "देखिए, <strong>दरवाज़ा {o}</strong> के पीछे बकरी थी।<br>अब क्या करेंगे? पहले चुने हुए <strong>दरवाज़ा {p}</strong> पर ही रहेंगे? या बंद पड़े दूसरे <strong>दरवाज़ा {c}</strong> पर बदल जाएँगे?",
+      "game.tagYours": "आपका चुना दरवाज़ा",
+      "game.tagOpened": "होस्ट ने खोला दरवाज़ा",
+      "game.tagFirst": "पहले चुना दरवाज़ा",
+      "game.tagAfter": "बदलने के बाद का दरवाज़ा",
+      "game.btnSwitch": "दरवाज़ा बदलें",
+      "game.btnSwitchNote": "दरवाज़ा {c} चुनें",
+      "game.btnStay": "वही रखें",
+      "game.btnStayNote": "दरवाज़ा {p} पर ही",
+      "game.win": "🎉 जीत गए! दरवाज़ा {n} के पीछे नई कार थी!",
+      "game.lose": "😢 अफ़सोस… दरवाज़ा {n} के पीछे बकरी थी। नई कार दरवाज़ा {c} के पीछे थी।",
+      "game.afterSwitch_html": "आपने दरवाज़ा <strong>बदला</strong>। नतीजा ‘आपका रिकॉर्ड’ तालिका में जुड़ गया।<br>कुछ बार खेलिए, फिर दिखने लगेगा कि कौन-सी तरकीब ज़्यादा जिताती है।",
+      "game.afterStay_html": "आपने दरवाज़ा <strong>नहीं बदला</strong>। नतीजा ‘आपका रिकॉर्ड’ तालिका में जुड़ गया।<br>कुछ बार खेलिए, फिर दिखने लगेगा कि कौन-सी तरकीब ज़्यादा जिताती है।",
+      "game.retry": "फिर से खेलें",
+      "record.title": "आपका रिकॉर्ड",
+      "record.lead": "कुछ बार खेलने पर, ‘बदला’ और ‘नहीं बदला’ में जीत की संभावना का फ़र्क़ दिखता है क्या?",
+      "record.thStrategy": "तरकीब",
+      "record.thPlayed": "कितनी बार खेला",
+      "record.thWon": "कितनी बार जीते",
+      "record.thRate": "जीत का प्रतिशत",
+      "record.rowSwitch": "दरवाज़ा बदला",
+      "record.rowStay": "नहीं बदला",
+      "common.times": "{n} बार",
+      "sim.title": "कंप्यूटर से बहुत बार खिलवाएँ",
+      "sim.lead": "हाथ से थोड़ी ही बार खेलें तो नतीजा संयोग पर टिका रहता है। इसलिए कंप्यूटर से वही खेल बार-बार खिलवाते हैं। ‘बदलने की तरकीब’ और ‘न बदलने की तरकीब’ को बराबर बार आज़माकर जीत के प्रतिशत की तुलना करते हैं।",
+      "sim.btn10": "10 बार और आज़माएँ",
+      "sim.btn100": "100 बार और आज़माएँ",
+      "sim.btn1000": "1000 बार और आज़माएँ",
+      "sim.btnClear": "रिकॉर्ड मिटाएँ",
+      "sim.statusInit": "बटन दबाइए, नतीजे यहाँ जुड़ते जाएँगे।",
+      "sim.statusRan": "हर तरकीब को {n} बार और आज़माया (कुल {t} बार हर एक)। देखिए, पट्टियाँ बिंदीदार लकीरों के पास पहुँचती हैं या नहीं।",
+      "sim.statusCleared": "रिकॉर्ड मिट गया। फिर से आज़माइए।",
+      "sim.chartTitle": "जीत का प्रतिशत (%) — बिंदीदार लकीरें ‘3 में से 1 बार’ (33.3%) और ‘3 में से 2 बार’ (66.7%) दिखाती हैं",
+      "sim.barSwitch": "बदलने की तरकीब",
+      "sim.barStay": "न बदलने की तरकीब",
+      "sim.barValue": "{r} % ({w} जीत / {t} बार)",
+      "sim.notYet": "अभी आज़माया नहीं",
+      "sim.thTried": "कितनी बार आज़माया",
+      "why.title": "‘बदलने पर ज़्यादा जीत’ क्यों होती है?",
+      "why.lead_html": "मान लीजिए आपने <strong>दरवाज़ा 1</strong> चुना। कार कहाँ है, इस हिसाब से तीन हालात बनते हैं। तीनों की संभावना बराबर है। होस्ट को पता है कार कहाँ है, और वह <strong>हमेशा बकरी वाला दरवाज़ा</strong> ही खोलता है।",
+      "why.chosen": "▼ चुना हुआ दरवाज़ा",
+      "why.case1_html": "<strong>हालत 1:</strong> कार दरवाज़ा 1 के पीछे है<br>बदलें तो बकरी मिलेगी, यानी <span class=\"outcome-lose\">हार</span> / न बदलें तो <span class=\"outcome-win\">जीत</span>",
+      "why.case2_html": "<strong>हालत 2:</strong> कार दरवाज़ा 2 के पीछे है<br>होस्ट के पास दरवाज़ा 3 खोलने के सिवा चारा नहीं, इसलिए बदलने पर दरवाज़ा 2 मिलेगा, यानी <span class=\"outcome-win\">जीत</span>",
+      "why.case3_html": "<strong>हालत 3:</strong> कार दरवाज़ा 3 के पीछे है<br>होस्ट के पास दरवाज़ा 2 खोलने के सिवा चारा नहीं, इसलिए बदलने पर दरवाज़ा 3 मिलेगा, यानी <span class=\"outcome-win\">जीत</span>",
+      "why.concl_html": "‘बदलने की तरकीब’ तीन में से <strong>दो हालात में जिताती</strong> है। ‘न बदलने की तरकीब’ सिर्फ़ एक में। इसलिए बदलने पर जीत की संभावना <strong>दुगुनी</strong> हो जाती है। ऊपर की पट्टियाँ 66.7% और 33.3% की बिंदीदार लकीरों के पास इसीलिए पहुँचती हैं।",
+      "ext.title": "दरवाज़ों की संख्या बढ़ाकर देखें",
+      "ext.lead_html": "तीन दरवाज़ों पर लग सकता है कि ‘दोनों बराबर ही तो हैं’। तो चलिए दरवाज़े बढ़ाते हैं। मान लीजिए <strong>100 दरवाज़ों</strong> में से आपने एक चुना, और होस्ट ने बकरी वाले पूरे 98 दरवाज़े खोल दिए — तब भी आप अपने पहले चुने दरवाज़े पर ही अड़े रहेंगे?",
+      "ext.labelDoors": "दरवाज़ों की संख्या",
+      "ext.labelHost": "होस्ट कैसे खोलेगा",
+      "ext.chipDoors": "{n} दरवाज़े",
+      "ext.custom": "खुद तय करें",
+      "ext.unit": "दरवाज़े",
+      "ext.customAria": "दरवाज़ों की संख्या खुद लिखें",
+      "ext.modeAll": "जब तक सिर्फ़ 1 बंद दरवाज़ा बचे, तब तक खोले",
+      "ext.modeOne": "बकरी वाला सिर्फ़ 1 दरवाज़ा खोले",
+      "ext.modeAllShort": "1 बचने तक खोले",
+      "ext.modeOneShort": "सिर्फ़ 1 खोले",
+      "ext.intro_html": "यहाँ <strong>{n} दरवाज़े</strong> हैं। सिर्फ़ एक के पीछे नई कार है, बाकी {m} के पीछे बकरियाँ।<br>अपनी पसंद का एक दरवाज़ा चुनिए।",
+      "ext.opening_html": "आपने <strong>दरवाज़ा {p}</strong> चुना। मुझे पता है कार कहाँ है। अब मैं बकरी वाले <strong>{k} दरवाज़े</strong> खोलता हूँ…",
+      "ext.decideAll_html": "बकरी वाले {k} दरवाज़े खोल दिए। अब सिर्फ़ आपका <strong>दरवाज़ा {p}</strong> और <strong>दरवाज़ा {c}</strong> बंद हैं।<br>बदलना हो तो दरवाज़ा {c} पर क्लिक कीजिए। वैसे ही ठीक हो तो ‘वही रखें’ दबाइए।",
+      "ext.decideOne_html": "बकरी वाला सिर्फ़ एक दरवाज़ा खोला। अब भी <strong>{c} दरवाज़े</strong> बंद हैं।<br>बदलना हो तो किसी बंद दरवाज़े पर क्लिक कीजिए। वैसे ही ठीक हो तो ‘वही रखें’ दबाइए।",
+      "ext.afterSwitch_html": "आपने दरवाज़ा <strong>बदला</strong>। नतीजा नीचे की तालिका में जुड़ गया।",
+      "ext.afterStay_html": "आपने दरवाज़ा <strong>नहीं बदला</strong>। नतीजा नीचे की तालिका में जुड़ गया।",
+      "ext.win": "🎉 जीत गए! दरवाज़ा {n} के पीछे नई कार थी!",
+      "ext.lose": "😢 अफ़सोस… दरवाज़ा {n} के पीछे बकरी थी। नई कार दरवाज़ा {c} के पीछे थी।",
+      "ext.stay": "वही रखें",
+      "ext.retry": "फिर से खेलें",
+      "ext.sim100": "इसी सेटिंग से 100 बार और आज़माएँ",
+      "ext.sim1000": "इसी सेटिंग से 1000 बार और आज़माएँ",
+      "ext.simInit": "कंप्यूटर से इसी सेटिंग में बार-बार खिलवाकर देख सकते हैं कि गिनती से निकला प्रतिशत मिलता है या नहीं।",
+      "ext.simRan": "{d} दरवाज़े · {mode} — इस सेटिंग में {n} बार और जोड़े (कुल {t} बार हर एक)।",
+      "ext.chartTitle": "जीत का प्रतिशत (%) — बिंदीदार लकीरें गिनती से निकला प्रतिशत दिखाती हैं (बदलें {s}% / न बदलें {y}%)",
+      "ext.theoryAll_html": "पहले चुना दरवाज़ा {n} में से सिर्फ़ 1 बार सही निकलता है ({ty}%)। बाकी <strong>{m}／{n}</strong> हालात में कार किसी और दरवाज़े के पीछे होती है, और होस्ट उसे बचाकर सिर्फ़ बकरी वाले दरवाज़े खोलता है। यानी उन हालात में आख़िर तक बंद रह गया दरवाज़ा ही कार वाला होता है। इसीलिए बदलने पर <strong>{s}%</strong> बार जीत होती है।",
+      "ext.theoryOne3_html": "जब दरवाज़े 3 हों, तो होस्ट के एक खोलते ही सिर्फ़ एक बंद दरवाज़ा बचता है। यह ऊपर वाले सादे खेल जैसा ही है — बदलें तो <strong>{s}%</strong>, न बदलें तो {ty}%।",
+      "ext.theoryOneN_html": "होस्ट सिर्फ़ एक दरवाज़ा खोले, तो {c} दरवाज़े बंद रह जाते हैं। बदलने पर भी पता नहीं चलता कि उनमें कार किसके पीछे है। बदलें तो <strong>{s}%</strong>, न बदलें तो {ty}%। बदलना फिर भी बेहतर है, पर दरवाज़े जितने ज़्यादा हों, यह फ़र्क़ उतना ही कम होता जाता है।",
+      "footer.lab": "Future University Hakodate　Tsuji Laboratory",
+      "footer.source": "सोर्स कोड"
+    },
+    "fr": {
+      "lang.name": "Français",
+      "lang.button": "Langue",
+      "meta.title": "Le problème de Monty Hall — simulateur à essayer soi-même",
+      "header.title": "Le problème de Monty Hall — simulateur à essayer soi-même",
+      "header.sub": "« Faut-il changer de porte ou pas ? » Vérifie-le toi-même !",
+      "steps.title": "Comment jouer (4 étapes)",
+      "steps.s1": "Choisis une porte",
+      "steps.s2": "Le présentateur ouvre une porte perdante",
+      "steps.s3": "Décide si tu changes",
+      "steps.s4": "Regarde le résultat",
+      "game.doorLabel": "Porte {n}",
+      "game.prizeCar": "Voiture neuve",
+      "game.prizeGoat": "Chèvre",
+      "game.pickAria": "Choisir la porte {n}",
+      "game.intro_html": "Bienvenue ! Derrière <strong>une seule</strong> des 3 portes se cache une voiture neuve. Derrière les deux autres, il y a des chèvres.<br>Pour commencer, clique sur la porte de ton choix.",
+      "game.picked_html": "Tu as choisi la <strong>porte {n}</strong>.<br>Moi, je sais où est la voiture. Parmi les portes qui restent, je vais en ouvrir une qui cache une chèvre…",
+      "game.decide_html": "Tu vois : derrière la <strong>porte {o}</strong>, il y avait une chèvre.<br>Alors, que fais-tu ? Tu gardes la <strong>porte {p}</strong> que tu as choisie au début ? Ou tu changes pour l'autre porte encore fermée, la <strong>porte {c}</strong> ?",
+      "game.tagYours": "Ta porte",
+      "game.tagOpened": "Porte ouverte par le présentateur",
+      "game.tagFirst": "Ton premier choix",
+      "game.tagAfter": "Ta porte après le changement",
+      "game.btnSwitch": "Je change de porte",
+      "game.btnSwitchNote": "Je prends la porte {c}",
+      "game.btnStay": "Je ne change pas",
+      "game.btnStayNote": "Je garde la porte {p}",
+      "game.win": "🎉 Gagné ! La voiture neuve était derrière la porte {n} !",
+      "game.lose": "😢 Dommage… Derrière la porte {n}, il y avait une chèvre. La voiture neuve était derrière la porte {c}.",
+      "game.afterSwitch_html": "Tu as <strong>changé</strong> de porte. Le résultat est ajouté au tableau « Tes résultats ».<br>Recommence plusieurs fois : tu verras peu à peu quelle stratégie fait gagner le plus souvent.",
+      "game.afterStay_html": "Tu <strong>n'as pas changé</strong> de porte. Le résultat est ajouté au tableau « Tes résultats ».<br>Recommence plusieurs fois : tu verras peu à peu quelle stratégie fait gagner le plus souvent.",
+      "game.retry": "Rejouer",
+      "record.title": "Tes résultats",
+      "record.lead": "Après plusieurs parties, y a-t-il une différence entre « changer de porte » et « ne pas changer » ?",
+      "record.thStrategy": "Stratégie",
+      "record.thPlayed": "Parties jouées",
+      "record.thWon": "Fois gagnées",
+      "record.thRate": "Taux de réussite",
+      "record.rowSwitch": "J'ai changé de porte",
+      "record.rowStay": "Je n'ai pas changé",
+      "common.times": "{n} fois",
+      "sim.title": "Laisse l'ordinateur essayer très souvent",
+      "sim.lead": "Quand on joue à la main, on fait peu de parties, et le hasard décide beaucoup. Demandons donc à l'ordinateur de rejouer le même jeu un grand nombre de fois. Il essaie autant de fois la stratégie « changer » que la stratégie « ne pas changer », puis on compare les taux de réussite.",
+      "sim.btn10": "Essayer 10 fois de plus",
+      "sim.btn100": "Essayer 100 fois de plus",
+      "sim.btn1000": "Essayer 1000 fois de plus",
+      "sim.btnClear": "Effacer les résultats",
+      "sim.statusInit": "Appuie sur un bouton : les résultats vont s'accumuler ici.",
+      "sim.statusRan": "On a joué {n} fois de plus avec chaque stratégie (total : {t} fois chacune). Regarde si les barres se rapprochent des pointillés.",
+      "sim.statusCleared": "Les résultats sont effacés. Essaie encore une fois !",
+      "sim.chartTitle": "Taux de réussite (%) — les pointillés marquent « 1 fois sur 3 » (33,3 %) et « 2 fois sur 3 » (66,7 %)",
+      "sim.barSwitch": "Stratégie « changer »",
+      "sim.barStay": "Stratégie « ne pas changer »",
+      "sim.barValue": "{r} % — gagné {w} fois sur {t}",
+      "sim.notYet": "Pas encore essayé",
+      "sim.thTried": "Parties essayées",
+      "why.title": "Pourquoi gagne-t-on plus souvent en changeant ?",
+      "why.lead_html": "Imagine que tu as choisi la <strong>porte 1</strong>. Selon l'endroit où se trouve la voiture neuve, il y a 3 cas possibles. Chaque cas a autant de chances d'arriver. Le présentateur sait où est la voiture, et il ouvre <strong>toujours une porte à chèvre</strong>.",
+      "why.chosen": "▼ La porte choisie",
+      "why.case1_html": "<strong>Cas 1 :</strong> la voiture est derrière la porte 1<br>Si tu changes… tu tombes sur une chèvre, <span class=\"outcome-lose\">perdu</span> / si tu ne changes pas, <span class=\"outcome-win\">gagné</span>",
+      "why.case2_html": "<strong>Cas 2 :</strong> la voiture est derrière la porte 2<br>Le présentateur ne peut ouvrir que la porte 3, donc en changeant tu prends la porte 2 : <span class=\"outcome-win\">gagné</span>",
+      "why.case3_html": "<strong>Cas 3 :</strong> la voiture est derrière la porte 3<br>Le présentateur ne peut ouvrir que la porte 2, donc en changeant tu prends la porte 3 : <span class=\"outcome-win\">gagné</span>",
+      "why.concl_html": "Avec la stratégie « changer », tu gagnes dans <strong>2 cas sur 3</strong>. Avec la stratégie « ne pas changer », tu ne gagnes que dans 1 cas. Voilà pourquoi on gagne <strong>2 fois plus souvent</strong> en changeant. C'est aussi pour cela que les barres de la simulation, plus haut, se rapprochent des pointillés à 66,7 % et 33,3 %.",
+      "ext.title": "Et si on ajoutait des portes ?",
+      "ext.lead_html": "Avec 3 portes, tu te dis peut-être : « c'est du 50-50, non ? » Alors ajoutons des portes. Imagine <strong>100 portes</strong> : tu en choisis une, puis le présentateur ouvre 98 portes à chèvres. Est-ce que tu gardes quand même la porte choisie au début ?",
+      "ext.labelDoors": "Nombre de portes",
+      "ext.labelHost": "Façon d'ouvrir du présentateur",
+      "ext.chipDoors": "{n} portes",
+      "ext.custom": "Je choisis moi-même",
+      "ext.unit": "portes",
+      "ext.customAria": "Saisir soi-même le nombre de portes",
+      "ext.modeAll": "Ouvrir jusqu'à ce qu'il ne reste qu'une porte fermée",
+      "ext.modeOne": "N'ouvrir qu'une seule porte à chèvre",
+      "ext.modeAllShort": "jusqu'à une seule porte fermée",
+      "ext.modeOneShort": "une seule porte ouverte",
+      "ext.intro_html": "Il y a <strong>{n} portes</strong>. Une seule cache la voiture neuve ; derrière les {m} autres, il y a des chèvres.<br>Choisis la porte que tu veux.",
+      "ext.opening_html": "Tu as choisi la <strong>porte {p}</strong>. Moi, je sais où est la voiture. Je vais maintenant ouvrir des portes à chèvres : <strong>{k}</strong> au total…",
+      "ext.decideAll_html": "J'ai ouvert des portes à chèvres : {k} au total. Il ne reste fermées que ta <strong>porte {p}</strong> et la <strong>porte {c}</strong>.<br>Clique sur la porte {c} pour changer. Si tu préfères garder ta porte, appuie sur « Je ne change pas ».",
+      "ext.decideOne_html": "Je n'ai ouvert qu'une seule porte à chèvre. Nombre de portes encore fermées : <strong>{c}</strong>.<br>Pour changer, clique sur une porte fermée. Si tu préfères garder ta porte, appuie sur « Je ne change pas ».",
+      "ext.afterSwitch_html": "Tu as <strong>changé</strong> de porte. Le résultat est ajouté au tableau ci-dessous.",
+      "ext.afterStay_html": "Tu <strong>n'as pas changé</strong> de porte. Le résultat est ajouté au tableau ci-dessous.",
+      "ext.win": "🎉 Gagné ! La voiture neuve était derrière la porte {n} !",
+      "ext.lose": "😢 Dommage… Derrière la porte {n}, il y avait une chèvre. La voiture neuve était derrière la porte {c}.",
+      "ext.stay": "Je ne change pas",
+      "ext.retry": "Rejouer",
+      "ext.sim100": "Essayer 100 fois de plus avec ce réglage",
+      "ext.sim1000": "Essayer 1000 fois de plus avec ce réglage",
+      "ext.simInit": "L'ordinateur rejoue avec le même réglage, et tu peux vérifier si le résultat colle au taux trouvé par le calcul.",
+      "ext.simRan": "Réglage : {d} portes, {mode}. On a joué {n} fois de plus (total : {t} fois pour chaque stratégie).",
+      "ext.chartTitle": "Taux de réussite (%) — les pointillés montrent les taux trouvés par le calcul (changer {s} % / ne pas changer {y} %)",
+      "ext.theoryAll_html": "La porte choisie au début est la bonne seulement 1 fois sur {n} ({ty} %). Dans les <strong>{m}/{n}</strong> autres, la voiture est derrière une autre porte, et le présentateur l'évite : il n'ouvre que des portes à chèvres. Donc, dans ces cas-là, la porte qui reste fermée jusqu'au bout cache la voiture. Voilà pourquoi, en changeant, tu gagnes <strong>{s} %</strong> du temps.",
+      "ext.theoryOne3_html": "Avec 3 portes, si le présentateur en ouvre une, il ne reste qu'une seule porte fermée. C'est exactement le jeu de base vu plus haut : en changeant tu gagnes <strong>{s} %</strong> du temps, en ne changeant pas {ty} %.",
+      "ext.theoryOneN_html": "Si le présentateur n'ouvre qu'une porte, il reste {c} portes fermées. Même en changeant, tu ne sais pas laquelle cache la voiture. En changeant tu gagnes <strong>{s} %</strong> du temps, en ne changeant pas {ty} %. Changer reste plus avantageux, mais plus il y a de portes, plus l'écart devient petit.",
+      "footer.lab": "Future University Hakodate — laboratoire Tsuji",
+      "footer.source": "Code source"
+    },
+    "ar": {
+      "lang.name": "العربية",
+      "lang.button": "اللغة",
+      "meta.title": "محاكاة مسألة مونتي هول",
+      "header.title": "محاكاة مسألة مونتي هول",
+      "header.sub": "«هل نُغيّر الباب أم نبقى عليه؟» — جرّب بنفسك واكتشف الجواب",
+      "steps.title": "كيف نلعب؟ (أربع خطوات)",
+      "steps.s1": "اختر بابًا واحدًا",
+      "steps.s2": "يفتح المُقدِّم بابًا خاسرًا",
+      "steps.s3": "قرّر: تُغيّر أم تبقى؟",
+      "steps.s4": "انظر إلى النتيجة",
+      "game.doorLabel": "الباب {n}",
+      "game.prizeCar": "سيارة جديدة",
+      "game.prizeGoat": "ماعز",
+      "game.pickAria": "اختر الباب {n}",
+      "game.intro_html": "أهلًا بك! خلف <strong>باب واحد فقط</strong> من الأبواب الثلاثة سيارة جديدة. وخلف البابين الآخرين ماعز.<br>اضغط أولًا على الباب الذي تريده.",
+      "game.picked_html": "اخترتَ <strong>الباب {n}</strong>.<br>أنا أعرف الجواب. سأفتح لك من الأبواب الباقية بابًا خلفه ماعز…",
+      "game.decide_html": "كما ترى، خلف <strong>الباب {o}</strong> ماعز.<br>ماذا تفعل الآن؟ هل تبقى على <strong>الباب {p}</strong> الذي اخترته أولًا؟ أم تُغيّر إلى <strong>الباب {c}</strong> المغلق الآخر؟",
+      "game.tagYours": "الباب الذي اخترته",
+      "game.tagOpened": "الباب الذي فتحه المُقدِّم",
+      "game.tagFirst": "الباب الذي اخترته أولًا",
+      "game.tagAfter": "الباب بعد التغيير",
+      "game.btnSwitch": "أُغيّر الباب",
+      "game.btnSwitchNote": "أنتقل إلى الباب {c}",
+      "game.btnStay": "لا أُغيّر",
+      "game.btnStayNote": "أبقى على الباب {p}",
+      "game.win": "🎉 أحسنت! خلف الباب {n} سيارة جديدة!",
+      "game.lose": "😢 للأسف… خلف الباب {n} كان هناك ماعز. السيارة الجديدة كانت خلف الباب {c}.",
+      "game.afterSwitch_html": "لقد <strong>غيّرتَ</strong> الباب. أضفنا النتيجة إلى جدول «سِجِلّك».<br>كرّر اللعب مرات عدة، وسترى أيّ خطة تربح أكثر.",
+      "game.afterStay_html": "لقد <strong>بقيتَ دون تغيير</strong>. أضفنا النتيجة إلى جدول «سِجِلّك».<br>كرّر اللعب مرات عدة، وسترى أيّ خطة تربح أكثر.",
+      "game.retry": "العب مرة أخرى",
+      "record.title": "سِجِلّك",
+      "record.lead": "بعد أن تلعب مرات عدة، هل يظهر فرق في نسبة الفوز بين «تغيير الباب» و«البقاء دون تغيير»؟",
+      "record.thStrategy": "الخطة",
+      "record.thPlayed": "عدد مرات اللعب",
+      "record.thWon": "عدد مرات الفوز",
+      "record.thRate": "نسبة الفوز",
+      "record.rowSwitch": "غيّرتُ الباب",
+      "record.rowStay": "بقيتُ دون تغيير",
+      "common.times": "{n} مرة",
+      "sim.title": "دع الحاسوب يجرّب مرات كثيرة",
+      "sim.lead": "اللعب باليد عدد مراته قليل، فتؤثّر فيه الصدفة. لذلك ندع الحاسوب يكرّر اللعبة نفسها مرات كثيرة. نجرّب «خطة التغيير» و«خطة البقاء» بالعدد نفسه، ثم نقارن نسبة الفوز.",
+      "sim.btn10": "جرّب 10 مرات أخرى",
+      "sim.btn100": "جرّب 100 مرة أخرى",
+      "sim.btn1000": "جرّب 1000 مرة أخرى",
+      "sim.btnClear": "امسح السجل",
+      "sim.statusInit": "اضغط على أحد الأزرار، وستتراكم النتائج هنا.",
+      "sim.statusRan": "أضفنا {n} مرة لكل خطة (المجموع {t} مرة لكل خطة). انظر هل يقترب العمودان من الخطين المنقّطين.",
+      "sim.statusCleared": "مسحنا السجل. جرّب مرة أخرى.",
+      "sim.chartTitle": "نسبة الفوز (%) — الخطان المنقّطان يشيران إلى «مرة من كل 3» (33.3%) و«مرتين من كل 3» (66.7%)",
+      "sim.barSwitch": "خطة التغيير",
+      "sim.barStay": "خطة البقاء",
+      "sim.barValue": "{r} % ({w} فوز من {t} مرة)",
+      "sim.notYet": "لم نجرّب بعد",
+      "sim.thTried": "عدد المحاولات",
+      "why.title": "لماذا يكون التغيير أوفر حظًّا؟",
+      "why.lead_html": "لنفترض أنك اخترت <strong>الباب 1</strong>. حسب مكان السيارة الجديدة، هناك ثلاث حالات، وكلها متساوية في الاحتمال. المُقدِّم يعرف الجواب، وهو <strong>يفتح باب ماعز دائمًا</strong>.",
+      "why.chosen": "▼ الباب الذي اخترته",
+      "why.case1_html": "<strong>الحالة 1:</strong> السيارة الجديدة خلف الباب 1<br>إن غيّرت… تقع على الماعز، أي <span class=\"outcome-lose\">خسارة</span> / وإن بقيت، <span class=\"outcome-win\">فوز</span>",
+      "why.case2_html": "<strong>الحالة 2:</strong> السيارة الجديدة خلف الباب 2<br>لا يملك المُقدِّم إلا أن يفتح الباب 3، فإن غيّرت انتقلت إلى الباب 2، أي <span class=\"outcome-win\">فوز</span>",
+      "why.case3_html": "<strong>الحالة 3:</strong> السيارة الجديدة خلف الباب 3<br>لا يملك المُقدِّم إلا أن يفتح الباب 2، فإن غيّرت انتقلت إلى الباب 3، أي <span class=\"outcome-win\">فوز</span>",
+      "why.concl_html": "«خطة التغيير» تفوز في <strong>حالتين</strong> من الحالات الثلاث. أما «خطة البقاء» فتفوز في حالة واحدة فقط. لذلك فرصة الفوز بالتغيير <strong>ضعف</strong> فرصة الفوز بالبقاء. ولهذا يقترب العمودان في المحاكاة أعلاه من الخطين المنقّطين عند 66.7% و33.3%.",
+      "ext.title": "لنزد عدد الأبواب",
+      "ext.lead_html": "مع ثلاثة أبواب قد تشعر أن الفرصة نصف بنصف. لذلك لنزد عدد الأبواب. تخيّل أنك اخترت بابًا واحدًا من <strong>100 باب</strong>، ثم فتح المُقدِّم أمامك 98 بابًا خلفها ماعز. هل تبقى مع الباب الذي اخترته أولًا؟",
+      "ext.labelDoors": "عدد الأبواب",
+      "ext.labelHost": "طريقة فتح المُقدِّم",
+      "ext.chipDoors": "{n} باب",
+      "ext.custom": "أُحدّده بنفسي",
+      "ext.unit": "باب",
+      "ext.customAria": "أدخل عدد الأبواب بنفسك",
+      "ext.modeAll": "يفتح حتى يبقى باب مغلق واحد",
+      "ext.modeOne": "يفتح باب ماعز واحدًا فقط",
+      "ext.modeAllShort": "حتى يبقى باب واحد",
+      "ext.modeOneShort": "باب واحد فقط",
+      "ext.intro_html": "أمامك <strong>{n} باب</strong>. خلف باب واحد فقط سيارة جديدة، وخلف الأبواب الباقية وعددها {m} ماعز.<br>اختر البابَ الذي تريده.",
+      "ext.opening_html": "اخترتَ <strong>الباب {p}</strong>. أنا أعرف الجواب. سأفتح الآن <strong>{k}</strong> من أبواب الماعز…",
+      "ext.decideAll_html": "فتحتُ {k} من أبواب الماعز. لم يبق مغلقًا سوى <strong>الباب {p}</strong> الذي اخترته و<strong>الباب {c}</strong>.<br>اضغط على الباب {c} إن أردت التغيير. وإن رضيت بما اخترت، اضغط «أبقى دون تغيير».",
+      "ext.decideOne_html": "فتحتُ باب ماعز واحدًا فقط. وما زال عدد الأبواب المغلقة <strong>{c}</strong>.<br>إن أردت التغيير، اضغط على أحد الأبواب المغلقة. وإن رضيت بما اخترت، اضغط «أبقى دون تغيير».",
+      "ext.afterSwitch_html": "لقد <strong>غيّرتَ</strong> الباب. أضفنا النتيجة إلى الجدول أدناه.",
+      "ext.afterStay_html": "لقد <strong>بقيتَ دون تغيير</strong>. أضفنا النتيجة إلى الجدول أدناه.",
+      "ext.win": "🎉 أحسنت! خلف الباب {n} سيارة جديدة!",
+      "ext.lose": "😢 للأسف… خلف الباب {n} كان ماعز. السيارة الجديدة كانت خلف الباب {c}.",
+      "ext.stay": "أبقى دون تغيير",
+      "ext.retry": "العب مرة أخرى",
+      "ext.sim100": "جرّب 100 مرة أخرى بهذا الإعداد",
+      "ext.sim1000": "جرّب 1000 مرة أخرى بهذا الإعداد",
+      "ext.simInit": "يمكنك أن تدع الحاسوب يكرّر اللعبة بالإعداد نفسه، فتتأكد من مطابقة النتيجة للنسبة المحسوبة.",
+      "ext.simRan": "أضفنا {n} مرة بإعداد {d} باب و«{mode}» (المجموع {t} مرة لكل خطة).",
+      "ext.chartTitle": "نسبة الفوز (%) — الخطان المنقّطان هما النسبة المحسوبة (التغيير {s}% / البقاء {y}%)",
+      "ext.theoryAll_html": "أن يكون البابُ الذي اخترته أولًا هو الرابح يحدث مرة واحدة من كل {n} مرة ({ty}%) فقط. وفي الحالات الباقية، وهي <strong>{m}/{n}</strong>، تكون السيارة الجديدة خلف باب آخر، والمُقدِّم يتجنّب ذلك الباب ويفتح أبواب الماعز وحدها. أي أن البابَ الذي يبقى مغلقًا حتى النهاية هو باب السيارة. لذلك تفوز بالتغيير بنسبة <strong>{s}%</strong>.",
+      "ext.theoryOne3_html": "حين تكون الأبواب 3، يكفي أن يفتح المُقدِّم بابًا واحدًا ليبقى باب مغلق واحد. وهذا هو نفسه اللعبة الأساسية أعلاه تمامًا: التغيير <strong>{s}%</strong>، والبقاء {ty}%.",
+      "ext.theoryOneN_html": "إذا فتح المُقدِّم بابًا واحدًا فقط، يبقى عدد الأبواب المغلقة {c}. وحتى لو غيّرت، لا تعرف أيَّ باب منها فيه السيارة الجديدة. التغيير <strong>{s}%</strong>، والبقاء {ty}%. يبقى التغيير أوفر حظًّا، لكن كلما زاد عدد الأبواب صغر الفرق.",
+      "footer.lab": "Future University Hakodate — Tsuji Laboratory",
+      "footer.source": "الشيفرة المصدرية"
+    },
+    "sv": {
+      "lang.name": "Svenska",
+      "lang.button": "Språk",
+      "meta.title": "Monty Hall-problemet – prova själv!",
+      "header.title": "Monty Hall-problemet – prova själv!",
+      "header.sub": "Ska man byta dörr eller inte? Ta reda på svaret med dina egna händer.",
+      "steps.title": "Så gör du (4 steg)",
+      "steps.s1": "Välj en dörr",
+      "steps.s2": "Programledaren öppnar en dörr med get bakom",
+      "steps.s3": "Bestäm dig: byta eller behålla?",
+      "steps.s4": "Se hur det gick",
+      "game.doorLabel": "Dörr {n}",
+      "game.prizeCar": "Ny bil",
+      "game.prizeGoat": "Get",
+      "game.pickAria": "Välj dörr {n}",
+      "game.intro_html": "Välkommen! Bakom <strong>en enda</strong> av de tre dörrarna står en ny bil. Bakom de andra två står det getter.<br>Börja med att klicka på den dörr du vill välja.",
+      "game.picked_html": "Du valde <strong>dörr {n}</strong>.<br>Jag vet var bilen står. Nu öppnar jag en av de andra dörrarna – en med en get bakom …",
+      "game.decide_html": "Som du ser stod det en get bakom <strong>dörr {o}</strong>.<br>Vad gör du nu? Behåller du <strong>dörr {p}</strong> som du valde först? Eller byter du till <strong>dörr {c}</strong>, som fortfarande är stängd?",
+      "game.tagYours": "Din dörr",
+      "game.tagOpened": "Öppnad av programledaren",
+      "game.tagFirst": "Ditt första val",
+      "game.tagAfter": "Din nya dörr",
+      "game.btnSwitch": "Byt dörr",
+      "game.btnSwitchNote": "Byt till dörr {c}",
+      "game.btnStay": "Behåll dörren",
+      "game.btnStayNote": "Stanna på dörr {p}",
+      "game.win": "🎉 Rätt gissat! Bakom dörr {n} stod den nya bilen!",
+      "game.lose": "😢 Tyvärr … Bakom dörr {n} stod en get. Bilen stod bakom dörr {c}.",
+      "game.afterSwitch_html": "Du <strong>bytte</strong> dörr. Resultatet är tillagt i tabellen ”Dina resultat”.<br>Spela några gånger till, så börjar du se vilken strategi som vinner oftast.",
+      "game.afterStay_html": "Du <strong>behöll</strong> din dörr. Resultatet är tillagt i tabellen ”Dina resultat”.<br>Spela några gånger till, så börjar du se vilken strategi som vinner oftast.",
+      "game.retry": "Spela igen",
+      "record.title": "Dina resultat",
+      "record.lead": "Efter några omgångar – syns det någon skillnad i hur ofta man vinner när man byter dörr och när man behåller dörren?",
+      "record.thStrategy": "Strategi",
+      "record.thPlayed": "Antal spel",
+      "record.thWon": "Antal vinster",
+      "record.thRate": "Andel vinster",
+      "record.rowSwitch": "Bytte dörr",
+      "record.rowStay": "Behöll dörren",
+      "common.times": "{n} st",
+      "sim.title": "Låt datorn spela många gånger",
+      "sim.lead": "När du spelar för hand blir det få omgångar, och då får slumpen stort inflytande. Låt därför datorn spela samma spel om och om igen. Den provar att byta och att behålla lika många gånger, och sedan jämför vi hur ofta de vinner.",
+      "sim.btn10": "Spela 10 gånger till",
+      "sim.btn100": "Spela 100 gånger till",
+      "sim.btn1000": "Spela 1000 gånger till",
+      "sim.btnClear": "Rensa resultaten",
+      "sim.statusInit": "Tryck på en knapp, så samlas resultaten här.",
+      "sim.statusRan": "Vi provade {n} gånger till med varje strategi (totalt {t} med varje). Se om staplarna närmar sig de streckade linjerna.",
+      "sim.statusCleared": "Resultaten är rensade. Prova gärna igen!",
+      "sim.chartTitle": "Andel vinster (%) – de streckade linjerna visar ”en gång av tre” (33,3 %) och ”två gånger av tre” (66,7 %)",
+      "sim.barSwitch": "Byta dörr",
+      "sim.barStay": "Behålla dörren",
+      "sim.barValue": "{r} % ({w} av {t})",
+      "sim.notYet": "Inte provat än",
+      "sim.thTried": "Antal spel",
+      "why.title": "Varför vinner man oftare om man byter?",
+      "why.lead_html": "Tänk dig att du väljer <strong>dörr 1</strong>. Bilen kan stå bakom tre olika dörrar, så det finns tre fall att titta på. Alla tre är lika troliga. Programledaren vet var bilen står och öppnar <strong>alltid en dörr med get</strong> bakom.",
+      "why.chosen": "▼ Din dörr",
+      "why.case1_html": "<strong>Fall 1:</strong> Bilen står bakom dörr 1<br>Byter du får du en get, alltså <span class=\"outcome-lose\">förlust</span> / behåller du dörren blir det <span class=\"outcome-win\">vinst</span>",
+      "why.case2_html": "<strong>Fall 2:</strong> Bilen står bakom dörr 2<br>Programledaren måste öppna dörr 3, så byter du hamnar du på dörr 2 – alltså <span class=\"outcome-win\">vinst</span>",
+      "why.case3_html": "<strong>Fall 3:</strong> Bilen står bakom dörr 3<br>Programledaren måste öppna dörr 2, så byter du hamnar du på dörr 3 – alltså <span class=\"outcome-win\">vinst</span>",
+      "why.concl_html": "Att byta dörr vinner i <strong>två av de tre fallen</strong>. Att behålla dörren vinner bara i ett. Därför är det <strong>dubbelt så stor chans</strong> att vinna om du byter. Det är också därför staplarna i simuleringen ovan närmar sig de streckade linjerna vid 66,7 % och 33,3 %.",
+      "ext.title": "Prova med fler dörrar",
+      "ext.lead_html": "Med bara tre dörrar kanske det känns som att chansen är lika stor på båda sätten. Prova då med fler dörrar! Tänk dig att du väljer en dörr av <strong>100</strong>, och att programledaren sedan öppnar hela 98 dörrar med getter bakom. Skulle du fortfarande hålla fast vid din första dörr?",
+      "ext.labelDoors": "Antal dörrar",
+      "ext.labelHost": "Så öppnar programledaren",
+      "ext.chipDoors": "{n} dörrar",
+      "ext.custom": "Välj själv",
+      "ext.unit": "dörrar",
+      "ext.customAria": "Skriv in antalet dörrar själv",
+      "ext.modeAll": "Öppna tills bara en stängd dörr är kvar",
+      "ext.modeOne": "Öppna bara en dörr med get",
+      "ext.modeAllShort": "öppnar tills en dörr är kvar",
+      "ext.modeOneShort": "öppnar bara en dörr",
+      "ext.intro_html": "Här finns <strong>{n} dörrar</strong>. Bakom en enda av dem står den nya bilen, och bakom de andra {m} står det getter.<br>Välj den dörr du vill ha.",
+      "ext.opening_html": "Du valde <strong>dörr {p}</strong>. Jag vet var bilen står. Nu öppnar jag <strong>{k}</strong> av dörrarna med get bakom …",
+      "ext.decideAll_html": "Jag öppnade {k} av dörrarna med get bakom. Nu är bara din <strong>dörr {p}</strong> och <strong>dörr {c}</strong> stängda.<br>Klicka på dörr {c} om du vill byta. Vill du ha kvar din dörr trycker du på ”Behåll dörren”.",
+      "ext.decideOne_html": "Jag öppnade bara en dörr med get bakom. Antalet dörrar som fortfarande är stängda är <strong>{c}</strong>.<br>Vill du byta klickar du på en stängd dörr. Vill du ha kvar din dörr trycker du på ”Behåll dörren”.",
+      "ext.afterSwitch_html": "Du <strong>bytte</strong> dörr. Resultatet är tillagt i tabellen nedan.",
+      "ext.afterStay_html": "Du <strong>behöll</strong> din dörr. Resultatet är tillagt i tabellen nedan.",
+      "ext.win": "🎉 Rätt gissat! Bakom dörr {n} stod den nya bilen!",
+      "ext.lose": "😢 Tyvärr … Bakom dörr {n} stod en get. Bilen stod bakom dörr {c}.",
+      "ext.stay": "Behåll dörren",
+      "ext.retry": "Spela igen",
+      "ext.sim100": "Spela 100 gånger till med de här inställningarna",
+      "ext.sim1000": "Spela 1000 gånger till med de här inställningarna",
+      "ext.simInit": "Låt datorn spela om och om igen med samma inställningar, så kan du se om det stämmer med den uträknade andelen.",
+      "ext.simRan": "Inställning: {d} dörrar, {mode}. Vi lade till {n} spel med varje strategi (totalt {t} med varje).",
+      "ext.chartTitle": "Andel vinster (%) – de streckade linjerna visar den uträknade andelen (byta {s} % / behålla {y} %)",
+      "ext.theoryAll_html": "Dörren du väljer först är rätt bara en gång av {n} ({ty} %). I de övriga <strong>{m}/{n}</strong> fallen står bilen bakom någon annan dörr, och programledaren undviker just den och öppnar bara dörrar med getter. Då är det den dörr som blir kvar stängd ända till slutet som har bilen bakom sig. Därför vinner du <strong>{s} %</strong> av gångerna om du byter.",
+      "ext.theoryOne3_html": "Med tre dörrar räcker det att programledaren öppnar en dörr, för då finns bara en stängd dörr kvar. Det blir precis samma sak som i grundspelet ovan: byter du vinner du <strong>{s} %</strong> av gångerna, behåller du dörren {ty} %.",
+      "ext.theoryOneN_html": "Om programledaren bara öppnar en dörr finns det {c} stängda dörrar kvar. Även om du byter vet du inte vilken av dem som har bilen bakom sig. Byter du vinner du <strong>{s} %</strong> av gångerna, behåller du dörren {ty} %. Det är fortfarande bättre att byta, men ju fler dörrar det finns, desto mindre blir skillnaden.",
+      "footer.lab": "Future University Hakodate, Tsuji Laboratory",
+      "footer.source": "Källkod"
+    }
+  };
+/* === I18N-DATA-END === */
+
+  // 辞書から文言を取り出し、{n} などを値で置き換える
+  function t(key, vars) {
+    const dict = I18N[LANG] || I18N.ja;
+    let s = dict[key];
+    if (s === undefined) s = I18N.ja[key];
+    if (s === undefined) return key;
+    if (vars) {
+      Object.keys(vars).forEach((k) => { s = s.split("{" + k + "}").join(vars[k]); });
+    }
+    return s;
+  }
+
+  // 数値をその言語の書き方で整える（小数点はロシア語などでコンマになる）
+  function num(v, digits) {
+    try {
+      return v.toLocaleString(LANG, {
+        minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false
+      });
+    } catch (e) {
+      return v.toFixed(digits);
+    }
+  }
+
+
   /* ---------- 賞品のSVG ---------- */
   const carSVG = `
-    <svg viewBox="0 0 120 70" width="86" role="img" aria-label="新車">
+    <svg viewBox="0 0 120 70" width="86" aria-hidden="true">
       <path d="M18 44 Q20 28 38 26 L46 16 Q48 12 54 12 L78 12 Q83 12 86 17 L92 26 Q106 28 108 40 L108 48 Q108 52 104 52 L16 52 Q12 52 12 48 L12 48 Q12 45 18 44 Z"
             fill="#e34948" stroke="#4a3b2a" stroke-width="3" stroke-linejoin="round"/>
       <path d="M50 16 L54 26 L70 26 L70 16 Z" fill="#cfe6ff" stroke="#4a3b2a" stroke-width="2.5"/>
@@ -778,7 +1986,7 @@
       <rect x="104" y="38" width="6" height="5" rx="2" fill="#f4c95d" stroke="#4a3b2a" stroke-width="2"/>
     </svg>`;
   const goatSVG = `
-    <svg viewBox="0 0 120 90" width="80" role="img" aria-label="ヤギ">
+    <svg viewBox="0 0 120 90" width="80" aria-hidden="true">
       <ellipse cx="55" cy="52" rx="30" ry="20" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="3"/>
       <rect x="36" y="66" width="7" height="16" rx="3" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="2.5"/>
       <rect x="66" y="66" width="7" height="16" rx="3" fill="#f5f0e6" stroke="#4a3b2a" stroke-width="2.5"/>
@@ -812,11 +2020,11 @@
       unit.className = "door-unit selectable";
       unit.dataset.index = i;
       unit.innerHTML = `
-        <div class="door-label">扉${i + 1}</div>
+        <div class="door-label">${t("game.doorLabel", { n: i + 1 })}</div>
         <div class="door-frame">
           <div class="prize">${i === carDoor ? carSVG : goatSVG}
-            <span class="prize-name">${i === carDoor ? "新車" : "ヤギ"}</span></div>
-          <div class="door" role="button" tabindex="0" aria-label="扉${i + 1}をえらぶ">
+            <span class="prize-name">${i === carDoor ? t("game.prizeCar") : t("game.prizeGoat")}</span></div>
+          <div class="door" role="button" tabindex="0" aria-label="${t("game.pickAria", { n: i + 1 })}">
             <div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
           </div>
         </div>
@@ -850,7 +2058,7 @@
     $("retryArea").style.display = "none";
     const banner = $("resultBanner");
     banner.className = "result-banner"; banner.textContent = "";
-    message.innerHTML = "ようこそ！ 3つの扉のうち、<strong>1つだけ</strong>に新車がかくれています。のこりの2つはヤギです。<br>まずは、好きな扉を1つクリックしてください。";
+    message.innerHTML = t("game.intro_html");
   }
 
   function pickDoor(i) {
@@ -859,9 +2067,9 @@
     picked = i;
     for (let k = 0; k < 3; k++) unitAt(k).classList.remove("selectable");
     unitAt(i).classList.add("chosen");
-    unitAt(i).querySelector(".tag").textContent = "あなたがえらんだ扉";
+    unitAt(i).querySelector(".tag").textContent = t("game.tagYours");
     setSteps(2);
-    message.innerHTML = `あなたは <strong>扉${i + 1}</strong> をえらびましたね。<br>私は答えを知っています。のこりの扉から、ヤギがいる扉を1つ開けてみせましょう…`;
+    message.innerHTML = t("game.picked_html", { n: i + 1 });
 
     // ヤギのいる扉を1つ開ける（えらばれた扉と新車の扉は開けない）
     const candidates = [0, 1, 2].filter((d) => d !== picked && d !== carDoor);
@@ -869,7 +2077,7 @@
 
     setTimeout(() => {
       unitAt(opened).classList.add("open");
-      unitAt(opened).querySelector(".tag").textContent = "司会者が開けた扉";
+      unitAt(opened).querySelector(".tag").textContent = t("game.tagOpened");
       setTimeout(showDecision, 900);
     }, 1200);
   }
@@ -878,9 +2086,9 @@
     phase = "decide";
     setSteps(3);
     const other = [0, 1, 2].find((d) => d !== picked && d !== opened);
-    message.innerHTML = `ごらんのとおり、<strong>扉${opened + 1}</strong> はヤギでした。<br>さあ、どうしますか？ 最初にえらんだ <strong>扉${picked + 1}</strong> のままにしますか？ それとも、閉まっているもう1つの <strong>扉${other + 1}</strong> に変えますか？`;
-    $("switchNote").textContent = `扉${other + 1} にする`;
-    $("stayNote").textContent = `扉${picked + 1} のまま`;
+    message.innerHTML = t("game.decide_html", { o: opened + 1, p: picked + 1, c: other + 1 });
+    $("switchNote").textContent = t("game.btnSwitchNote", { c: other + 1 });
+    $("stayNote").textContent = t("game.btnStayNote", { p: picked + 1 });
     $("decisionArea").style.display = "flex";
   }
 
@@ -898,8 +2106,8 @@
     if (didSwitch) {
       unitAt(picked).classList.remove("chosen");
       unitAt(finalDoor).classList.add("chosen");
-      unitAt(picked).querySelector(".tag").textContent = "最初にえらんだ扉";
-      unitAt(finalDoor).querySelector(".tag").textContent = "変えたあとの扉";
+      unitAt(picked).querySelector(".tag").textContent = t("game.tagFirst");
+      unitAt(finalDoor).querySelector(".tag").textContent = t("game.tagAfter");
     }
 
     // 全部の扉を開けて答え合わせ
@@ -913,27 +2121,25 @@
     const banner = $("resultBanner");
     banner.className = "result-banner " + (won ? "win" : "lose");
     banner.textContent = won
-      ? `🎉 あたり！ 扉${finalDoor + 1} には新車がありました！`
-      : `😢 ざんねん… 扉${finalDoor + 1} にいたのはヤギでした。新車は 扉${carDoor + 1} でした。`;
+      ? t("game.win", { n: finalDoor + 1 })
+      : t("game.lose", { n: finalDoor + 1, c: carDoor + 1 });
 
-    message.innerHTML = (didSwitch
-      ? `あなたは扉を<strong>変えました</strong>。`
-      : `あなたは扉を<strong>変えませんでした</strong>。`)
-      + `結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。`;
+    message.innerHTML = didSwitch ? t("game.afterSwitch_html") : t("game.afterStay_html");
 
     $("retryArea").style.display = "flex";
   }
 
   /* ---------- 記録の表示 ---------- */
   function pct(win, total) {
-    return total === 0 ? "—" : (100 * win / total).toFixed(1) + " %";
+    return total === 0 ? "—" : num(100 * win / total, 1) + " %";
   }
+  function times(n) { return t("common.times", { n: n }); }
   function renderManual() {
-    $("mSwitchTotal").textContent = manual.switch.total + " 回";
-    $("mSwitchWin").textContent = manual.switch.win + " 回";
+    $("mSwitchTotal").textContent = times(manual.switch.total);
+    $("mSwitchWin").textContent = times(manual.switch.win);
     $("mSwitchRate").textContent = pct(manual.switch.win, manual.switch.total);
-    $("mStayTotal").textContent = manual.stay.total + " 回";
-    $("mStayWin").textContent = manual.stay.win + " 回";
+    $("mStayTotal").textContent = times(manual.stay.total);
+    $("mStayWin").textContent = times(manual.stay.win);
     $("mStayRate").textContent = pct(manual.stay.win, manual.stay.total);
   }
 
@@ -952,8 +2158,7 @@
       if (pick !== car) sim.switch.win += 1;
     }
     renderSim();
-    $("simStatus").textContent =
-      `${n}回ずつ追加でためしました（累計 ${sim.switch.total} 回ずつ）。棒グラフが点線に近づいていくか、見てみましょう。`;
+    $("simStatus").textContent = t("sim.statusRan", { n: n, t: sim.switch.total });
   }
 
   function renderSim() {
@@ -962,14 +2167,14 @@
     $("barSwitch").style.width = swRate + "%";
     $("barStay").style.width = stRate + "%";
     $("barSwitchLabel").textContent = sim.switch.total
-      ? `${swRate.toFixed(1)} %（${sim.switch.win}勝 / ${sim.switch.total}回）` : "まだ試していません";
+      ? t("sim.barValue", { r: num(swRate, 1), w: sim.switch.win, t: sim.switch.total }) : t("sim.notYet");
     $("barStayLabel").textContent = sim.stay.total
-      ? `${stRate.toFixed(1)} %（${sim.stay.win}勝 / ${sim.stay.total}回）` : "まだ試していません";
-    $("sSwitchTotal").textContent = sim.switch.total + " 回";
-    $("sSwitchWin").textContent = sim.switch.win + " 回";
+      ? t("sim.barValue", { r: num(stRate, 1), w: sim.stay.win, t: sim.stay.total }) : t("sim.notYet");
+    $("sSwitchTotal").textContent = times(sim.switch.total);
+    $("sSwitchWin").textContent = times(sim.switch.win);
     $("sSwitchRate").textContent = pct(sim.switch.win, sim.switch.total);
-    $("sStayTotal").textContent = sim.stay.total + " 回";
-    $("sStayWin").textContent = sim.stay.win + " 回";
+    $("sStayTotal").textContent = times(sim.stay.total);
+    $("sStayWin").textContent = times(sim.stay.win);
     $("sStayRate").textContent = pct(sim.stay.win, sim.stay.total);
   }
 
@@ -977,13 +2182,13 @@
   $("btnSwitch").addEventListener("click", () => decide(true));
   $("btnStay").addEventListener("click", () => decide(false));
   $("btnRetry").addEventListener("click", newGame);
-  document.querySelectorAll(".btn-sim").forEach((b) =>
+  document.querySelectorAll("[data-trials]").forEach((b) =>
     b.addEventListener("click", () => runTrials(parseInt(b.dataset.trials, 10))));
   $("btnSimReset").addEventListener("click", () => {
     sim.switch.total = 0; sim.switch.win = 0;
     sim.stay.total = 0; sim.stay.win = 0;
     renderSim();
-    $("simStatus").textContent = "記録を消しました。もう一度ためしてみましょう。";
+    $("simStatus").textContent = t("sim.statusCleared");
   });
 
   newGame();
@@ -1023,7 +2228,7 @@
       d.dataset.index = i;
       d.setAttribute("role", "button");
       d.setAttribute("tabindex", "0");
-      d.setAttribute("aria-label", `扉${i + 1}`);
+      d.setAttribute("aria-label", t("game.doorLabel", { n: i + 1 }));
       d.innerHTML = (ext.n <= 12 ? `<span>${i + 1}</span>` : "") + `<span class="knob-dot"></span>`;
       const act = () => extClick(i);
       d.addEventListener("click", act);
@@ -1045,7 +2250,7 @@
     $("extActions").style.display = "none";
     $("extRetryArea").style.display = "none";
     const b = $("extBanner"); b.className = "result-banner"; b.textContent = "";
-    extMsg.innerHTML = `扉が <strong>${ext.n}枚</strong> あります。1枚だけに新車、のこりの ${ext.n - 1}枚 はヤギです。<br>好きな扉を1つえらんでください。`;
+    extMsg.innerHTML = t("ext.intro_html", { n: ext.n, m: ext.n - 1 });
   }
 
   function extClick(i) {
@@ -1060,7 +2265,7 @@
     extTile(i).classList.add("picked");
 
     const list = hostOpens(ext.n, ext.car, ext.pick, ext.mode);
-    extMsg.innerHTML = `<strong>扉${i + 1}</strong> をえらびましたね。私は答えを知っています。これからヤギの扉を <strong>${list.length}枚</strong> 開けます…`;
+    extMsg.innerHTML = t("ext.opening_html", { p: i + 1, k: list.length });
 
     // 枚数が多いときは順番に開けて、減っていく様子を見せる
     const step = Math.max(8, Math.min(60, Math.round(900 / Math.max(1, list.length))));
@@ -1077,8 +2282,8 @@
       const closed = [];
       for (let d = 0; d < ext.n; d++) if (d !== ext.pick && !ext.opened.has(d)) closed.push(d);
       extMsg.innerHTML = ext.mode === "all"
-        ? `ヤギの扉を ${list.length}枚 開けました。閉じているのは、あなたの <strong>扉${ext.pick + 1}</strong> と <strong>扉${closed[0] + 1}</strong> だけです。<br>扉${closed[0] + 1} をクリックすれば変えられます。このままでよければ「変えない」を押してください。`
-        : `ヤギの扉を1枚だけ開けました。まだ <strong>${closed.length}枚</strong> が閉じたままです。<br>変えるなら閉じている扉をクリックしてください。このままでよければ「変えない」を押してください。`;
+        ? t("ext.decideAll_html", { k: list.length, p: ext.pick + 1, c: closed[0] + 1 })
+        : t("ext.decideOne_html", { c: closed.length });
       $("extActions").style.display = "flex";
     }, 400 + list.length * step + 350);
   }
@@ -1109,20 +2314,18 @@
     const b = $("extBanner");
     b.className = "result-banner " + (won ? "win" : "lose");
     b.textContent = won
-      ? `🎉 あたり！ 扉${finalIdx + 1} に新車がありました！`
-      : `😢 ざんねん… 扉${finalIdx + 1} はヤギでした。新車は 扉${ext.car + 1} でした。`;
-    extMsg.innerHTML = didSwitch
-      ? `扉を <strong>変えました</strong>。結果を下の表にたしました。`
-      : `扉を <strong>変えませんでした</strong>。結果を下の表にたしました。`;
+      ? t("ext.win", { n: finalIdx + 1 })
+      : t("ext.lose", { n: finalIdx + 1, c: ext.car + 1 });
+    extMsg.innerHTML = didSwitch ? t("ext.afterSwitch_html") : t("ext.afterStay_html");
     $("extRetryArea").style.display = "flex";
   }
 
   function renderExtPlay() {
-    $("eSwitchTotal").textContent = ext.play.switch.total + " 回";
-    $("eSwitchWin").textContent = ext.play.switch.win + " 回";
+    $("eSwitchTotal").textContent = times(ext.play.switch.total);
+    $("eSwitchWin").textContent = times(ext.play.switch.win);
     $("eSwitchRate").textContent = pct(ext.play.switch.win, ext.play.switch.total);
-    $("eStayTotal").textContent = ext.play.stay.total + " 回";
-    $("eStayWin").textContent = ext.play.stay.win + " 回";
+    $("eStayTotal").textContent = times(ext.play.stay.total);
+    $("eStayWin").textContent = times(ext.play.stay.win);
     $("eStayRate").textContent = pct(ext.play.stay.win, ext.play.stay.total);
   }
 
@@ -1142,12 +2345,15 @@
       if (moveTo === car) ext.sim.switch.win += 1;
     }
     renderExtSim();
-    $("extSimStatus").textContent =
-      `扉${ext.n}枚・${ext.mode === "all" ? "残り1枚になるまで開ける" : "1枚だけ開ける"} の設定で ${n}回 追加しました（累計 ${ext.sim.switch.total} 回ずつ）。`;
+    $("extSimStatus").textContent = t("ext.simRan", {
+      d: ext.n,
+      mode: ext.mode === "all" ? t("ext.modeAllShort") : t("ext.modeOneShort"),
+      n: n, t: ext.sim.switch.total
+    });
   }
 
   // 値が小さいほど桁を増やす（1.0％ と 1.01％ が同じに見えないように）
-  function fmtPct(v) { return v >= 10 ? v.toFixed(1) : v.toFixed(2); }
+  function fmtPct(v) { return num(v, v >= 10 ? 1 : 2); }
 
   // 計算で求めた「変える作戦」の勝率
   function extTheorySwitch() {
@@ -1162,32 +2368,23 @@
     $("extBarSwitch").style.width = swRate + "%";
     $("extBarStay").style.width = stRate + "%";
     $("extBarSwitchLabel").textContent = sw.total
-      ? `${fmtPct(swRate)} %（${sw.win}勝 / ${sw.total}回）` : "まだ試していません";
+      ? t("sim.barValue", { r: fmtPct(swRate), w: sw.win, t: sw.total }) : t("sim.notYet");
     $("extBarStayLabel").textContent = st.total
-      ? `${fmtPct(stRate)} %（${st.win}勝 / ${st.total}回）` : "まだ試していません";
+      ? t("sim.barValue", { r: fmtPct(stRate), w: st.win, t: st.total }) : t("sim.notYet");
   }
 
   function renderExtTheory() {
     const n = ext.n;
     const ts = 100 * extTheorySwitch(), ty = 100 / n;
-    $("extRefSwitch").style.left = ts + "%";
-    $("extRefStay").style.left = ty + "%";
-    $("extChartTitle").textContent =
-      `あたった割合（％）— 点線は、計算で求めた割合（変える ${fmtPct(ts)}％ / 変えない ${fmtPct(ty)}％）です`;
+    $("extRefSwitch").style.insetInlineStart = ts + "%";
+    $("extRefStay").style.insetInlineStart = ty + "%";
+    $("extChartTitle").textContent = t("ext.chartTitle", { s: fmtPct(ts), y: fmtPct(ty) });
     if (ext.mode === "all") {
-      $("extTheory").innerHTML =
-        `最初にえらんだ1枚があたるのは ${n}回に1回（${fmtPct(ty)}％）だけです。`
-        + `のこりの <strong>${n - 1}／${n}</strong> では新車はほかの扉にあり、司会者はそれを避けてヤギの扉だけを開けます。`
-        + `つまりその場合、最後まで閉じたまま残る扉が新車です。だから変えると <strong>${fmtPct(ts)}％</strong> であたります。`;
+      $("extTheory").innerHTML = t("ext.theoryAll_html", { n: n, m: n - 1, ty: fmtPct(ty), s: fmtPct(ts) });
     } else if (n === 3) {
-      $("extTheory").innerHTML =
-        `扉が3枚のときは、司会者が1枚開ければ閉じた扉は1枚しか残りません。上の基本のゲームとまったく同じで、`
-        + `変えると <strong>${fmtPct(ts)}％</strong>、変えないと ${fmtPct(ty)}％ です。`;
+      $("extTheory").innerHTML = t("ext.theoryOne3_html", { s: fmtPct(ts), ty: fmtPct(ty) });
     } else {
-      $("extTheory").innerHTML =
-        `司会者が1枚しか開けないと、閉じた扉が ${n - 2}枚 のこります。変えても、その中のどれが新車かは分かりません。`
-        + `変えると <strong>${fmtPct(ts)}％</strong>、変えないと ${fmtPct(ty)}％ です。`
-        + `変えたほうが有利なことに変わりはありませんが、扉が多いほどその差は小さくなります。`;
+      $("extTheory").innerHTML = t("ext.theoryOneN_html", { c: n - 2, s: fmtPct(ts), ty: fmtPct(ty) });
     }
   }
 
@@ -1226,11 +2423,120 @@
     b.addEventListener("click", () => extRunTrials(parseInt(b.dataset.extTrials, 10))));
   $("btnExtSimReset").addEventListener("click", () => {
     extResetSim();
-    $("extSimStatus").textContent = "記録を消しました。もう一度ためしてみましょう。";
+    $("extSimStatus").textContent = t("sim.statusCleared");
   });
+
+  /* ---------- 言語メニュー ---------- */
+  function buildLangMenu() {
+    const ul = $("langMenu");
+    ul.innerHTML = "";
+    LANG_ORDER.forEach((code) => {
+      const li = document.createElement("li");
+      li.setAttribute("role", "option");
+      li.setAttribute("tabindex", "0");
+      li.setAttribute("aria-selected", code === LANG ? "true" : "false");
+      li.textContent = I18N[code]["lang.name"];
+      li.lang = code;
+      if (code === LANG) li.className = "on";
+      const choose = () => { setLang(code); closeLangMenu(); $("langBtn").focus(); };
+      li.addEventListener("click", choose);
+      li.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); choose(); }
+      });
+      ul.appendChild(li);
+    });
+  }
+  function openLangMenu() {
+    $("langMenu").hidden = false;
+    $("langBtn").setAttribute("aria-expanded", "true");
+  }
+  function closeLangMenu() {
+    $("langMenu").hidden = true;
+    $("langBtn").setAttribute("aria-expanded", "false");
+  }
+  $("langBtn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    if ($("langMenu").hidden) openLangMenu(); else closeLangMenu();
+  });
+  document.addEventListener("click", (e) => {
+    if (!$("langMenu").hidden && !e.target.closest(".langbar")) closeLangMenu();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !$("langMenu").hidden) { closeLangMenu(); $("langBtn").focus(); }
+  });
+
+  function setLang(code) {
+    if (!I18N[code]) return;
+    LANG = code;
+    try { localStorage.setItem("mh_lang", code); } catch (e) { /* 保存できなくても続行 */ }
+    buildLangMenu();
+    applyI18n();
+  }
+
+  // 表示中の文言をすべて選択中の言語に差し替える
+  function applyI18n() {
+    const rtl = RTL_LANGS.indexOf(LANG) >= 0;
+    document.documentElement.lang = LANG;
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+    document.title = t("meta.title");
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+      el.innerHTML = t(el.getAttribute("data-i18n-html"));
+    });
+    document.querySelectorAll("[data-n]").forEach((b) => {
+      b.textContent = t("ext.chipDoors", { n: b.dataset.n });
+    });
+    $("extNInput").setAttribute("aria-label", t("ext.customAria"));
+    $("langBtnLabel").textContent = t("lang.button");
+
+    // 研究室のクレジット（リンクは言語によらず同じ）
+    const lab = $("footerLab");
+    const open = LANG === "ja" ? "（" : " (";
+    const close = LANG === "ja" ? "）" : ")";
+    lab.textContent = t("footer.lab") + open;
+    const a = document.createElement("a");
+    a.href = "https://tsuji-lab.net";
+    a.textContent = "tsuji-lab.net";
+    lab.appendChild(a);
+    lab.appendChild(document.createTextNode(close));
+
+    // 記録は残したまま、表示と進行中のゲームだけ作り直す
+    $("simStatus").textContent = t("sim.statusInit");
+    $("extSimStatus").textContent = t("ext.simInit");
+    renderManual();
+    renderSim();
+    renderExtPlay();
+    renderExtSim();
+    renderExtTheory();
+    newGame();
+    extNewGame();
+  }
+
+  // 起動時の言語：URLの ?lang= → 前回の選択 → ブラウザの設定 → 日本語
+  function initLang() {
+    const fromUrl = new URLSearchParams(location.search).get("lang");
+    if (fromUrl && I18N[fromUrl]) return fromUrl;
+    try {
+      const saved = localStorage.getItem("mh_lang");
+      if (saved && I18N[saved]) return saved;
+    } catch (e) { /* 参照できなければ次の判定へ */ }
+    const nav = (navigator.language || "").toLowerCase();
+    if (nav.indexOf("zh") === 0) {
+      return (nav.indexOf("tw") >= 0 || nav.indexOf("hk") >= 0 || nav.indexOf("hant") >= 0) ? "zh-Hant" : "zh-Hans";
+    }
+    const two = nav.split("-")[0];
+    const hit = LANG_ORDER.filter((c) => c.toLowerCase() === two)[0];
+    return hit || "ja";
+  }
 
   extSetMode("all");
   extSetN(3);
+  LANG = initLang();
+  buildLangMenu();
+  applyI18n();
 })();
 </script>
 </body>
