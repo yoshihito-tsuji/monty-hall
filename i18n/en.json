@@ -33,6 +33,13 @@
   "game.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the \"Your record\" table.<br>Play a few more times and you'll start to see which plan wins more often.",
   "game.retry": "Play again",
 
+  "flow.btnOk": "OK",
+  "flow.btnOkNote": "go to the next step",
+  "flow.btnAuto": "AUTO",
+  "flow.btnAutoNote": "continue automatically",
+  "flow.autoNow": "The game is advancing automatically.",
+  "flow.btnStep": "Advance with the OK button",
+
   "record.title": "Your record",
   "record.lead": "Play a few rounds. Does switching win more often than staying?",
   "record.thStrategy": "Plan",

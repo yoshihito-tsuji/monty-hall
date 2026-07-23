@@ -33,6 +33,13 @@
   "game.afterStay_html": "당신은 문을 <strong>바꾸지 않았어요</strong>. 결과를 '나의 기록' 표에 더했어요.<br>여러 번 반복하면 어느 작전이 더 잘 맞는지 보이기 시작할 거예요.",
   "game.retry": "한 번 더 하기",
 
+  "flow.btnOk": "확인",
+  "flow.btnOkNote": "다음으로 진행",
+  "flow.btnAuto": "자동",
+  "flow.btnAutoNote": "지금부터 자동으로 진행",
+  "flow.autoNow": "지금은 자동으로 진행됩니다.",
+  "flow.btnStep": "확인 버튼으로 진행하기",
+
   "record.title": "나의 기록",
   "record.lead": "여러 번 해 보면 '바꾼 경우'와 '바꾸지 않은 경우' 사이에 당첨되는 정도의 차이가 나타날까요?",
   "record.thStrategy": "작전",

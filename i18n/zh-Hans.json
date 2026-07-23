@@ -33,6 +33,13 @@
   "game.afterStay_html": "你<strong>没有换</strong>门。结果已经加到“你的记录”表里。<br>多玩几次，就能看出哪种办法更容易中。",
   "game.retry": "再玩一次",
 
+  "flow.btnOk": "确定",
+  "flow.btnOkNote": "进入下一步",
+  "flow.btnAuto": "自动",
+  "flow.btnAutoNote": "从这里开始自动进行",
+  "flow.autoNow": "目前为自动进行。",
+  "flow.btnStep": "改用确定按钮进行",
+
   "record.title": "你的记录",
   "record.lead": "多玩几次，“换了门”和“没有换”，中的比例会不会出现差别呢？",
   "record.thStrategy": "办法",

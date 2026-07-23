@@ -17,6 +17,14 @@
     const id = setInterval(() => { if (cond()) { clearInterval(id); res(); } }, 30);
   });
 
+  // 司会者のセリフのOK待ちを通過する（AUTOモードでも動くよう両対応）
+  async function passGate() {
+    await wait(() => $("advanceArea").style.display === "flex" ||
+                     $("decisionArea").style.display === "flex");
+    if ($("decisionArea").style.display !== "flex") $("btnOk").click();
+    await wait(() => $("decisionArea").style.display === "flex");
+  }
+
   async function playRound(i) {
     const doSwitch = i % 2 === 0;
     const us = units();
@@ -31,8 +39,8 @@
     const pick = i % 3;
     us[pick].querySelector(".door").click();
 
-    // 2) 司会者がハズレを開けるのを待つ
-    await wait(() => $("decisionArea").style.display === "flex");
+    // 2) OKで進め、司会者がハズレを開けるのを待つ
+    await passGate();
     const opened = units().filter(isOpen);
     if (opened.length !== 1) fail(`round${i}: 開いた扉が ${opened.length} 枚（1枚のはず）`);
     const openedIdx = units().indexOf(opened[0]);

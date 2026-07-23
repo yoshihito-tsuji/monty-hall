@@ -12,6 +12,10 @@
     if (ts.length !== n) return fail(`扉が ${ts.length} 枚（${n} 枚のはず）`);
     const pick = 0;
     ts[pick].click();
+    // OK待ちを通過してから、司会者が開け終わるのを待つ
+    await wait(() => $("extAdvanceArea").style.display === "flex" ||
+                     $("extActions").style.display === "flex");
+    if ($("extActions").style.display !== "flex") $("btnExtOk").click();
     await wait(() => $("extActions").style.display === "flex");
 
     const opened = tiles().filter(t => t.classList.contains("open"));

@@ -33,6 +33,13 @@
   "game.afterStay_html": "Tu <strong>n'as pas changé</strong> de porte. Le résultat est ajouté au tableau « Tes résultats ».<br>Recommence plusieurs fois : tu verras peu à peu quelle stratégie fait gagner le plus souvent.",
   "game.retry": "Rejouer",
 
+  "flow.btnOk": "OK",
+  "flow.btnOkNote": "passer à la suite",
+  "flow.btnAuto": "AUTO",
+  "flow.btnAutoNote": "continuer automatiquement",
+  "flow.autoNow": "La partie avance maintenant automatiquement.",
+  "flow.btnStep": "Avancer avec le bouton OK",
+
   "record.title": "Tes résultats",
   "record.lead": "Après plusieurs parties, y a-t-il une différence entre « changer de porte » et « ne pas changer » ?",
   "record.thStrategy": "Stratégie",

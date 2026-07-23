@@ -33,6 +33,13 @@
   "game.afterStay_html": "你<strong>沒有換門</strong>。結果已經加進「你的紀錄」表裡了。<br>多玩幾次，就會慢慢看出哪一種作法比較容易中獎。",
   "game.retry": "再玩一次",
 
+  "flow.btnOk": "確定",
+  "flow.btnOkNote": "進入下一步",
+  "flow.btnAuto": "自動",
+  "flow.btnAutoNote": "從這裡開始自動進行",
+  "flow.autoNow": "目前為自動進行。",
+  "flow.btnStep": "改用確定按鈕進行",
+
   "record.title": "你的紀錄",
   "record.lead": "多玩幾次之後，「換門」和「不換門」的中獎機會，會出現差別嗎？",
   "record.thStrategy": "作法",

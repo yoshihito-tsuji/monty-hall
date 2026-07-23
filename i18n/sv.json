@@ -33,6 +33,13 @@
   "game.afterStay_html": "Du <strong>behöll</strong> din dörr. Resultatet är tillagt i tabellen ”Dina resultat”.<br>Spela några gånger till, så börjar du se vilken strategi som vinner oftast.",
   "game.retry": "Spela igen",
 
+  "flow.btnOk": "OK",
+  "flow.btnOkNote": "gå till nästa steg",
+  "flow.btnAuto": "AUTO",
+  "flow.btnAutoNote": "fortsätt automatiskt",
+  "flow.autoNow": "Spelet går nu vidare automatiskt.",
+  "flow.btnStep": "Gå vidare med OK-knappen",
+
   "record.title": "Dina resultat",
   "record.lead": "Efter några omgångar – syns det någon skillnad i hur ofta man vinner när man byter dörr och när man behåller dörren?",
   "record.thStrategy": "Strategi",

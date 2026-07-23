@@ -33,6 +33,13 @@
   "game.afterStay_html": "<strong>No cambiaste</strong> de puerta. Sumamos el resultado a la tabla «Tus resultados».<br>Si repites varias veces, empezarás a ver qué estrategia acierta más.",
   "game.retry": "Jugar otra vez",
 
+  "flow.btnOk": "OK",
+  "flow.btnOkNote": "pasar al siguiente paso",
+  "flow.btnAuto": "AUTO",
+  "flow.btnAutoNote": "continuar automáticamente",
+  "flow.autoNow": "Ahora el juego avanza automáticamente.",
+  "flow.btnStep": "Avanzar con el botón OK",
+
   "record.title": "Tus resultados",
   "record.lead": "Si juegas varias veces, ¿aparecerá alguna diferencia entre cambiar de puerta y no cambiar?",
   "record.thStrategy": "Estrategia",

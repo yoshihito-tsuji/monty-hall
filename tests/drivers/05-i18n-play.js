@@ -5,8 +5,11 @@
   const wait=(c)=>new Promise(r=>{const i=setInterval(()=>{if(c()){clearInterval(i);r();}},20);});
   async function playOne(code){
     [...document.querySelectorAll("#langMenu li")].forEach(li=>{if(li.lang===code)li.click();});
-    // 基本ゲームを1回
+    // 基本ゲームを1回（OK待ちを通過して進める）
     document.querySelectorAll(".door")[0].click();
+    await wait(()=>$("advanceArea").style.display==="flex");
+    if(!$("btnOk").textContent.trim()) fail(`${code}: OKボタンの表示が空`);
+    $("btnOk").click();
     await wait(()=>$("decisionArea").style.display==="flex");
     if(!$("switchNote").textContent.trim()) fail(`${code}: ボタンの補足が空`);
     $("btnSwitch").click();
@@ -19,6 +22,8 @@
     // 拡張版：100枚
     document.querySelector('[data-n="100"]').click();
     document.querySelectorAll("#extStage .mini")[0].click();
+    await wait(()=>$("extAdvanceArea").style.display==="flex");
+    $("btnExtOk").click();
     await wait(()=>$("extActions").style.display==="flex");
     document.querySelector('[data-ext-trials="1000"]').click();
     const th=$("extTheory").textContent;

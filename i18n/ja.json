@@ -33,6 +33,13 @@
   "game.afterStay_html": "あなたは扉を<strong>変えませんでした</strong>。結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。",
   "game.retry": "もう一度あそぶ",
 
+  "flow.btnOk": "OK",
+  "flow.btnOkNote": "つぎへ進む",
+  "flow.btnAuto": "AUTO",
+  "flow.btnAutoNote": "ここから自動で進める",
+  "flow.autoNow": "いまは自動で進んでいます。",
+  "flow.btnStep": "OKボタンで進める",
+
   "record.title": "あなたの記録",
   "record.lead": "何回かあそぶと、「変えた場合」と「変えなかった場合」で、あたりやすさにちがいが出てくるでしょうか？",
   "record.thStrategy": "作戦",

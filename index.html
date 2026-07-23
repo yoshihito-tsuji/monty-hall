@@ -233,6 +233,26 @@
     opacity: 0.75;
   }
 
+  /* ---------- 進行モードの表示 ---------- */
+  .flow-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-top: 14px;
+  }
+  .flow-note button {
+    font-size: 0.8rem;
+    font-weight: normal;
+    padding: 4px 14px;
+    margin-inline-start: 8px;
+    background: #fff;
+    color: var(--accent-dark);
+    border: 2px solid var(--card-border);
+    border-radius: 999px;
+    box-shadow: none;
+  }
+  .flow-note button:hover { border-color: var(--accent); }
+
   /* ---------- 結果バナー ---------- */
   .result-banner {
     display: none;
@@ -578,6 +598,11 @@
 
     <div class="stage" id="stage"></div>
 
+    <div class="actions" id="advanceArea" style="display:none;">
+      <button class="btn-primary" id="btnOk"><span data-i18n="flow.btnOk"></span><span class="btn-note" data-i18n="flow.btnOkNote"></span></button>
+      <button class="btn-secondary" id="btnAuto"><span data-i18n="flow.btnAuto"></span><span class="btn-note" data-i18n="flow.btnAutoNote"></span></button>
+    </div>
+
     <div class="actions" id="decisionArea" style="display:none;">
       <button class="btn-primary" id="btnSwitch"><span data-i18n="game.btnSwitch"></span><span class="btn-note" id="switchNote"></span></button>
       <button class="btn-secondary" id="btnStay"><span data-i18n="game.btnStay"></span><span class="btn-note" id="stayNote"></span></button>
@@ -588,6 +613,8 @@
     <div class="actions" id="retryArea" style="display:none;">
       <button class="btn-primary" id="btnRetry" data-i18n="game.retry"></button>
     </div>
+
+    <p class="flow-note" id="flowNote" style="display:none;"><span data-i18n="flow.autoNow"></span><button id="btnStepMode" data-i18n="flow.btnStep"></button></p>
   </section>
 
   <!-- 手であそんだ記録 -->
@@ -740,6 +767,11 @@
 
     <div class="ext-stage" id="extStage"></div>
 
+    <div class="actions" id="extAdvanceArea" style="display:none;">
+      <button class="btn-primary" id="btnExtOk"><span data-i18n="flow.btnOk"></span><span class="btn-note" data-i18n="flow.btnOkNote"></span></button>
+      <button class="btn-secondary" id="btnExtAuto"><span data-i18n="flow.btnAuto"></span><span class="btn-note" data-i18n="flow.btnAutoNote"></span></button>
+    </div>
+
     <div class="actions" id="extActions" style="display:none;">
       <button class="btn-secondary" id="btnExtStay" data-i18n="ext.stay"></button>
     </div>
@@ -747,6 +779,8 @@
     <div class="actions" id="extRetryArea" style="display:none;">
       <button class="btn-primary" id="btnExtRetry" data-i18n="ext.retry"></button>
     </div>
+
+    <p class="flow-note" id="extFlowNote" style="display:none;"><span data-i18n="flow.autoNow"></span><button id="btnExtStepMode" data-i18n="flow.btnStep"></button></p>
 
     <table style="margin-top:20px;">
       <thead>
@@ -836,6 +870,12 @@
       "game.afterSwitch_html": "あなたは扉を<strong>変えました</strong>。結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。",
       "game.afterStay_html": "あなたは扉を<strong>変えませんでした</strong>。結果を「あなたの記録」の表にたしました。<br>何回かくり返すと、どちらの作戦があたりやすいか、見えてくるはずです。",
       "game.retry": "もう一度あそぶ",
+      "flow.btnOk": "OK",
+      "flow.btnOkNote": "つぎへ進む",
+      "flow.btnAuto": "AUTO",
+      "flow.btnAutoNote": "ここから自動で進める",
+      "flow.autoNow": "いまは自動で進んでいます。",
+      "flow.btnStep": "OKボタンで進める",
       "record.title": "あなたの記録",
       "record.lead": "何回かあそぶと、「変えた場合」と「変えなかった場合」で、あたりやすさにちがいが出てくるでしょうか？",
       "record.thStrategy": "作戦",
@@ -931,6 +971,12 @@
       "game.afterSwitch_html": "You <strong>switched</strong> doors. The result has been added to the \"Your record\" table.<br>Play a few more times and you'll start to see which plan wins more often.",
       "game.afterStay_html": "You <strong>stayed</strong> with your door. The result has been added to the \"Your record\" table.<br>Play a few more times and you'll start to see which plan wins more often.",
       "game.retry": "Play again",
+      "flow.btnOk": "OK",
+      "flow.btnOkNote": "go to the next step",
+      "flow.btnAuto": "AUTO",
+      "flow.btnAutoNote": "continue automatically",
+      "flow.autoNow": "The game is advancing automatically.",
+      "flow.btnStep": "Advance with the OK button",
       "record.title": "Your record",
       "record.lead": "Play a few rounds. Does switching win more often than staying?",
       "record.thStrategy": "Plan",
@@ -1026,6 +1072,12 @@
       "game.afterSwitch_html": "你<strong>换</strong>了门。结果已经加到“你的记录”表里。<br>多玩几次，就能看出哪种办法更容易中。",
       "game.afterStay_html": "你<strong>没有换</strong>门。结果已经加到“你的记录”表里。<br>多玩几次，就能看出哪种办法更容易中。",
       "game.retry": "再玩一次",
+      "flow.btnOk": "确定",
+      "flow.btnOkNote": "进入下一步",
+      "flow.btnAuto": "自动",
+      "flow.btnAutoNote": "从这里开始自动进行",
+      "flow.autoNow": "目前为自动进行。",
+      "flow.btnStep": "改用确定按钮进行",
       "record.title": "你的记录",
       "record.lead": "多玩几次，“换了门”和“没有换”，中的比例会不会出现差别呢？",
       "record.thStrategy": "办法",
@@ -1121,6 +1173,12 @@
       "game.afterSwitch_html": "你<strong>換了門</strong>。結果已經加進「你的紀錄」表裡了。<br>多玩幾次，就會慢慢看出哪一種作法比較容易中獎。",
       "game.afterStay_html": "你<strong>沒有換門</strong>。結果已經加進「你的紀錄」表裡了。<br>多玩幾次，就會慢慢看出哪一種作法比較容易中獎。",
       "game.retry": "再玩一次",
+      "flow.btnOk": "確定",
+      "flow.btnOkNote": "進入下一步",
+      "flow.btnAuto": "自動",
+      "flow.btnAutoNote": "從這裡開始自動進行",
+      "flow.autoNow": "目前為自動進行。",
+      "flow.btnStep": "改用確定按鈕進行",
       "record.title": "你的紀錄",
       "record.lead": "多玩幾次之後，「換門」和「不換門」的中獎機會，會出現差別嗎？",
       "record.thStrategy": "作法",
@@ -1216,6 +1274,12 @@
       "game.afterSwitch_html": "당신은 문을 <strong>바꿨어요</strong>. 결과를 '나의 기록' 표에 더했어요.<br>여러 번 반복하면 어느 작전이 더 잘 맞는지 보이기 시작할 거예요.",
       "game.afterStay_html": "당신은 문을 <strong>바꾸지 않았어요</strong>. 결과를 '나의 기록' 표에 더했어요.<br>여러 번 반복하면 어느 작전이 더 잘 맞는지 보이기 시작할 거예요.",
       "game.retry": "한 번 더 하기",
+      "flow.btnOk": "확인",
+      "flow.btnOkNote": "다음으로 진행",
+      "flow.btnAuto": "자동",
+      "flow.btnAutoNote": "지금부터 자동으로 진행",
+      "flow.autoNow": "지금은 자동으로 진행됩니다.",
+      "flow.btnStep": "확인 버튼으로 진행하기",
       "record.title": "나의 기록",
       "record.lead": "여러 번 해 보면 '바꾼 경우'와 '바꾸지 않은 경우' 사이에 당첨되는 정도의 차이가 나타날까요?",
       "record.thStrategy": "작전",
@@ -1311,6 +1375,12 @@
       "game.afterSwitch_html": "Вы <strong>сменили</strong> дверь. Результат записан в таблицу «Ваши результаты».<br>Сыграйте ещё несколько раз — и станет видно, какая тактика чаще приносит победу.",
       "game.afterStay_html": "Вы <strong>не стали менять</strong> дверь. Результат записан в таблицу «Ваши результаты».<br>Сыграйте ещё несколько раз — и станет видно, какая тактика чаще приносит победу.",
       "game.retry": "Сыграть ещё раз",
+      "flow.btnOk": "ОК",
+      "flow.btnOkNote": "перейти к следующему шагу",
+      "flow.btnAuto": "АВТО",
+      "flow.btnAutoNote": "дальше продолжать автоматически",
+      "flow.autoNow": "Сейчас игра идёт автоматически.",
+      "flow.btnStep": "Продолжать по кнопке ОК",
       "record.title": "Ваши результаты",
       "record.lead": "Сыграйте несколько раз. Появится ли разница между тем, когда вы меняли дверь, и тем, когда не меняли?",
       "record.thStrategy": "Тактика",
@@ -1406,6 +1476,12 @@
       "game.afterSwitch_html": "<strong>Cambiaste</strong> de puerta. Sumamos el resultado a la tabla «Tus resultados».<br>Si repites varias veces, empezarás a ver qué estrategia acierta más.",
       "game.afterStay_html": "<strong>No cambiaste</strong> de puerta. Sumamos el resultado a la tabla «Tus resultados».<br>Si repites varias veces, empezarás a ver qué estrategia acierta más.",
       "game.retry": "Jugar otra vez",
+      "flow.btnOk": "OK",
+      "flow.btnOkNote": "pasar al siguiente paso",
+      "flow.btnAuto": "AUTO",
+      "flow.btnAutoNote": "continuar automáticamente",
+      "flow.autoNow": "Ahora el juego avanza automáticamente.",
+      "flow.btnStep": "Avanzar con el botón OK",
       "record.title": "Tus resultados",
       "record.lead": "Si juegas varias veces, ¿aparecerá alguna diferencia entre cambiar de puerta y no cambiar?",
       "record.thStrategy": "Estrategia",
@@ -1501,6 +1577,12 @@
       "game.afterSwitch_html": "คุณ<strong>เปลี่ยน</strong>ประตู ผลถูกบันทึกลงในตาราง \"บันทึกของคุณ\" แล้ว<br>ถ้าลองเล่นซ้ำหลาย ๆ ครั้ง จะเริ่มเห็นว่าวิธีไหนถูกง่ายกว่ากัน",
       "game.afterStay_html": "คุณ<strong>ไม่เปลี่ยน</strong>ประตู ผลถูกบันทึกลงในตาราง \"บันทึกของคุณ\" แล้ว<br>ถ้าลองเล่นซ้ำหลาย ๆ ครั้ง จะเริ่มเห็นว่าวิธีไหนถูกง่ายกว่ากัน",
       "game.retry": "เล่นอีกครั้ง",
+      "flow.btnOk": "ตกลง",
+      "flow.btnOkNote": "ไปขั้นตอนถัดไป",
+      "flow.btnAuto": "อัตโนมัติ",
+      "flow.btnAutoNote": "ดำเนินต่อโดยอัตโนมัติ",
+      "flow.autoNow": "ตอนนี้เกมดำเนินไปโดยอัตโนมัติ",
+      "flow.btnStep": "ดำเนินต่อด้วยปุ่มตกลง",
       "record.title": "บันทึกของคุณ",
       "record.lead": "ถ้าเล่นหลายครั้ง โอกาสถูกของ \"ตอนที่เปลี่ยน\" กับ \"ตอนที่ไม่เปลี่ยน\" จะต่างกันไหม",
       "record.thStrategy": "วิธีเล่น",
@@ -1596,6 +1678,12 @@
       "game.afterSwitch_html": "आपने दरवाज़ा <strong>बदला</strong>। नतीजा ‘आपका रिकॉर्ड’ तालिका में जुड़ गया।<br>कुछ बार खेलिए, फिर दिखने लगेगा कि कौन-सी तरकीब ज़्यादा जिताती है।",
       "game.afterStay_html": "आपने दरवाज़ा <strong>नहीं बदला</strong>। नतीजा ‘आपका रिकॉर्ड’ तालिका में जुड़ गया।<br>कुछ बार खेलिए, फिर दिखने लगेगा कि कौन-सी तरकीब ज़्यादा जिताती है।",
       "game.retry": "फिर से खेलें",
+      "flow.btnOk": "ठीक है",
+      "flow.btnOkNote": "अगले चरण पर जाएँ",
+      "flow.btnAuto": "ऑटो",
+      "flow.btnAutoNote": "यहाँ से अपने आप आगे बढ़े",
+      "flow.autoNow": "अभी खेल अपने आप आगे बढ़ रहा है।",
+      "flow.btnStep": "ठीक है बटन से आगे बढ़ें",
       "record.title": "आपका रिकॉर्ड",
       "record.lead": "कुछ बार खेलने पर, ‘बदला’ और ‘नहीं बदला’ में जीत की संभावना का फ़र्क़ दिखता है क्या?",
       "record.thStrategy": "तरकीब",
@@ -1691,6 +1779,12 @@
       "game.afterSwitch_html": "Tu as <strong>changé</strong> de porte. Le résultat est ajouté au tableau « Tes résultats ».<br>Recommence plusieurs fois : tu verras peu à peu quelle stratégie fait gagner le plus souvent.",
       "game.afterStay_html": "Tu <strong>n'as pas changé</strong> de porte. Le résultat est ajouté au tableau « Tes résultats ».<br>Recommence plusieurs fois : tu verras peu à peu quelle stratégie fait gagner le plus souvent.",
       "game.retry": "Rejouer",
+      "flow.btnOk": "OK",
+      "flow.btnOkNote": "passer à la suite",
+      "flow.btnAuto": "AUTO",
+      "flow.btnAutoNote": "continuer automatiquement",
+      "flow.autoNow": "La partie avance maintenant automatiquement.",
+      "flow.btnStep": "Avancer avec le bouton OK",
       "record.title": "Tes résultats",
       "record.lead": "Après plusieurs parties, y a-t-il une différence entre « changer de porte » et « ne pas changer » ?",
       "record.thStrategy": "Stratégie",
@@ -1786,6 +1880,12 @@
       "game.afterSwitch_html": "لقد <strong>غيّرتَ</strong> الباب. أضفنا النتيجة إلى جدول «سِجِلّك».<br>كرّر اللعب مرات عدة، وسترى أيّ خطة تربح أكثر.",
       "game.afterStay_html": "لقد <strong>بقيتَ دون تغيير</strong>. أضفنا النتيجة إلى جدول «سِجِلّك».<br>كرّر اللعب مرات عدة، وسترى أيّ خطة تربح أكثر.",
       "game.retry": "العب مرة أخرى",
+      "flow.btnOk": "موافق",
+      "flow.btnOkNote": "الانتقال إلى الخطوة التالية",
+      "flow.btnAuto": "تلقائي",
+      "flow.btnAutoNote": "المتابعة تلقائيًا",
+      "flow.autoNow": "تتقدم اللعبة الآن تلقائيًا.",
+      "flow.btnStep": "المتابعة بزر موافق",
       "record.title": "سِجِلّك",
       "record.lead": "بعد أن تلعب مرات عدة، هل يظهر فرق في نسبة الفوز بين «تغيير الباب» و«البقاء دون تغيير»؟",
       "record.thStrategy": "الخطة",
@@ -1881,6 +1981,12 @@
       "game.afterSwitch_html": "Du <strong>bytte</strong> dörr. Resultatet är tillagt i tabellen ”Dina resultat”.<br>Spela några gånger till, så börjar du se vilken strategi som vinner oftast.",
       "game.afterStay_html": "Du <strong>behöll</strong> din dörr. Resultatet är tillagt i tabellen ”Dina resultat”.<br>Spela några gånger till, så börjar du se vilken strategi som vinner oftast.",
       "game.retry": "Spela igen",
+      "flow.btnOk": "OK",
+      "flow.btnOkNote": "gå till nästa steg",
+      "flow.btnAuto": "AUTO",
+      "flow.btnAutoNote": "fortsätt automatiskt",
+      "flow.autoNow": "Spelet går nu vidare automatiskt.",
+      "flow.btnStep": "Gå vidare med OK-knappen",
       "record.title": "Dina resultat",
       "record.lead": "Efter några omgångar – syns det någon skillnad i hur ofta man vinner när man byter dörr och när man behåller dörren?",
       "record.thStrategy": "Strategi",
@@ -2012,6 +2118,49 @@
   const stage = $("stage");
   const message = $("message");
 
+  /* ---------- 進行モード（OKで1つずつ / AUTOで自動） ---------- */
+  // "step" … 司会者のセリフごとに OK を待つ。"auto" … 従来のペースで自動的に進む。
+  let flowMode = "step";
+  try {
+    const savedFlow = localStorage.getItem("mh_flow");
+    if (savedFlow === "auto" || savedFlow === "step") flowMode = savedFlow;
+  } catch (e) { /* 参照できなければ既定のまま */ }
+
+  const pendingNext = {};   // OK待ち中の「次に進む処理」を停止点ごとに持つ
+
+  function setFlowMode(m) {
+    flowMode = m;
+    try { localStorage.setItem("mh_flow", m); } catch (e) { /* 保存できなくても続行 */ }
+    renderFlowNotes();
+  }
+
+  function renderFlowNotes() {
+    const show = flowMode === "auto" ? "block" : "none";
+    $("flowNote").style.display = show;
+    $("extFlowNote").style.display = show;
+  }
+
+  // 対話の停止点。step なら OK/AUTO ボタンを出して待ち、auto なら autoDelay ミリ秒後に進む
+  function waitForOk(areaId, autoDelay, next) {
+    if (flowMode === "auto") { setTimeout(next, autoDelay); return; }
+    pendingNext[areaId] = next;
+    $(areaId).style.display = "flex";
+  }
+
+  function advanceFrom(areaId, toAuto) {
+    const next = pendingNext[areaId];
+    if (!next) return;
+    pendingNext[areaId] = null;
+    $(areaId).style.display = "none";
+    if (toAuto) setFlowMode("auto");
+    next();
+  }
+
+  function cancelPending(areaId) {
+    pendingNext[areaId] = null;
+    $(areaId).style.display = "none";
+  }
+
   /* ---------- 扉の生成 ---------- */
   function buildDoors() {
     stage.innerHTML = "";
@@ -2054,6 +2203,7 @@
     picked = -1; opened = -1; phase = "pick";
     buildDoors();
     setSteps(1);
+    cancelPending("advanceArea");
     $("decisionArea").style.display = "none";
     $("retryArea").style.display = "none";
     const banner = $("resultBanner");
@@ -2075,11 +2225,12 @@
     const candidates = [0, 1, 2].filter((d) => d !== picked && d !== carDoor);
     opened = candidates[Math.floor(Math.random() * candidates.length)];
 
-    setTimeout(() => {
+    // セリフを読み終えてから進めるよう、ここで一度止まれるようにする
+    waitForOk("advanceArea", 1200, () => {
       unitAt(opened).classList.add("open");
       unitAt(opened).querySelector(".tag").textContent = t("game.tagOpened");
       setTimeout(showDecision, 900);
-    }, 1200);
+    });
   }
 
   function showDecision() {
@@ -2179,6 +2330,9 @@
   }
 
   /* ---------- イベント ---------- */
+  $("btnOk").addEventListener("click", () => advanceFrom("advanceArea", false));
+  $("btnAuto").addEventListener("click", () => advanceFrom("advanceArea", true));
+  $("btnStepMode").addEventListener("click", () => setFlowMode("step"));
   $("btnSwitch").addEventListener("click", () => decide(true));
   $("btnStay").addEventListener("click", () => decide(false));
   $("btnRetry").addEventListener("click", newGame);
@@ -2247,6 +2401,7 @@
     buildExtDoors();
     extStage.classList.add("pickable");
     extStage.classList.remove("switchable");
+    cancelPending("extAdvanceArea");
     $("extActions").style.display = "none";
     $("extRetryArea").style.display = "none";
     const b = $("extBanner"); b.className = "result-banner"; b.textContent = "";
@@ -2267,25 +2422,28 @@
     const list = hostOpens(ext.n, ext.car, ext.pick, ext.mode);
     extMsg.innerHTML = t("ext.opening_html", { p: i + 1, k: list.length });
 
-    // 枚数が多いときは順番に開けて、減っていく様子を見せる
-    const step = Math.max(8, Math.min(60, Math.round(900 / Math.max(1, list.length))));
-    list.forEach((d, k) => setTimeout(() => {
-      ext.opened.add(d);
-      const t = extTile(d);
-      t.classList.add("open");
-      t.innerHTML = "🐐";
-    }, 400 + k * step));
+    // セリフを読み終えてから進めるよう、ここで一度止まれるようにする
+    waitForOk("extAdvanceArea", 400, () => {
+      // 枚数が多いときは順番に開けて、減っていく様子を見せる
+      const step = Math.max(8, Math.min(60, Math.round(900 / Math.max(1, list.length))));
+      list.forEach((d, k) => setTimeout(() => {
+        ext.opened.add(d);
+        const t = extTile(d);
+        t.classList.add("open");
+        t.innerHTML = "🐐";
+      }, k * step));
 
-    setTimeout(() => {
-      ext.phase = "decide";
-      extStage.classList.add("switchable");
-      const closed = [];
-      for (let d = 0; d < ext.n; d++) if (d !== ext.pick && !ext.opened.has(d)) closed.push(d);
-      extMsg.innerHTML = ext.mode === "all"
-        ? t("ext.decideAll_html", { k: list.length, p: ext.pick + 1, c: closed[0] + 1 })
-        : t("ext.decideOne_html", { c: closed.length });
-      $("extActions").style.display = "flex";
-    }, 400 + list.length * step + 350);
+      setTimeout(() => {
+        ext.phase = "decide";
+        extStage.classList.add("switchable");
+        const closed = [];
+        for (let d = 0; d < ext.n; d++) if (d !== ext.pick && !ext.opened.has(d)) closed.push(d);
+        extMsg.innerHTML = ext.mode === "all"
+          ? t("ext.decideAll_html", { k: list.length, p: ext.pick + 1, c: closed[0] + 1 })
+          : t("ext.decideOne_html", { c: closed.length });
+        $("extActions").style.display = "flex";
+      }, list.length * step + 350);
+    });
   }
 
   function extFinish(finalIdx, didSwitch) {
@@ -2417,6 +2575,9 @@
   document.querySelectorAll("[data-mode]").forEach((b) =>
     b.addEventListener("click", () => extSetMode(b.dataset.mode)));
   $("extNInput").addEventListener("change", (e) => extSetN(parseInt(e.target.value, 10)));
+  $("btnExtOk").addEventListener("click", () => advanceFrom("extAdvanceArea", false));
+  $("btnExtAuto").addEventListener("click", () => advanceFrom("extAdvanceArea", true));
+  $("btnExtStepMode").addEventListener("click", () => setFlowMode("step"));
   $("btnExtStay").addEventListener("click", () => extFinish(ext.pick, false));
   $("btnExtRetry").addEventListener("click", extNewGame);
   document.querySelectorAll("[data-ext-trials]").forEach((b) =>
@@ -2534,6 +2695,7 @@
 
   extSetMode("all");
   extSetN(3);
+  renderFlowNotes();
   LANG = initLang();
   buildLangMenu();
   applyI18n();

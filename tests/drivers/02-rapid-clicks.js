@@ -12,6 +12,9 @@
     doors()[0].click(); doors()[0].click(); doors()[0].click();
     // 2) 司会者が開ける前に別の扉を押す → 選択が乗り換わらないこと
     doors()[1].click(); doors()[2].click();
+    // OKボタンを連打 → 二重に進まないこと
+    await wait(() => $("advanceArea").style.display === "flex");
+    $("btnOk").click(); $("btnOk").click(); $("btnOk").click();
     await wait(() => $("decisionArea").style.display === "flex");
     const chosen = units().filter((u) => u.classList.contains("chosen"));
     if (chosen.length !== 1) fail(`選択中の扉が ${chosen.length} 枚（連打で二重選択）`);
@@ -39,9 +42,38 @@
 
     // 6) キーボード操作（Enter）で扉を選べること
     doors()[2].dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await wait(() => $("advanceArea").style.display === "flex");
+    $("btnOk").click();
     await wait(() => $("decisionArea").style.display === "flex");
     if (units().indexOf(units().filter((u) => u.classList.contains("chosen"))[0]) !== 2)
       fail("Enterキーで扉を選べない");
+
+    // 7) AUTOモード → OK待ちなしで進み、「OKボタンで進める」で個別進行に戻れること
+    $("btnStay").click();
+    await wait(() => $("retryArea").style.display === "flex");
+    $("btnRetry").click();
+    doors()[0].click();
+    await wait(() => $("advanceArea").style.display === "flex");
+    $("btnAuto").click();
+    await wait(() => $("decisionArea").style.display === "flex");
+    if ($("flowNote").style.display === "none") fail("AUTOにしたのに自動進行中の表示が出ない");
+    $("btnStay").click();
+    await wait(() => $("retryArea").style.display === "flex");
+    $("btnRetry").click();
+    doors()[1].click();
+    await wait(() => $("decisionArea").style.display === "flex");
+    if ($("advanceArea").style.display === "flex") fail("AUTOモードなのにOK待ちで止まった");
+    $("btnStepMode").click();
+    if ($("flowNote").style.display !== "none") fail("個別進行に戻しても自動進行中の表示が残る");
+    $("btnStay").click();
+    await wait(() => $("retryArea").style.display === "flex");
+    $("btnRetry").click();
+    doors()[0].click();
+    await wait(() => $("advanceArea").style.display === "flex");
+    $("btnOk").click();
+    await wait(() => $("decisionArea").style.display === "flex");
+    $("btnStay").click();
+    await wait(() => $("retryArea").style.display === "flex");
 
     log.push(ng === 0 ? "RESULT: ALL PASS" : `RESULT: ${ng} 件の不具合`);
     const p = document.createElement("pre"); p.id = "testlog"; p.textContent = log.join("\n");
