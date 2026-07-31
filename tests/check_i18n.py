@@ -17,7 +17,7 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LANGS = ["ja", "en", "zh-Hans", "zh-Hant", "ko", "ru", "es", "th", "hi", "fr", "ar", "sv"]
+LANGS = ["ja", "en", "zh-Hans", "zh-Hant", "ko", "ru", "es", "th", "hi", "fr", "ar", "ur", "sv"]
 
 PLACEHOLDER = re.compile(r"\{[a-z]+\}")
 TAG = re.compile(r"</?[a-z]+[^>]*>")

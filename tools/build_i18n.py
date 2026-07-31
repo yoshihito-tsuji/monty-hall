@@ -12,7 +12,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-LANGS = ["ja", "en", "zh-Hans", "zh-Hant", "ko", "ru", "es", "th", "hi", "fr", "ar", "sv"]
+LANGS = ["ja", "en", "zh-Hans", "zh-Hant", "ko", "ru", "es", "th", "hi", "fr", "ar", "ur", "sv"]
 # 小数点にコンマを使う言語（静的な文言を実行時の表記に合わせる）
 COMMA_LANGS = {"ru", "fr", "es", "sv"}
 

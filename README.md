@@ -2,8 +2,8 @@
 
 **▶ 実際に遊ぶ / Try it now： https://yoshihito-tsuji.github.io/monty-hall/**
 
-12言語対応のブラウザ教材です。インストール不要、単一のHTMLファイルで動きます。
-A browser-based teaching tool available in 12 languages. No installation — it is a single, self-contained HTML file.
+13言語対応のブラウザ教材です。インストール不要、単一のHTMLファイルで動きます。
+A browser-based teaching tool available in 13 languages. No installation — it is a single, self-contained HTML file.
 
 [日本語の説明](#日本語) ｜ [English documentation](#english)
 
@@ -38,12 +38,12 @@ A browser-based teaching tool available in 12 languages. No installation — it 
 
 画面右上の「言語」ボタンから切り替えます。
 
-日本語 ／ English ／ 简体中文 ／ 繁體中文 ／ 한국어 ／ Русский ／ Español ／ ไทย ／ हिन्दी ／ Français ／ العربية ／ Svenska
+日本語 ／ English ／ 简体中文 ／ 繁體中文 ／ 한국어 ／ Русский ／ Español ／ ไทย ／ हिन्दी ／ Français ／ العربية ／ اردو ／ Svenska
 
 - 選んだ言語はブラウザに記憶され、次に開いたときも同じ言語で表示されます。
 - URLに `?lang=en` のように付けると、その言語で直接開けます（例： `https://yoshihito-tsuji.github.io/monty-hall/?lang=fr`）。授業で特定の言語のリンクを配りたいときに使えます。
 - 初回は、URLの指定 → 前回選んだ言語 → ブラウザの言語設定 → 日本語、の順に決まります。
-- アラビア語では画面全体が右から左に読む配置に切り替わります。
+- アラビア語とウルドゥー語では画面全体が右から左に読む配置に切り替わります。
 
 ### 手元で動かす
 
@@ -68,9 +68,9 @@ python3 tests/check_i18n.py   # 翻訳の整合と、index.html への反映漏�
 ./tests/run.sh                # ヘッドレスブラウザで実際に操作する5つのテスト
 ```
 
-ブラウザテストは、司会者が新車の扉やあなたが選んだ扉を開けないこと、結果表示が実際の中身と一致すること、記録表の数が合うこと、連打で壊れないこと、12言語すべてが表示され遊べることを確認します。手元でも同じコマンドで実行できます（Chrome か Chromium が必要）。
+ブラウザテストは、司会者が新車の扉やあなたが選んだ扉を開けないこと、結果表示が実際の中身と一致すること、記録表の数が合うこと、連打で壊れないこと、13言語すべてが表示され遊べることを確認します。手元でも同じコマンドで実行できます（Chrome か Chromium が必要）。
 
-**翻訳の来歴について：** 日本語以外の11言語は生成AI（Claude）が訳し、言語ごとに別のAIが原文と突き合わせて検討・修正したものです。人間の母語話者による確認は経ていません。論理の誤りや文法の破綻は検討の過程で修正しましたが、語感の細部には改善の余地が残っている可能性があります。
+**翻訳の来歴について：** 日本語以外の12言語は生成AI（Claude）が訳し、言語ごとに別のAIが原文と突き合わせて検討・修正したものです。人間の母語話者による確認は経ていません。論理の誤りや文法の破綻は検討の過程で修正しましたが、語感の細部には改善の余地が残っている可能性があります。
 
 ### 制作
 
@@ -113,12 +113,12 @@ For every setting, the page states the exact calculated probability in words and
 
 ### Languages
 
-Use the **Language** button at the top right. Available in Japanese, English, Simplified Chinese, Traditional Chinese, Korean, Russian, Spanish, Thai, Hindi, French, Arabic, and Swedish.
+Use the **Language** button at the top right. Available in Japanese, English, Simplified Chinese, Traditional Chinese, Korean, Russian, Spanish, Thai, Hindi, French, Arabic, Urdu, and Swedish.
 
 - Your choice is remembered in the browser for next time.
 - Append `?lang=` to the URL to open the page directly in a given language — for example `https://yoshihito-tsuji.github.io/monty-hall/?lang=fr`. This is convenient for handing a class a link in one specific language.
 - On first visit the language is decided in this order: URL parameter → previously chosen language → browser language setting → Japanese.
-- Arabic switches the whole layout to right-to-left, including the order of the doors.
+- Arabic and Urdu switch the whole layout to right-to-left, including the order of the doors.
 
 ### Running it locally
 
@@ -151,9 +151,9 @@ python3 tests/check_i18n.py   # translation consistency, and whether index.html 
 ./tests/run.sh                # five suites driving the real page in headless Chrome
 ```
 
-The browser tests confirm that the host never opens the car door or your own door, that the result message matches what is actually behind the chosen door, that the tallies add up, that rapid clicking cannot corrupt the state, and that all twelve languages render and play correctly. The same commands run locally (Chrome or Chromium required).
+The browser tests confirm that the host never opens the car door or your own door, that the result message matches what is actually behind the chosen door, that the tallies add up, that rapid clicking cannot corrupt the state, and that all thirteen languages render and play correctly. The same commands run locally (Chrome or Chromium required).
 
-**Provenance of the translations:** the eleven non-Japanese languages were produced by a generative AI (Claude) and then reviewed against the Japanese source by a separate AI reviewer per language, which corrected mistranslations, grammatical agreement that broke for particular numbers, and inconsistent terminology. They have **not** been checked by human native speakers. Corrections are welcome via issues or pull requests.
+**Provenance of the translations:** the twelve non-Japanese languages were produced by a generative AI (Claude) and then reviewed against the Japanese source by a separate AI reviewer per language, which corrected mistranslations, grammatical agreement that broke for particular numbers, and inconsistent terminology. They have **not** been checked by human native speakers. Corrections are welcome via issues or pull requests.
 
 ### Credits
 
