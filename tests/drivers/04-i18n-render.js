@@ -9,8 +9,9 @@
     li.click();
     if(document.documentElement.lang!==c) fail(`${c}: html lang が ${document.documentElement.lang}`);
     const dir=document.documentElement.dir;
-    if(c==="ar" && dir!=="rtl") fail("ar: dir=rtl になっていない");
-    if(c!=="ar" && dir!=="ltr") fail(`${c}: dir=${dir}`);
+    const rtl=["ar","ur"];
+    if(rtl.includes(c) && dir!=="rtl") fail(`${c}: dir=rtl になっていない`);
+    if(!rtl.includes(c) && dir!=="ltr") fail(`${c}: dir=${dir}`);
     const empties=[...document.querySelectorAll("[data-i18n],[data-i18n-html]")].filter(e=>!e.textContent.trim());
     if(empties.length) fail(`${c}: 空表示 ${empties.length}件（${empties[0].getAttribute("data-i18n")||empties[0].getAttribute("data-i18n-html")}）`);
     ["message","extMessage","extChartTitle","extTheory","simStatus","extSimStatus","footerLab","langBtnLabel"].forEach(id=>{

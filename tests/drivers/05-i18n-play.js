@@ -34,7 +34,7 @@
     out.push(`${code}: ${$("resultBanner").textContent.slice(0,34)} ｜ ${$("barSwitchLabel").textContent.slice(0,28)}`);
   }
   (async()=>{
-    for(const c of ["ja","en","zh-Hans","zh-Hant","ko","ru","es","th","hi","fr","ar","sv"]) await playOne(c);
+    for(const c of ["ja","en","zh-Hans","zh-Hant","ko","ru","es","th","hi","fr","ar","ur","sv"]) await playOne(c);
     out.push(ng===0?"RESULT: ALL PASS":`RESULT: ${ng} 件の不具合`);
     const p=document.createElement("pre");p.id="testlog";p.textContent=out.join("\n");document.body.appendChild(p);
   })();
