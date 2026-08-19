@@ -76,12 +76,7 @@
 
   "ext.title": "Et si on ajoutait des portes ?",
   "ext.lead_html": "Avec 3 portes, tu te dis peut-être : « C'est du 50-50, non ? » Alors ajoutons des portes. Imagine <strong>100 portes</strong> : tu en choisis une, puis le présentateur ouvre 98 portes à chèvre. Est-ce que tu gardes quand même la porte choisie au début ?",
-  "ext.labelDoors": "Nombre de portes",
   "ext.labelHost": "Façon d'ouvrir du présentateur",
-  "ext.chipDoors": "{n} portes",
-  "ext.custom": "Je choisis moi-même",
-  "ext.unit": "portes",
-  "ext.customAria": "Saisir soi-même le nombre de portes",
   "ext.modeAll": "Ouvrir jusqu'à ce qu'il ne reste qu'une porte fermée",
   "ext.modeOne": "N'ouvrir qu'une seule porte à chèvre",
   "ext.modeAllShort": "jusqu'à une seule porte fermée",
@@ -102,7 +97,6 @@
   "ext.simRan": "Réglage : {d} portes, {mode}. On a joué {n} fois de plus (total : {t} fois pour chaque stratégie).",
   "ext.chartTitle": "Taux de réussite (%) — les pointillés montrent les taux trouvés par le calcul (changer {s} % / ne pas changer {y} %)",
   "ext.theoryAll_html": "La porte choisie au début est la bonne seulement 1 fois sur {n} ({ty} %). Mais <strong>{m} fois sur {n}</strong>, la voiture est derrière une autre porte, et le présentateur l'évite : il n'ouvre que des portes à chèvre. Donc, dans ces cas-là, la porte qui reste fermée jusqu'au bout cache la voiture. Voilà pourquoi, en changeant, tu gagnes <strong>{s} %</strong> du temps.",
-  "ext.theoryOne3_html": "Avec 3 portes, si le présentateur en ouvre une, il ne reste qu'une seule porte fermée. C'est exactement le jeu de base vu plus haut : en changeant tu gagnes <strong>{s} %</strong> du temps, en ne changeant pas {ty} %.",
   "ext.theoryOneN_html": "Si le présentateur n'ouvre qu'une porte, il reste {c} portes fermées. Même en changeant, tu ne sais pas laquelle cache la voiture. En changeant tu gagnes <strong>{s} %</strong> du temps, en ne changeant pas {ty} %. Changer reste plus avantageux, mais plus il y a de portes, plus l'écart devient petit.",
 
   "footer.lab": "Future University Hakodate — laboratoire Tsuji",

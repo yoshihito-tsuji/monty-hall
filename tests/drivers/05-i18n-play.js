@@ -20,7 +20,6 @@
     document.querySelector('[data-trials="1000"]').click();
     if(!/[0-9]/.test($("barSwitchLabel").textContent)) fail(`${code}: グラフの数値が空`);
     // 拡張版：100枚
-    document.querySelector('[data-n="100"]').click();
     document.querySelectorAll("#extStage .mini")[0].click();
     await wait(()=>$("extAdvanceArea").style.display==="flex");
     $("btnExtOk").click();

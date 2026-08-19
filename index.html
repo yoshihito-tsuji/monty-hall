@@ -429,11 +429,27 @@
   }
   .ext-stage {
     display: grid;
+    /* 列数は幅にまかせる（狭い画面でも1枚が潰れないように） */
+    grid-template-columns: repeat(auto-fit, minmax(28px, 1fr));
     gap: 6px;
     justify-content: center;
     max-width: 560px;
     margin: 18px auto 4px;
   }
+  /* 司会者が開けはじめたら、開いた扉を縮めて彩度を落とす（閉じた扉だけが目に残る） */
+  .ext-stage.dim .mini.open { transform: rotateY(-32deg) scale(0.55); opacity: 0.5; }
+  /* 決断の場面：開いた扉を背景のテクスチャまで縮め、取り出した2枚と一緒に1画面へ収める */
+  .ext-stage.compact {
+    grid-template-columns: repeat(auto-fit, minmax(11px, 1fr));
+    gap: 2px;
+    max-width: 300px;
+    margin-top: 10px;
+  }
+  .ext-stage.compact .mini { font-size: 0; border-width: 1px; border-radius: 3px; }
+  .ext-stage.compact .mini .knob-dot { display: none; }
+  .ext-stage.compact.dim .mini.open { transform: none; opacity: 0.45; }
+  /* 決断の場面で取り出す2枚（基本ゲームと同じ扉の見た目を流用する） */
+  .ext-focus { margin-top: 4px; }
   .mini {
     position: relative;
     aspect-ratio: 3 / 4;
@@ -517,6 +533,8 @@
   [dir="rtl"] .door { transform-origin: right center; }
   [dir="rtl"] .door-unit.open .door { transform: rotateY(105deg); }
   [dir="rtl"] .mini.open { transform: rotateY(32deg) scale(0.94); }
+  [dir="rtl"] .ext-stage.dim .mini.open { transform: rotateY(32deg) scale(0.55); }
+  [dir="rtl"] .ext-stage.compact.dim .mini.open { transform: none; }
 
   footer {
     text-align: center;
@@ -696,16 +714,6 @@
 
     <div class="ext-controls">
       <div class="ctrl-row">
-        <span class="ctrl-label" data-i18n="ext.labelDoors"></span>
-        <button class="chip" data-n="3"></button>
-        <button class="chip" data-n="5"></button>
-        <button class="chip" data-n="10"></button>
-        <button class="chip" data-n="100"></button>
-        <label class="num-wrap"><span data-i18n="ext.custom"></span>
-          <input type="number" id="extNInput" min="3" max="200" step="1" value="3"><span data-i18n="ext.unit"></span>
-        </label>
-      </div>
-      <div class="ctrl-row">
         <span class="ctrl-label" data-i18n="ext.labelHost"></span>
         <button class="chip" data-mode="all" data-i18n="ext.modeAll"></button>
         <button class="chip" data-mode="one" data-i18n="ext.modeOne"></button>
@@ -724,6 +732,8 @@
       </svg>
       <div class="bubble"><p id="extMessage" aria-live="polite"></p></div>
     </div>
+
+    <div class="stage ext-focus" id="extFocus" style="display:none;"></div>
 
     <div class="ext-stage" id="extStage"></div>
 
@@ -909,12 +919,7 @@
       "why.concl_html": "「変える作戦」は、3つの場合のうち<strong>2つであたり</strong>ます。「変えない作戦」であたるのは1つだけです。だから、変えたほうが<strong>2倍あたりやすい</strong>のです。上のシミュレーションの棒グラフが、66.7％と33.3％の点線に近づいていくのは、このためです。",
       "ext.title": "扉の数を増やしてみる",
       "ext.lead_html": "3枚だと「どちらも五分五分では？」と感じるかもしれません。そこで、扉の数を増やしてみましょう。たとえば<strong>100枚</strong>の扉から1枚をえらび、司会者がヤギの扉を98枚も開けてみせたら、あなたは最初にえらんだ1枚に、それでもこだわりますか？",
-      "ext.labelDoors": "扉の数",
       "ext.labelHost": "司会者の開け方",
-      "ext.chipDoors": "{n}枚",
-      "ext.custom": "自分で決める",
-      "ext.unit": "枚",
-      "ext.customAria": "扉の数を自分で入力する",
       "ext.modeAll": "閉じた扉が残り1枚になるまで開ける",
       "ext.modeOne": "ヤギの扉を1枚だけ開ける",
       "ext.modeAllShort": "残り1枚になるまで開ける",
@@ -935,7 +940,6 @@
       "ext.simRan": "扉{d}枚・{mode} の設定で {n}回 追加しました（累計 {t} 回ずつ）。",
       "ext.chartTitle": "あたった割合（％）— 点線は、計算で求めた割合（変える {s}％ / 変えない {y}％）です",
       "ext.theoryAll_html": "最初にえらんだ1枚があたるのは {n}回に1回（{ty}％）だけです。のこりの <strong>{m}／{n}</strong> では新車はほかの扉にあり、司会者はそれを避けてヤギの扉だけを開けます。つまりその場合、最後まで閉じたまま残る扉が新車です。だから変えると <strong>{s}％</strong> であたります。",
-      "ext.theoryOne3_html": "扉が3枚のときは、司会者が1枚開ければ閉じた扉は1枚しか残りません。上の基本のゲームとまったく同じで、変えると <strong>{s}％</strong>、変えないと {ty}％ です。",
       "ext.theoryOneN_html": "司会者が1枚しか開けないと、閉じた扉が {c}枚 のこります。変えても、その中のどれが新車かは分かりません。変えると <strong>{s}％</strong>、変えないと {ty}％ です。変えたほうが有利なことに変わりはありませんが、扉が多いほどその差は小さくなります。",
       "footer.lab": "公立はこだて未来大学　辻研究室",
       "footer.source": "ソースコード"
@@ -1010,12 +1014,7 @@
       "why.concl_html": "The switch plan wins in <strong>2 of the 3 cases</strong>. The stay plan wins in only 1. That is why switching wins <strong>twice as often</strong>. It is also why the bars in the simulation above creep toward the 66.7% and 33.3% dotted lines.",
       "ext.title": "Try more doors",
       "ext.lead_html": "With 3 doors it may still feel like a 50-50 guess. So let's add more doors. Imagine picking 1 door out of <strong>100</strong>, and then the host opens 98 doors with goats behind them. Would you still hold on to your first pick?",
-      "ext.labelDoors": "Number of doors",
       "ext.labelHost": "How the host opens doors",
-      "ext.chipDoors": "{n} doors",
-      "ext.custom": "Choose your own",
-      "ext.unit": "doors",
-      "ext.customAria": "Type your own number of doors",
       "ext.modeAll": "Open doors until only 1 closed door is left",
       "ext.modeOne": "Open just 1 door with a goat",
       "ext.modeAllShort": "Open until 1 is left",
@@ -1036,7 +1035,6 @@
       "ext.simRan": "Added {n} rounds with {d} doors and \"{mode}\" ({t} of each in total).",
       "ext.chartTitle": "Win rate (%) — the dotted lines show the numbers we worked out (switch {s}% / stay {y}%)",
       "ext.theoryAll_html": "Your very first pick wins only 1 time in {n} ({ty}%). The other <strong>{m}/{n}</strong> of the time the car is behind some other door, and the host avoids it, opening only doors with goats. So in those cases, the other door still closed at the end hides the car. That is why switching wins <strong>{s}%</strong> of the time.",
-      "ext.theoryOne3_html": "With 3 doors, once the host opens 1 door only 1 closed door is left. This is exactly the basic game above: switching wins <strong>{s}%</strong> of the time, staying {ty}%.",
       "ext.theoryOneN_html": "If the host opens only 1 door, {c} doors stay closed. Even if you switch, you can't tell which of them hides the car. Switching wins <strong>{s}%</strong> of the time, staying {ty}%. Switching is still the better choice, but the more doors there are, the smaller the gap becomes.",
       "footer.lab": "Tsuji Laboratory, Future University Hakodate",
       "footer.source": "Source code"
@@ -1111,12 +1109,7 @@
       "why.concl_html": "“换门”这个办法，在三种情况里<strong>有两种能中</strong>。“不换门”能中的只有一种。所以，换门中的机会是<strong>两倍</strong>。上面模拟里的柱子会慢慢靠近66.7%和33.3%的虚线，原因就在这里。",
       "ext.title": "试着增加门的数量",
       "ext.lead_html": "只有3扇门时，也许你会觉得“不就是一半一半吗？”。那就增加门的数量试试吧。比如从<strong>100扇</strong>门里选一扇，主持人一口气打开98扇有山羊的门，你还会坚持最初选的那一扇吗？",
-      "ext.labelDoors": "门的数量",
       "ext.labelHost": "主持人的开门方式",
-      "ext.chipDoors": "{n}扇",
-      "ext.custom": "自己设定",
-      "ext.unit": "扇",
-      "ext.customAria": "自己输入门的数量",
       "ext.modeAll": "一直开到只剩1扇关着的门",
       "ext.modeOne": "只打开1扇有山羊的门",
       "ext.modeAllShort": "开到只剩1扇",
@@ -1137,7 +1130,6 @@
       "ext.simRan": "用{d}扇门、{mode}的设定又各试了{n}次（一共各{t}次）。",
       "ext.chartTitle": "中的比例（%）— 虚线是算出来的比例（换门 {s}% / 不换门 {y}%）",
       "ext.theoryAll_html": "最初选的那扇门能中的机会，只有 {n} 次里的 1 次（{ty}%）。剩下的 <strong>{m}／{n}</strong> 里，新车在别的门后面，而主持人会避开它，只打开有山羊的门。也就是说，这时一直关到最后的那扇门就是新车。所以换门的话，有 <strong>{s}%</strong> 的机会中。",
-      "ext.theoryOne3_html": "门只有3扇时，主持人打开1扇，关着的就只剩1扇了。这和上面的基本游戏完全一样，换门是 <strong>{s}%</strong>，不换是 {ty}%。",
       "ext.theoryOneN_html": "主持人只打开1扇的话，关着的门还有 {c}扇。就算换，也不知道其中哪一扇是新车。换门是 <strong>{s}%</strong>，不换是 {ty}%。换门更有利这一点没有变，不过门越多，这个差别就越小。",
       "footer.lab": "公立函馆未来大学　辻研究室",
       "footer.source": "源代码"
@@ -1212,12 +1204,7 @@
       "why.concl_html": "「換門」在 3 種情況裡，有<strong>2 種會中獎</strong>。「不換門」只有 1 種會中。所以換門的中獎機會是不換的<strong>2 倍</strong>。上面模擬的長條圖會越來越靠近 66.7% 和 33.3% 的虛線，就是這個原因。",
       "ext.title": "試著把門變多",
       "ext.lead_html": "只有 3 扇門的時候，你也許會覺得「不就是一半一半嗎？」。那麼，我們把門變多看看。比方說從 <strong>100 扇</strong>門裡選 1 扇，主持人一口氣打開了 98 扇有山羊的門，這樣你還會堅持一開始選的那一扇嗎？",
-      "ext.labelDoors": "門的數量",
       "ext.labelHost": "主持人的開門方式",
-      "ext.chipDoors": "{n} 扇",
-      "ext.custom": "自己決定",
-      "ext.unit": "扇",
-      "ext.customAria": "自己輸入門的數量",
       "ext.modeAll": "一直開到只剩 1 扇關著的門",
       "ext.modeOne": "只打開 1 扇有山羊的門",
       "ext.modeAllShort": "開到只剩 1 扇",
@@ -1238,7 +1225,6 @@
       "ext.simRan": "用 {d} 扇門、{mode} 的設定，又各試了 {n} 次（累計各 {t} 次）。",
       "ext.chartTitle": "中獎的比例（%）— 虛線是算出來的比例（換門 {s}% / 不換門 {y}%）",
       "ext.theoryAll_html": "一開始選的那 1 扇會中獎的機會，只有 {n} 次中 1 次（{ty}%）。剩下的 <strong>{m}／{n}</strong> 情況裡，新車都在別的門後面，而主持人會避開那扇門，只打開有山羊的門。也就是說，這時候一直關到最後的那扇門就是新車。所以換門的話，有 <strong>{s}%</strong> 會中獎。",
-      "ext.theoryOne3_html": "門只有 3 扇的時候，主持人打開 1 扇，關著的門就只剩 1 扇了。這跟上面的基本遊戲完全一樣，換門是 <strong>{s}%</strong>，不換門是 {ty}%。",
       "ext.theoryOneN_html": "主持人只打開 1 扇的話，還會剩下 {c} 扇關著的門。就算換了，也不知道裡面哪一扇才是新車。換門是 <strong>{s}%</strong>，不換門是 {ty}%。換門還是比較有利，這一點沒有變，但門越多，這個差距就越小。",
       "footer.lab": "公立函館未來大學　辻研究室",
       "footer.source": "原始碼"
@@ -1313,12 +1299,7 @@
       "why.concl_html": "'바꾸는 작전'은 세 가지 경우 중 <strong>두 가지에서 당첨</strong>돼요. '바꾸지 않는 작전'으로 당첨되는 건 한 가지뿐이에요. 그래서 바꾸는 쪽이 <strong>2배 더 잘 맞아요</strong>. 위 시뮬레이션의 막대그래프가 66.7%와 33.3% 점선에 가까워지는 건 이 때문이에요.",
       "ext.title": "문의 개수를 늘려 보기",
       "ext.lead_html": "문이 3개면 '둘 다 반반 아닐까?' 하고 느낄지도 몰라요. 그래서 문의 개수를 늘려 봐요. 예를 들어 <strong>100개</strong>의 문에서 하나를 골랐는데, 진행자가 염소가 있는 문을 98개나 열어 보인다면, 그래도 처음에 고른 그 하나를 고집할 건가요?",
-      "ext.labelDoors": "문의 개수",
       "ext.labelHost": "진행자가 여는 방식",
-      "ext.chipDoors": "{n}개",
-      "ext.custom": "직접 정하기",
-      "ext.unit": "개",
-      "ext.customAria": "문의 개수를 직접 입력하기",
       "ext.modeAll": "닫힌 문이 1개만 남을 때까지 열기",
       "ext.modeOne": "염소가 있는 문을 1개만 열기",
       "ext.modeAllShort": "1개 남을 때까지 열기",
@@ -1339,7 +1320,6 @@
       "ext.simRan": "문 {d}개·{mode} 설정으로 {n}번 더했어요 (모두 {t}번씩).",
       "ext.chartTitle": "당첨된 비율 (%) — 점선은 계산으로 구한 비율이에요 (바꾸기 {s}% / 안 바꾸기 {y}%)",
       "ext.theoryAll_html": "처음에 고른 1개가 당첨되는 건 {n}번에 1번({ty}%)뿐이에요. 나머지 <strong>{m}/{n}</strong>에서는 새 차가 다른 문에 있고, 진행자는 그 문을 피해서 염소가 있는 문만 열어요. 그러니 그 경우에는 끝까지 닫힌 채 남은 문이 새 차예요. 그래서 바꾸면 <strong>{s}%</strong>로 당첨돼요.",
-      "ext.theoryOne3_html": "문이 3개일 때는 진행자가 1개를 열면 닫힌 문이 1개밖에 남지 않아요. 위의 기본 게임과 똑같아서, 바꾸면 <strong>{s}%</strong>, 바꾸지 않으면 {ty}%예요.",
       "ext.theoryOneN_html": "진행자가 1개만 열면 닫힌 문이 {c}개 남아요. 바꿔도 그중 어느 것이 새 차인지는 알 수 없어요. 바꾸면 <strong>{s}%</strong>, 바꾸지 않으면 {ty}%예요. 바꾸는 쪽이 유리한 건 변함없지만, 문이 많을수록 그 차이는 작아져요.",
       "footer.lab": "Future University Hakodate 츠지 연구실",
       "footer.source": "소스 코드"
@@ -1414,12 +1394,7 @@
       "why.concl_html": "Тактика «менять» побеждает <strong>в двух случаях из трёх</strong>. Тактика «не менять» — только в одном. Значит, если менять дверь, победа приходит <strong>вдвое чаще</strong>. Именно поэтому столбики на графике выше приближаются к пунктирным линиям 66,7 % и 33,3 %.",
       "ext.title": "А если дверей будет больше?",
       "ext.lead_html": "С тремя дверями может показаться, что шансы равны. Тогда давайте увеличим число дверей. Представьте: дверей <strong>100</strong>, вы выбрали одну, а ведущий открыл 98 дверей с козами. Так и останетесь при своей первой двери?",
-      "ext.labelDoors": "Число дверей",
       "ext.labelHost": "Как открывает ведущий",
-      "ext.chipDoors": "{n} шт.",
-      "ext.custom": "Задать самому",
-      "ext.unit": "шт.",
-      "ext.customAria": "Ввести число дверей вручную",
       "ext.modeAll": "Открывать, пока не останется одна закрытая дверь",
       "ext.modeOne": "Открыть только одну дверь с козой",
       "ext.modeAllShort": "открывать до одной закрытой",
@@ -1440,7 +1415,6 @@
       "ext.simRan": "Настройки: дверей — {d}, {mode}. Добавлено игр для каждой тактики: {n} (всего: {t}).",
       "ext.chartTitle": "Доля побед (%) — пунктир показывает расчётные значения (менять — {s} %, не менять — {y} %)",
       "ext.theoryAll_html": "Первая выбранная дверь оказывается выигрышной лишь 1 раз из {n} ({ty} %). В остальных случаях — а это <strong>{m} из {n}</strong> — машина стоит за другой дверью, и ведущий обходит её стороной, открывая только двери с козами. Значит, в этих случаях машина стоит за той дверью, которая остаётся закрытой до конца. Поэтому при замене победа приходит в <strong>{s} %</strong> случаев.",
-      "ext.theoryOne3_html": "Когда дверей всего 3, ведущий открывает одну — и закрытой остаётся ровно одна. Это в точности та же игра, что и наверху: меняем — <strong>{s} %</strong>, не меняем — {ty} %.",
       "ext.theoryOneN_html": "Если ведущий открывает только одну дверь, закрытых остаётся {c}. Даже поменяв дверь, вы не знаете, за какой из них машина. Меняем — <strong>{s} %</strong>, не меняем — {ty} %. Менять по-прежнему выгоднее, но чем больше дверей, тем меньше эта разница.",
       "footer.lab": "Future University Hakodate, лаборатория Цудзи",
       "footer.source": "Исходный код"
@@ -1515,12 +1489,7 @@
       "why.concl_html": "La estrategia de cambiar gana en <strong>2 de los 3 casos</strong>. La de no cambiar gana solo en 1. Por eso cambiando aciertas <strong>el doble de veces</strong>. Y por eso las barras de la simulación de arriba se acercan a las líneas punteadas del 66,7 % y del 33,3 %.",
       "ext.title": "Prueba con más puertas",
       "ext.lead_html": "Con 3 puertas quizá pienses «pero si es mitad y mitad, ¿no?». Vamos a poner más puertas. Imagina que eliges 1 entre <strong>100 puertas</strong> y el presentador abre 98 puertas con cabras. ¿Seguirías quedándote con la puerta que elegiste al principio?",
-      "ext.labelDoors": "Número de puertas",
       "ext.labelHost": "Cómo abre el presentador",
-      "ext.chipDoors": "{n} puertas",
-      "ext.custom": "Otro número",
-      "ext.unit": "puertas",
-      "ext.customAria": "Escribe tú el número de puertas",
       "ext.modeAll": "Abrir hasta que quede 1 sola puerta cerrada",
       "ext.modeOne": "Abrir solo 1 puerta con cabra",
       "ext.modeAllShort": "abrir hasta que quede 1",
@@ -1541,7 +1510,6 @@
       "ext.simRan": "Añadimos {n} partidas con {d} puertas y la opción «{mode}» (en total, {t} con cada estrategia).",
       "ext.chartTitle": "Porcentaje de aciertos (%) — las líneas punteadas marcan el porcentaje calculado (cambiar {s} % / no cambiar {y} %)",
       "ext.theoryAll_html": "La puerta que elegiste al principio acierta solo 1 de cada {n} veces ({ty} %). En los otros <strong>{m}/{n}</strong> de los casos, el auto está detrás de otra puerta, y el presentador la evita y abre solo puertas con cabra. Por eso, en esos casos, la puerta que queda cerrada hasta el final es la del auto. Así que cambiando aciertas el <strong>{s} %</strong> de las veces.",
-      "ext.theoryOne3_html": "Con 3 puertas, si el presentador abre una, solo queda 1 puerta cerrada. Es exactamente igual que el juego básico de arriba: cambiando aciertas el <strong>{s} %</strong> y sin cambiar, el {ty} %.",
       "ext.theoryOneN_html": "Si el presentador abre solo una, quedan {c} puertas sin abrir. Aunque cambies, no sabes cuál de ellas esconde el auto. Cambiando aciertas el <strong>{s} %</strong> y sin cambiar, el {ty} %. Cambiar sigue siendo lo mejor, pero cuantas más puertas haya, más pequeña se vuelve la diferencia.",
       "footer.lab": "Future University Hakodate, Laboratorio Tsuji",
       "footer.source": "Código fuente"
@@ -1616,12 +1584,7 @@
       "why.concl_html": "\"วิธีเปลี่ยน\" ถูกใน <strong>2 กรณี</strong> จาก 3 กรณี ส่วน \"วิธีไม่เปลี่ยน\" ถูกแค่ 1 กรณี ดังนั้นการเปลี่ยนจึง<strong>ถูกง่ายกว่า 2 เท่า</strong> นี่คือเหตุผลที่กราฟแท่งด้านบนค่อย ๆ เข้าใกล้เส้นประ 66.7% และ 33.3%",
       "ext.title": "ลองเพิ่มจำนวนประตู",
       "ext.lead_html": "แค่ 3 บาน คุณอาจรู้สึกว่า \"ก็ครึ่งต่อครึ่งไม่ใช่หรือ\" งั้นลองเพิ่มจำนวนประตูดู เช่น เลือก 1 บานจากประตู <strong>100 บาน</strong> แล้วพิธีกรเปิดประตูที่มีแพะให้ดูถึง 98 บาน คุณยังจะยืนยันอยู่กับบานแรกที่เลือกไว้อีกไหม",
-      "ext.labelDoors": "จำนวนประตู",
       "ext.labelHost": "วิธีเปิดของพิธีกร",
-      "ext.chipDoors": "{n} บาน",
-      "ext.custom": "กำหนดเอง",
-      "ext.unit": "บาน",
-      "ext.customAria": "กรอกจำนวนประตูเอง",
       "ext.modeAll": "เปิดจนเหลือประตูที่ปิดอยู่ 1 บาน",
       "ext.modeOne": "เปิดประตูที่มีแพะแค่ 1 บาน",
       "ext.modeAllShort": "เปิดจนเหลือ 1 บาน",
@@ -1642,7 +1605,6 @@
       "ext.simRan": "เพิ่มอีก {n} ครั้ง ด้วยการตั้งค่าประตู {d} บาน แบบ {mode} (รวมอย่างละ {t} ครั้ง)",
       "ext.chartTitle": "สัดส่วนที่ถูก (%) — เส้นประคือสัดส่วนที่คำนวณได้ (เปลี่ยน {s}% / ไม่เปลี่ยน {y}%)",
       "ext.theoryAll_html": "บานแรกที่เลือกจะถูกแค่ 1 ใน {n} ครั้ง ({ty}%) ส่วนอีก <strong>{m}/{n}</strong> รถใหม่จะอยู่ที่ประตูอื่น และพิธีกรจะเลี่ยงบานนั้น เปิดแต่ประตูที่มีแพะ นั่นแปลว่าในกรณีนั้น ประตูที่ปิดอยู่จนถึงตอนสุดท้ายคือบานที่มีรถใหม่ ดังนั้นถ้าเปลี่ยน จะถูก <strong>{s}%</strong>",
-      "ext.theoryOne3_html": "เมื่อมีประตู 3 บาน พิธีกรเปิด 1 บานแล้วจะเหลือประตูที่ปิดอยู่แค่บานเดียว เหมือนกับเกมพื้นฐานด้านบนทุกอย่าง ถ้าเปลี่ยนจะถูก <strong>{s}%</strong> ถ้าไม่เปลี่ยนจะถูก {ty}%",
       "ext.theoryOneN_html": "ถ้าพิธีกรเปิดแค่ 1 บาน จะเหลือประตูที่ปิดอยู่ {c} บาน ต่อให้เปลี่ยน เราก็ไม่รู้ว่าบานไหนในนั้นเป็นรถใหม่ ถ้าเปลี่ยนจะถูก <strong>{s}%</strong> ถ้าไม่เปลี่ยนจะถูก {ty}% การเปลี่ยนยังได้เปรียบอยู่เหมือนเดิม แต่ยิ่งประตูเยอะ ส่วนต่างก็ยิ่งน้อยลง",
       "footer.lab": "Future University Hakodate ห้องปฏิบัติการ Tsuji",
       "footer.source": "ซอร์สโค้ด"
@@ -1717,12 +1679,7 @@
       "why.concl_html": "‘बदलने की तरकीब’ तीन में से <strong>दो हालात में जिताती</strong> है। ‘न बदलने की तरकीब’ सिर्फ़ एक में। इसलिए बदलने पर जीत की संभावना <strong>दुगुनी</strong> हो जाती है। ऊपर की पट्टियाँ 66.7% और 33.3% की बिंदीदार लकीरों के पास इसीलिए पहुँचती हैं।",
       "ext.title": "दरवाज़ों की संख्या बढ़ाकर देखें",
       "ext.lead_html": "तीन दरवाज़े हों तो लग सकता है कि ‘दोनों बराबर ही तो हैं’। तो चलिए दरवाज़े बढ़ाते हैं। मान लीजिए <strong>100 दरवाज़ों</strong> में से आपने एक चुना, और होस्ट ने बकरी वाले पूरे 98 दरवाज़े खोल दिए — तब भी आप अपने पहले चुने दरवाज़े पर ही अड़े रहेंगे?",
-      "ext.labelDoors": "दरवाज़ों की संख्या",
       "ext.labelHost": "होस्ट कैसे खोलेगा",
-      "ext.chipDoors": "{n} दरवाज़े",
-      "ext.custom": "खुद तय करें",
-      "ext.unit": "दरवाज़े",
-      "ext.customAria": "दरवाज़ों की संख्या खुद लिखें",
       "ext.modeAll": "जब तक सिर्फ़ 1 बंद दरवाज़ा न बचे, तब तक खोले",
       "ext.modeOne": "बकरी वाला सिर्फ़ 1 दरवाज़ा खोले",
       "ext.modeAllShort": "1 बचने तक खोले",
@@ -1743,7 +1700,6 @@
       "ext.simRan": "{d} दरवाज़े · {mode} — इस सेटिंग में {n} बार और आज़माया (कुल {t} बार हर एक)।",
       "ext.chartTitle": "जीत का प्रतिशत (%) — बिंदीदार लकीरें हिसाब से निकला प्रतिशत दिखाती हैं (बदलें {s}% / न बदलें {y}%)",
       "ext.theoryAll_html": "पहले चुना दरवाज़ा {n} में से सिर्फ़ 1 बार सही निकलता है ({ty}%)। बाकी <strong>{m}／{n}</strong> हालात में कार किसी और दरवाज़े के पीछे होती है, और होस्ट उसे बचाकर सिर्फ़ बकरी वाले दरवाज़े खोलता है। यानी उन हालात में आख़िर तक बंद रह गया दरवाज़ा ही कार वाला होता है। इसीलिए बदलने पर <strong>{s}%</strong> बार जीत होती है।",
-      "ext.theoryOne3_html": "जब दरवाज़े 3 हों, तो होस्ट के एक खोलते ही सिर्फ़ एक बंद दरवाज़ा बचता है। यह ऊपर वाले सादे खेल जैसा ही है — बदलें तो <strong>{s}%</strong>, न बदलें तो {ty}%।",
       "ext.theoryOneN_html": "होस्ट सिर्फ़ एक दरवाज़ा खोले, तो {c} दरवाज़े बंद रह जाते हैं। बदलने पर भी पता नहीं चलता कि उनमें कार किसके पीछे है। बदलें तो <strong>{s}%</strong>, न बदलें तो {ty}%। बदलना फिर भी बेहतर है, पर दरवाज़े जितने ज़्यादा हों, यह फ़र्क़ उतना ही कम होता जाता है।",
       "footer.lab": "Future University Hakodate　Tsuji Laboratory",
       "footer.source": "सोर्स कोड"
@@ -1818,12 +1774,7 @@
       "why.concl_html": "Avec la stratégie « changer », tu gagnes dans <strong>2 cas sur 3</strong>. Avec la stratégie « ne pas changer », tu ne gagnes que dans 1 cas. Voilà pourquoi on gagne <strong>2 fois plus souvent</strong> en changeant. C'est aussi pour cela que les barres de la simulation, plus haut, se rapprochent des pointillés à 66,7 % et 33,3 %.",
       "ext.title": "Et si on ajoutait des portes ?",
       "ext.lead_html": "Avec 3 portes, tu te dis peut-être : « C'est du 50-50, non ? » Alors ajoutons des portes. Imagine <strong>100 portes</strong> : tu en choisis une, puis le présentateur ouvre 98 portes à chèvre. Est-ce que tu gardes quand même la porte choisie au début ?",
-      "ext.labelDoors": "Nombre de portes",
       "ext.labelHost": "Façon d'ouvrir du présentateur",
-      "ext.chipDoors": "{n} portes",
-      "ext.custom": "Je choisis moi-même",
-      "ext.unit": "portes",
-      "ext.customAria": "Saisir soi-même le nombre de portes",
       "ext.modeAll": "Ouvrir jusqu'à ce qu'il ne reste qu'une porte fermée",
       "ext.modeOne": "N'ouvrir qu'une seule porte à chèvre",
       "ext.modeAllShort": "jusqu'à une seule porte fermée",
@@ -1844,7 +1795,6 @@
       "ext.simRan": "Réglage : {d} portes, {mode}. On a joué {n} fois de plus (total : {t} fois pour chaque stratégie).",
       "ext.chartTitle": "Taux de réussite (%) — les pointillés montrent les taux trouvés par le calcul (changer {s} % / ne pas changer {y} %)",
       "ext.theoryAll_html": "La porte choisie au début est la bonne seulement 1 fois sur {n} ({ty} %). Mais <strong>{m} fois sur {n}</strong>, la voiture est derrière une autre porte, et le présentateur l'évite : il n'ouvre que des portes à chèvre. Donc, dans ces cas-là, la porte qui reste fermée jusqu'au bout cache la voiture. Voilà pourquoi, en changeant, tu gagnes <strong>{s} %</strong> du temps.",
-      "ext.theoryOne3_html": "Avec 3 portes, si le présentateur en ouvre une, il ne reste qu'une seule porte fermée. C'est exactement le jeu de base vu plus haut : en changeant tu gagnes <strong>{s} %</strong> du temps, en ne changeant pas {ty} %.",
       "ext.theoryOneN_html": "Si le présentateur n'ouvre qu'une porte, il reste {c} portes fermées. Même en changeant, tu ne sais pas laquelle cache la voiture. En changeant tu gagnes <strong>{s} %</strong> du temps, en ne changeant pas {ty} %. Changer reste plus avantageux, mais plus il y a de portes, plus l'écart devient petit.",
       "footer.lab": "Future University Hakodate — laboratoire Tsuji",
       "footer.source": "Code source"
@@ -1919,12 +1869,7 @@
       "why.concl_html": "«خطة التغيير» تفوز في <strong>حالتين</strong> من الحالات الثلاث. أما «خطة البقاء» فتفوز في حالة واحدة فقط. لذلك فرصة الفوز بالتغيير <strong>ضعف</strong> فرصة الفوز بالبقاء. ولهذا يقترب العمودان في المحاكاة أعلاه من الخطين المنقّطين عند 66.7% و33.3%.",
       "ext.title": "لنزد عدد الأبواب",
       "ext.lead_html": "مع ثلاثة أبواب قد تشعر أن الفرصة نصف بنصف. لذلك لنزد عدد الأبواب. تخيّل أنك اخترت بابًا واحدًا من <strong>100 باب</strong>، ثم فتح المُقدِّم أمامك 98 بابًا خلفها ماعز. هل تبقى مع الباب الذي اخترته أولًا؟",
-      "ext.labelDoors": "عدد الأبواب",
       "ext.labelHost": "طريقة فتح المُقدِّم",
-      "ext.chipDoors": "{n}",
-      "ext.custom": "أُحدّده بنفسي",
-      "ext.unit": "باب",
-      "ext.customAria": "أدخل عدد الأبواب بنفسك",
       "ext.modeAll": "يفتح حتى يبقى باب مغلق واحد",
       "ext.modeOne": "يفتح باب ماعز واحدًا فقط",
       "ext.modeAllShort": "حتى يبقى باب واحد",
@@ -1945,7 +1890,6 @@
       "ext.simRan": "أضفنا {n} من المحاولات بإعداد {d} من الأبواب و«{mode}» (المجموع: {t} لكل خطة).",
       "ext.chartTitle": "نسبة الفوز (%) — الخطان المنقّطان هما النسبة المحسوبة (التغيير {s}% / البقاء {y}%)",
       "ext.theoryAll_html": "أن يكون البابُ الذي اخترته أولًا هو الرابح يحدث مرة واحدة فقط من كل {n} ({ty}%). وفي الحالات الباقية، وهي <strong>{m}/{n}</strong>، تكون السيارة الجديدة خلف باب آخر، والمُقدِّم يتجنّب ذلك الباب ويفتح أبواب الماعز وحدها. أي أن البابَ الذي يبقى مغلقًا حتى النهاية هو باب السيارة. لذلك تفوز بالتغيير بنسبة <strong>{s}%</strong>.",
-      "ext.theoryOne3_html": "حين تكون الأبواب 3، يكفي أن يفتح المُقدِّم بابًا واحدًا ليبقى باب مغلق واحد. وهذا هو نفسه اللعبة الأساسية أعلاه تمامًا: التغيير <strong>{s}%</strong>، والبقاء {ty}%.",
       "ext.theoryOneN_html": "إذا فتح المُقدِّم بابًا واحدًا فقط، يبقى عدد الأبواب المغلقة {c}. وحتى لو غيّرت، لا تعرف أيَّ باب منها فيه السيارة الجديدة. التغيير <strong>{s}%</strong>، والبقاء {ty}%. يبقى التغيير أوفر حظًّا، لكن كلما زاد عدد الأبواب صغر الفرق.",
       "footer.lab": "Future University Hakodate — Tsuji Laboratory",
       "footer.source": "الشيفرة المصدرية"
@@ -2020,12 +1964,7 @@
       "why.concl_html": "بدلنے کا منصوبہ 3 میں سے <strong>2 صورتوں میں جیتتا</strong> ہے۔ قائم رہنے کا منصوبہ صرف 1 میں جیتتا ہے۔ اسی لیے بدلنا <strong>دو گنا زیادہ بار</strong> جیتتا ہے۔ یہی وجہ ہے کہ اوپر کی سیمولیشن میں سلاخیں 66.7% اور 33.3% کی نقطہ دار لکیروں کی طرف بڑھتی ہیں۔",
       "ext.title": "زیادہ دروازے آزمائیں",
       "ext.lead_html": "3 دروازوں کے ساتھ شاید اب بھی یہ 50-50 اندازہ لگے۔ تو آئیے مزید دروازے شامل کرتے ہیں۔ تصور کریں کہ آپ <strong>100</strong> میں سے 1 دروازہ چنتے ہیں، اور پھر میزبان بکریوں والے 98 دروازے کھول دیتا ہے۔ کیا آپ پھر بھی اپنے پہلے انتخاب پر قائم رہیں گے؟",
-      "ext.labelDoors": "دروازوں کی تعداد",
       "ext.labelHost": "میزبان دروازے کیسے کھولتا ہے",
-      "ext.chipDoors": "{n} دروازے",
-      "ext.custom": "اپنی مرضی سے چنیں",
-      "ext.unit": "دروازے",
-      "ext.customAria": "اپنی مرضی سے دروازوں کی تعداد لکھیں",
       "ext.modeAll": "دروازے کھولتے جائیں یہاں تک کہ صرف 1 بند دروازہ رہ جائے",
       "ext.modeOne": "بکری والا صرف 1 دروازہ کھولیں",
       "ext.modeAllShort": "1 رہ جانے تک کھولیں",
@@ -2046,7 +1985,6 @@
       "ext.simRan": "{d} دروازوں اور ”{mode}“ کے ساتھ {n} دور شامل کیے (کل {t} فی ہر ایک)۔",
       "ext.chartTitle": "جیت کی شرح (%) — نقطہ دار لکیریں ہمارے نکالے ہوئے اعداد ظاہر کرتی ہیں (بدلیں {s}% / قائم رہیں {y}%)",
       "ext.theoryAll_html": "آپ کا سب سے پہلا انتخاب {n} میں سے صرف 1 بار جیتتا ہے ({ty}%)۔ باقی <strong>{m}/{n}</strong> بار گاڑی کسی اور دروازے کے پیچھے ہوتی ہے، اور میزبان اُس سے بچتے ہوئے صرف بکریوں والے دروازے کھولتا ہے۔ تو ان صورتوں میں، آخر تک بند رہنے والا دوسرا دروازہ گاڑی چھپائے ہوتا ہے۔ اسی لیے بدلنا <strong>{s}%</strong> بار جیتتا ہے۔",
-      "ext.theoryOne3_html": "3 دروازوں کے ساتھ، جب میزبان 1 دروازہ کھولتا ہے تو صرف 1 بند دروازہ رہ جاتا ہے۔ یہ بالکل اوپر والے بنیادی کھیل جیسا ہے: بدلنا <strong>{s}%</strong> بار جیتتا ہے، قائم رہنا {ty}%۔",
       "ext.theoryOneN_html": "اگر میزبان صرف 1 دروازہ کھولے، تو {c} دروازے بند رہتے ہیں۔ بدلنے پر بھی، آپ نہیں بتا سکتے کہ ان میں سے کون گاڑی چھپائے ہے۔ بدلنا <strong>{s}%</strong> بار جیتتا ہے، قائم رہنا {ty}%۔ بدلنا پھر بھی بہتر انتخاب ہے، مگر جتنے زیادہ دروازے ہوں، فرق اتنا ہی کم ہوتا جاتا ہے۔",
       "footer.lab": "تسوجی لیبارٹری، فیوچر یونیورسٹی ہاکوداتے",
       "footer.source": "سورس کوڈ"
@@ -2121,12 +2059,7 @@
       "why.concl_html": "Att byta dörr vinner i <strong>två av de tre fallen</strong>. Att behålla dörren vinner bara i ett. Därför är det <strong>dubbelt så stor chans</strong> att vinna om du byter. Det är också därför staplarna i simuleringen ovan närmar sig de streckade linjerna vid 66,7 % och 33,3 %.",
       "ext.title": "Prova med fler dörrar",
       "ext.lead_html": "Med bara tre dörrar kanske det känns som att chansen är lika stor på båda sätten. Prova då med fler dörrar! Tänk dig att du väljer en dörr av <strong>100</strong>, och att programledaren sedan öppnar hela 98 dörrar med getter bakom. Skulle du fortfarande hålla fast vid din första dörr?",
-      "ext.labelDoors": "Antal dörrar",
       "ext.labelHost": "Så öppnar programledaren",
-      "ext.chipDoors": "{n} dörrar",
-      "ext.custom": "Välj själv",
-      "ext.unit": "dörrar",
-      "ext.customAria": "Skriv in antalet dörrar själv",
       "ext.modeAll": "Öppna tills bara en stängd dörr är kvar",
       "ext.modeOne": "Öppna bara en dörr med get",
       "ext.modeAllShort": "öppnar tills en dörr är kvar",
@@ -2147,7 +2080,6 @@
       "ext.simRan": "Inställning: {d} dörrar, {mode}. Vi lade till {n} spel med varje strategi (totalt {t} med varje).",
       "ext.chartTitle": "Andel vinster (%) – de streckade linjerna visar den uträknade andelen (byta {s} % / behålla {y} %)",
       "ext.theoryAll_html": "Dörren du väljer först är rätt bara en gång av {n} ({ty} %). I de övriga <strong>{m}/{n}</strong> fallen står bilen bakom någon annan dörr, och programledaren undviker just den och öppnar bara dörrar med getter. Då är det den dörr som blir kvar stängd ända till slutet som har bilen bakom sig. Därför vinner du <strong>{s} %</strong> av gångerna om du byter.",
-      "ext.theoryOne3_html": "Med tre dörrar räcker det att programledaren öppnar en dörr, för då finns bara en stängd dörr kvar. Det blir precis samma sak som i grundspelet ovan: byter du vinner du <strong>{s} %</strong> av gångerna, behåller du dörren {ty} %.",
       "ext.theoryOneN_html": "Om programledaren bara öppnar en dörr finns det {c} stängda dörrar kvar. Även om du byter vet du inte vilken av dem som har bilen bakom sig. Byter du vinner du <strong>{s} %</strong> av gångerna, behåller du dörren {ty} %. Det är fortfarande bättre att byta, men ju fler dörrar det finns, desto mindre blir skillnaden.",
       "footer.lab": "Future University Hakodate, Tsuji Laboratory",
       "footer.source": "Källkod"
@@ -2452,7 +2384,7 @@
   // mode "all" … 閉じた扉が残り1枚になるまで司会者が開ける（変える勝率 (N-1)/N）
   // mode "one" … 司会者はヤギの扉を1枚だけ開ける（変える勝率 ((N-1)/N)/(N-2)）
   const ext = {
-    n: 3, mode: "all",
+    n: 100, mode: "all",
     car: -1, pick: -1, opened: new Set(), phase: "pick",
     play: { switch: { total: 0, win: 0 }, stay: { total: 0, win: 0 } },
     sim: { switch: { total: 0, win: 0 }, stay: { total: 0, win: 0 } }
@@ -2472,10 +2404,7 @@
     return goats.filter((d) => d !== keep);
   }
 
-  function extCols(n) { return n <= 5 ? n : n <= 12 ? 6 : 10; }
-
   function buildExtDoors() {
-    extStage.style.gridTemplateColumns = `repeat(${extCols(ext.n)}, minmax(0, 1fr))`;
     extStage.innerHTML = "";
     for (let i = 0; i < ext.n; i++) {
       const d = document.createElement("div");
@@ -2484,7 +2413,7 @@
       d.setAttribute("role", "button");
       d.setAttribute("tabindex", "0");
       d.setAttribute("aria-label", t("game.doorLabel", { n: i + 1 }));
-      d.innerHTML = (ext.n <= 12 ? `<span>${i + 1}</span>` : "") + `<span class="knob-dot"></span>`;
+      d.innerHTML = `<span>${i + 1}</span><span class="knob-dot"></span>`;
       const act = () => extClick(i);
       d.addEventListener("click", act);
       d.addEventListener("keydown", (e) => {
@@ -2496,12 +2425,52 @@
 
   function extTile(i) { return extStage.children[i]; }
 
+  // 決断の場面で、閉じている2枚をグリッドの外に大きく取り出す。
+  // 番号バッジ（game.doorLabel）が司会者のセリフの「扉{p}」「扉{c}」と対応する。
+  function buildExtFocus(yours, other) {
+    const box = $("extFocus");
+    box.innerHTML = "";
+    [[yours, true], [other, false]].forEach(([idx, isYours]) => {
+      const unit = document.createElement("div");
+      unit.className = "door-unit" + (isYours ? " chosen" : " selectable");
+      unit.dataset.index = idx;
+      unit.innerHTML = `
+        <div class="door-label">${t("game.doorLabel", { n: idx + 1 })}</div>
+        <div class="door-frame">
+          <div class="prize">${idx === ext.car ? carSVG : goatSVG}
+            <span class="prize-name">${idx === ext.car ? t("game.prizeCar") : t("game.prizeGoat")}</span></div>
+          <div class="door" role="button" tabindex="0" aria-label="${
+            isYours ? t("game.doorLabel", { n: idx + 1 }) : t("game.pickAria", { n: idx + 1 })}">
+            <div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
+          </div>
+        </div>
+        <div class="tag">${isYours ? t("game.tagYours") : ""}</div>`;
+      if (!isYours) {
+        const door = unit.querySelector(".door");
+        const act = () => extClick(idx);
+        door.addEventListener("click", act);
+        door.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(); }
+        });
+      }
+      box.appendChild(unit);
+    });
+    box.style.display = "flex";
+  }
+
+  function hideExtFocus() {
+    const box = $("extFocus");
+    box.innerHTML = "";
+    box.style.display = "none";
+  }
+
   function extNewGame() {
     ext.car = randInt(ext.n);
     ext.pick = -1; ext.opened = new Set(); ext.phase = "pick";
     buildExtDoors();
     extStage.classList.add("pickable");
-    extStage.classList.remove("switchable");
+    extStage.classList.remove("switchable", "dim", "compact");
+    hideExtFocus();
     cancelPending("extAdvanceArea");
     $("extActions").style.display = "none";
     $("extRetryArea").style.display = "none";
@@ -2520,6 +2489,7 @@
     extStage.classList.remove("pickable");
     extTile(i).classList.add("picked");
 
+    extStage.classList.add("dim");
     const list = hostOpens(ext.n, ext.car, ext.pick, ext.mode);
     extMsg.innerHTML = t("ext.opening_html", { p: i + 1, k: list.length });
 
@@ -2539,6 +2509,10 @@
         extStage.classList.add("switchable");
         const closed = [];
         for (let d = 0; d < ext.n; d++) if (d !== ext.pick && !ext.opened.has(d)) closed.push(d);
+        if (ext.mode === "all") {
+          extStage.classList.add("compact");
+          buildExtFocus(ext.pick, closed[0]);
+        }
         extMsg.innerHTML = ext.mode === "all"
           ? t("ext.decideAll_html", { k: list.length, p: ext.pick + 1, c: closed[0] + 1 })
           : t("ext.decideOne_html", { c: closed.length });
@@ -2563,6 +2537,12 @@
     }
     extTile(ext.pick).classList.remove("picked");
     extTile(finalIdx).classList.add("final");
+    // 取り出した2枚を開けて答えを見せる（compact は残す：答えの扉は必ずこの2枚のどちらか）
+    extStage.classList.remove("dim");
+    [...$("extFocus").children].forEach((unit) => {
+      unit.classList.add("open");
+      unit.classList.toggle("chosen", parseInt(unit.dataset.index, 10) === finalIdx);
+    });
 
     const won = finalIdx === ext.car;
     const key = didSwitch ? "switch" : "stay";
@@ -2640,21 +2620,9 @@
     $("extChartTitle").textContent = t("ext.chartTitle", { s: fmtPct(ts), y: fmtPct(ty) });
     if (ext.mode === "all") {
       $("extTheory").innerHTML = t("ext.theoryAll_html", { n: n, m: n - 1, ty: fmtPct(ty), s: fmtPct(ts) });
-    } else if (n === 3) {
-      $("extTheory").innerHTML = t("ext.theoryOne3_html", { s: fmtPct(ts), ty: fmtPct(ty) });
     } else {
       $("extTheory").innerHTML = t("ext.theoryOneN_html", { c: n - 2, s: fmtPct(ts), ty: fmtPct(ty) });
     }
-  }
-
-  function extSetN(n) {
-    ext.n = Math.max(3, Math.min(200, Math.floor(n) || 3));
-    $("extNInput").value = ext.n;
-    document.querySelectorAll("[data-n]").forEach((b) =>
-      b.classList.toggle("on", parseInt(b.dataset.n, 10) === ext.n));
-    extResetSim();
-    renderExtTheory();
-    extNewGame();
   }
 
   function extSetMode(m) {
@@ -2671,11 +2639,8 @@
     renderExtSim();
   }
 
-  document.querySelectorAll("[data-n]").forEach((b) =>
-    b.addEventListener("click", () => extSetN(parseInt(b.dataset.n, 10))));
   document.querySelectorAll("[data-mode]").forEach((b) =>
     b.addEventListener("click", () => extSetMode(b.dataset.mode)));
-  $("extNInput").addEventListener("change", (e) => extSetN(parseInt(e.target.value, 10)));
   $("btnExtOk").addEventListener("click", () => advanceFrom("extAdvanceArea", false));
   $("btnExtAuto").addEventListener("click", () => advanceFrom("extAdvanceArea", true));
   $("btnExtStepMode").addEventListener("click", () => setFlowMode("step"));
@@ -2748,10 +2713,6 @@
     document.querySelectorAll("[data-i18n-html]").forEach((el) => {
       el.innerHTML = t(el.getAttribute("data-i18n-html"));
     });
-    document.querySelectorAll("[data-n]").forEach((b) => {
-      b.textContent = t("ext.chipDoors", { n: b.dataset.n });
-    });
-    $("extNInput").setAttribute("aria-label", t("ext.customAria"));
     $("langBtnLabel").textContent = t("lang.button");
 
     // 研究室のクレジット（リンクは言語によらず同じ）
@@ -2795,7 +2756,6 @@
   }
 
   extSetMode("all");
-  extSetN(3);
   renderFlowNotes();
   LANG = initLang();
   buildLangMenu();

@@ -76,12 +76,7 @@
 
   "ext.title": "試著把門變多",
   "ext.lead_html": "只有 3 扇門的時候，你也許會覺得「不就是一半一半嗎？」。那麼，我們把門變多看看。比方說從 <strong>100 扇</strong>門裡選 1 扇，主持人一口氣打開了 98 扇有山羊的門，這樣你還會堅持一開始選的那一扇嗎？",
-  "ext.labelDoors": "門的數量",
   "ext.labelHost": "主持人的開門方式",
-  "ext.chipDoors": "{n} 扇",
-  "ext.custom": "自己決定",
-  "ext.unit": "扇",
-  "ext.customAria": "自己輸入門的數量",
   "ext.modeAll": "一直開到只剩 1 扇關著的門",
   "ext.modeOne": "只打開 1 扇有山羊的門",
   "ext.modeAllShort": "開到只剩 1 扇",
@@ -102,7 +97,6 @@
   "ext.simRan": "用 {d} 扇門、{mode} 的設定，又各試了 {n} 次（累計各 {t} 次）。",
   "ext.chartTitle": "中獎的比例（%）— 虛線是算出來的比例（換門 {s}% / 不換門 {y}%）",
   "ext.theoryAll_html": "一開始選的那 1 扇會中獎的機會，只有 {n} 次中 1 次（{ty}%）。剩下的 <strong>{m}／{n}</strong> 情況裡，新車都在別的門後面，而主持人會避開那扇門，只打開有山羊的門。也就是說，這時候一直關到最後的那扇門就是新車。所以換門的話，有 <strong>{s}%</strong> 會中獎。",
-  "ext.theoryOne3_html": "門只有 3 扇的時候，主持人打開 1 扇，關著的門就只剩 1 扇了。這跟上面的基本遊戲完全一樣，換門是 <strong>{s}%</strong>，不換門是 {ty}%。",
   "ext.theoryOneN_html": "主持人只打開 1 扇的話，還會剩下 {c} 扇關著的門。就算換了，也不知道裡面哪一扇才是新車。換門是 <strong>{s}%</strong>，不換門是 {ty}%。換門還是比較有利，這一點沒有變，但門越多，這個差距就越小。",
 
   "footer.lab": "公立函館未來大學　辻研究室",
