@@ -22,8 +22,8 @@ A browser-based teaching tool available in 13 languages. No installation — it 
 - **手で遊ぶ** — 扉を選び、司会者がハズレを開け、変えるか決める、という一連を体験できます。画面上部の4ステップ表示と司会者の吹き出しが、いま何をする場面かを案内します。
 - **記録を見る** — 「変えた場合」と「変えなかった場合」のあたった割合が、遊ぶたびに表に積み上がります。
 - **コンピュータに任せる** — 10回・100回・1000回の一括試行を実行し、2つの作戦のあたる割合が 66.7% と 33.3% に近づく様子を棒グラフで確認できます。
-- **理由を知る** — 3つの場合分けの図で、なぜ変えたほうがよいのかを説明します。
 - **扉の数を増やす** — 扉100枚で試せます。1枚をえらんだあと、司会者が98枚を開けてみせる様子は、言葉の説明より雄弁です。最後に残った2枚は大きく取り出して並べるので、どちらを選ぶ場面なのかが一目で分かります。
+- **理由を知る** — 3つの場合分けの図で、なぜ変えたほうがよいのかを説明します。
 
 ### 司会者の開け方は2通り選べます
 
@@ -95,8 +95,8 @@ The page is a single scrolling lesson made of five parts.
 1. **Play by hand.** Pick a door, watch the host open a losing door, then decide whether to switch. A four-step indicator at the top and the host's speech bubble tell you what is happening at every moment, so the interaction never leaves you guessing what to do next.
 2. **Your record.** Every round is tallied into a table, separated by whether you switched or stayed, with the win rate for each. Playing a handful of rounds by hand shows the effect, but noisily — which motivates the next part.
 3. **Let the computer play.** Run 10, 100, or 1000 rounds at a time. Results accumulate, and a bar chart shows both strategies converging on 66.7% and 33.3%, with dashed reference lines at those values.
-4. **Why switching wins.** A three-case diagram walks through where the car can be, showing that switching wins in two of the three equally likely cases.
-5. **More doors.** This is the part that usually settles the argument. The section runs with 100 doors: pick one, and watch the host open 98 goat doors one after another, leaving your door and exactly one other. The two remaining doors are then lifted out of the grid and shown full size, side by side, so the choice you are about to make is unmistakable. Almost nobody wants to stay after seeing that.
+4. **More doors.** This is the part that usually settles the argument. The section runs with 100 doors: pick one, and watch the host open 98 goat doors one after another, leaving your door and exactly one other. The two remaining doors are then lifted out of the grid and shown full size, side by side, so the choice you are about to make is unmistakable. Almost nobody wants to stay after seeing that.
+5. **Why switching wins.** A three-case diagram walks through where the car can be, showing that switching wins in two of the three equally likely cases — the argument you have just felt with 100 doors, counted out on three.
 
 ### Two host behaviours
 
