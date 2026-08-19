@@ -76,12 +76,7 @@
 
   "ext.title": "Prueba con más puertas",
   "ext.lead_html": "Con 3 puertas quizá pienses «pero si es mitad y mitad, ¿no?». Vamos a poner más puertas. Imagina que eliges 1 entre <strong>100 puertas</strong> y el presentador abre 98 puertas con cabras. ¿Seguirías quedándote con la puerta que elegiste al principio?",
-  "ext.labelDoors": "Número de puertas",
   "ext.labelHost": "Cómo abre el presentador",
-  "ext.chipDoors": "{n} puertas",
-  "ext.custom": "Otro número",
-  "ext.unit": "puertas",
-  "ext.customAria": "Escribe tú el número de puertas",
   "ext.modeAll": "Abrir hasta que quede 1 sola puerta cerrada",
   "ext.modeOne": "Abrir solo 1 puerta con cabra",
   "ext.modeAllShort": "abrir hasta que quede 1",
@@ -102,7 +97,6 @@
   "ext.simRan": "Añadimos {n} partidas con {d} puertas y la opción «{mode}» (en total, {t} con cada estrategia).",
   "ext.chartTitle": "Porcentaje de aciertos (%) — las líneas punteadas marcan el porcentaje calculado (cambiar {s} % / no cambiar {y} %)",
   "ext.theoryAll_html": "La puerta que elegiste al principio acierta solo 1 de cada {n} veces ({ty} %). En los otros <strong>{m}/{n}</strong> de los casos, el auto está detrás de otra puerta, y el presentador la evita y abre solo puertas con cabra. Por eso, en esos casos, la puerta que queda cerrada hasta el final es la del auto. Así que cambiando aciertas el <strong>{s} %</strong> de las veces.",
-  "ext.theoryOne3_html": "Con 3 puertas, si el presentador abre una, solo queda 1 puerta cerrada. Es exactamente igual que el juego básico de arriba: cambiando aciertas el <strong>{s} %</strong> y sin cambiar, el {ty} %.",
   "ext.theoryOneN_html": "Si el presentador abre solo una, quedan {c} puertas sin abrir. Aunque cambies, no sabes cuál de ellas esconde el auto. Cambiando aciertas el <strong>{s} %</strong> y sin cambiar, el {ty} %. Cambiar sigue siendo lo mejor, pero cuantas más puertas haya, más pequeña se vuelve la diferencia.",
 
   "footer.lab": "Future University Hakodate, Laboratorio Tsuji",

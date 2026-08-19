@@ -76,12 +76,7 @@
 
   "ext.title": "Try more doors",
   "ext.lead_html": "With 3 doors it may still feel like a 50-50 guess. So let's add more doors. Imagine picking 1 door out of <strong>100</strong>, and then the host opens 98 doors with goats behind them. Would you still hold on to your first pick?",
-  "ext.labelDoors": "Number of doors",
   "ext.labelHost": "How the host opens doors",
-  "ext.chipDoors": "{n} doors",
-  "ext.custom": "Choose your own",
-  "ext.unit": "doors",
-  "ext.customAria": "Type your own number of doors",
   "ext.modeAll": "Open doors until only 1 closed door is left",
   "ext.modeOne": "Open just 1 door with a goat",
   "ext.modeAllShort": "Open until 1 is left",
@@ -102,7 +97,6 @@
   "ext.simRan": "Added {n} rounds with {d} doors and \"{mode}\" ({t} of each in total).",
   "ext.chartTitle": "Win rate (%) — the dotted lines show the numbers we worked out (switch {s}% / stay {y}%)",
   "ext.theoryAll_html": "Your very first pick wins only 1 time in {n} ({ty}%). The other <strong>{m}/{n}</strong> of the time the car is behind some other door, and the host avoids it, opening only doors with goats. So in those cases, the other door still closed at the end hides the car. That is why switching wins <strong>{s}%</strong> of the time.",
-  "ext.theoryOne3_html": "With 3 doors, once the host opens 1 door only 1 closed door is left. This is exactly the basic game above: switching wins <strong>{s}%</strong> of the time, staying {ty}%.",
   "ext.theoryOneN_html": "If the host opens only 1 door, {c} doors stay closed. Even if you switch, you can't tell which of them hides the car. Switching wins <strong>{s}%</strong> of the time, staying {ty}%. Switching is still the better choice, but the more doors there are, the smaller the gap becomes.",
 
   "footer.lab": "Tsuji Laboratory, Future University Hakodate",

@@ -76,12 +76,7 @@
 
   "ext.title": "Prova med fler dörrar",
   "ext.lead_html": "Med bara tre dörrar kanske det känns som att chansen är lika stor på båda sätten. Prova då med fler dörrar! Tänk dig att du väljer en dörr av <strong>100</strong>, och att programledaren sedan öppnar hela 98 dörrar med getter bakom. Skulle du fortfarande hålla fast vid din första dörr?",
-  "ext.labelDoors": "Antal dörrar",
   "ext.labelHost": "Så öppnar programledaren",
-  "ext.chipDoors": "{n} dörrar",
-  "ext.custom": "Välj själv",
-  "ext.unit": "dörrar",
-  "ext.customAria": "Skriv in antalet dörrar själv",
   "ext.modeAll": "Öppna tills bara en stängd dörr är kvar",
   "ext.modeOne": "Öppna bara en dörr med get",
   "ext.modeAllShort": "öppnar tills en dörr är kvar",
@@ -102,7 +97,6 @@
   "ext.simRan": "Inställning: {d} dörrar, {mode}. Vi lade till {n} spel med varje strategi (totalt {t} med varje).",
   "ext.chartTitle": "Andel vinster (%) – de streckade linjerna visar den uträknade andelen (byta {s} % / behålla {y} %)",
   "ext.theoryAll_html": "Dörren du väljer först är rätt bara en gång av {n} ({ty} %). I de övriga <strong>{m}/{n}</strong> fallen står bilen bakom någon annan dörr, och programledaren undviker just den och öppnar bara dörrar med getter. Då är det den dörr som blir kvar stängd ända till slutet som har bilen bakom sig. Därför vinner du <strong>{s} %</strong> av gångerna om du byter.",
-  "ext.theoryOne3_html": "Med tre dörrar räcker det att programledaren öppnar en dörr, för då finns bara en stängd dörr kvar. Det blir precis samma sak som i grundspelet ovan: byter du vinner du <strong>{s} %</strong> av gångerna, behåller du dörren {ty} %.",
   "ext.theoryOneN_html": "Om programledaren bara öppnar en dörr finns det {c} stängda dörrar kvar. Även om du byter vet du inte vilken av dem som har bilen bakom sig. Byter du vinner du <strong>{s} %</strong> av gångerna, behåller du dörren {ty} %. Det är fortfarande bättre att byta, men ju fler dörrar det finns, desto mindre blir skillnaden.",
 
   "footer.lab": "Future University Hakodate, Tsuji Laboratory",
