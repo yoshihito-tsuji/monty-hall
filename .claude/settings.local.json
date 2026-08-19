@@ -1,1 +1,0 @@
-{"hooks":{"SessionStart":[{"matcher":"","hooks":[{"type":"command","command":"'/home/freshmint/.agents/skills/agmsg/scripts/session-start.sh' 'claude-code' '/home/freshmint/monty-hall'"}]}],"SessionEnd":[{"matcher":"","hooks":[{"type":"command","command":"'/home/freshmint/.agents/skills/agmsg/scripts/session-end.sh' 'claude-code' '/home/freshmint/monty-hall'"}]}]}}
