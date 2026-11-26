@@ -52,9 +52,9 @@ def crop_subject(path: pathlib.Path) -> bytes:
         raise ValueError(f"{path}: 1024×1024 が必要です（実際: {image.width}×{image.height}）")
     # 明るい背景を見つける。元画像の白いムラはそのまま保持し、透過化しない。
     diff = ImageChops.difference(image, Image.new("RGB", image.size, "white"))
-    channels = [channel.point(lambda p: 255 if p <= 10 else 0) for channel in diff.split()]
-    light = ImageChops.multiply(ImageChops.multiply(channels[0], channels[1]), channels[2])
-    bbox = light.getbbox()
+    channels = [channel.point(lambda p: 255 if p > 10 else 0) for channel in diff.split()]
+    foreground = ImageChops.lighter(ImageChops.lighter(channels[0], channels[1]), channels[2])
+    bbox = foreground.getbbox()
     if bbox is None:
         raise ValueError(f"{path}: 白以外の絵を検出できません")
     left, top, right, bottom = bbox
