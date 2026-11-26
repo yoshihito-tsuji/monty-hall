@@ -6,26 +6,24 @@
 <title>モンティホール問題 体験シミュレーター</title>
 <style>
   :root {
-    --paper: #faf3e3;
-    --card: #fffdf7;
-    --card-border: #e8dcc3;
-    --ink: #4a3b2a;
-    --ink-soft: #8a7a63;
-    --wood: #c98544;
-    --wood-dark: #a5691f;
-    --wood-edge: #7a4e17;
-    --accent: #2a78d6;
-    --accent-dark: #1c5cab;
-    --win: #e34948;
-    --chart-surface: #fcfcfb;
-    --series-switch: #2a78d6;   /* 変える作戦 */
-    --series-stay: #008300;     /* 変えない作戦 */
+    --paper: #F4F6F9;
+    --card: #FFFFFF;
+    --card-border: #D5DCE6;
+    --ink: #141E30;
+    --ink-soft: #475569;
+    --accent: #1D4ED8;
+    --accent-dark: #1E40AF;
+    --series-switch: #1D4ED8;
+    --series-stay: #C2410C;
+    --door: #334155;
+    --door-edge: #1E293B;
+    --chart-surface: #FFFFFF;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: var(--paper);
     color: var(--ink);
-    font-family: "Hiragino Maru Gothic ProN", "BIZ UDGothic", "Yu Gothic", system-ui, sans-serif;
+    font-family: "BIZ UDPGothic", "BIZ UDGothic", "Hiragino Sans", "Noto Sans JP", "Noto Sans", system-ui, sans-serif;
     line-height: 1.8;
     padding: 24px 16px 64px;
   }
@@ -567,31 +565,197 @@
     th, td { padding: 7px 4px; font-size: 0.85rem; }
     th { font-size: 0.75rem; }
   }
+
+  /* ---------- 案2: サイエンスノート ---------- */
+  body { padding: 0 16px 64px; overflow-x: clip; }
+  main { max-width: 1100px; }
+  header {
+    width: 100vw;
+    margin-inline-start: calc(50% - 50vw);
+    margin-bottom: 18px;
+    text-align: start;
+  }
+  .header-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; min-height: 64px;
+    padding: 8px max(16px, calc((100vw - 1100px) / 2));
+    background: #fff;
+    border-bottom: 1px solid var(--card-border);
+  }
+  header h1 { flex: 1; min-width: 0; font-size: 1.35rem; letter-spacing: 0; }
+  header p { margin: 8px auto 0; max-width: 1100px; padding-inline: 16px; color: var(--ink-soft); font-size: .9rem; }
+  .langbar { flex: none; margin: 0; }
+  .lang-btn { flex: none; padding: 6px 12px; background: #F4F6F9; border: 1px solid var(--card-border); }
+  .lang-menu { border-width: 1px; border-radius: 10px; box-shadow: 0 8px 24px rgba(20,30,48,.14); }
+  .lang-menu li:hover { background: #F4F6F9; }
+
+  .card { min-width: 0; margin-bottom: 24px; padding: 24px; border: 1px solid var(--card-border); border-radius: 12px; box-shadow: none; }
+  .card > h2 { margin-bottom: 12px; padding: 0; border: 0; font-size: 1.05rem; font-weight: 700; line-height: 1.45; }
+  .sr-only {
+    position: absolute !important; width: 1px !important; height: 1px !important;
+    padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
+  }
+  .steps-section { margin: 0 0 20px; }
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .step {
+    display: flex; align-items: baseline; gap: 6px; min-width: 0;
+    padding: 8px 4px 10px; background: transparent; border: 0; border-bottom: 3px solid var(--card-border);
+    border-radius: 0; color: #94A3B8; font-size: .88rem; line-height: 1.45; transition: color .2s, border-color .2s;
+  }
+  .step .num { flex: none; width: auto; height: auto; border-radius: 0; background: none; color: inherit; font-weight: 700; display: inline; }
+  .step .num span::after { content: "."; }
+  .step.active { background: transparent; border-color: var(--accent); color: var(--accent); box-shadow: none; font-weight: 700; }
+  .step.active .num, .step.done .num { background: none; }
+  .step.done { color: var(--ink); border-color: var(--ink); }
+  .step.done .num { background: none; }
+  .step.done .num::before { content: none; }
+  .step.done .num span { display: inline; }
+
+  .host-face { width: 72px; height: 72px; }
+  .bubble { border: 1px solid var(--card-border); border-radius: 10px; }
+  .bubble::before { inset-inline-start: -12px; left: auto; border-inline-end-color: var(--card-border); border-right-color: transparent; }
+  .bubble::after { inset-inline-start: -9px; left: auto; border-inline-end-color: #fff; border-right-color: transparent; }
+  .bubble strong { color: var(--accent); }
+
+  .door-label { margin: 0; padding: 0; background: none; }
+  .door-frame { border: 1px solid var(--door-edge); border-radius: 6px; background: #fff; }
+  .prize { border: 1px solid var(--card-border); border-radius: 5px; }
+  .prize-img { width: 110px; max-width: 100%; }
+  .prize .prize-name { color: var(--ink-soft); font-size: .8rem; }
+  .door { background: var(--door); border: 1px solid var(--door-edge); border-radius: 4px; }
+  .door .panel { inset-inline-start: 18%; left: auto; width: 64%; border: 1px solid #4B5A73; border-radius: 3px; background: #3E4C63; }
+  .door .knob { inset-inline-end: 10px; top: 48%; background: #CBD5E1; border: 1px solid #94A3B8; }
+  .door .plate {
+    position: absolute; inset-inline: 0; top: 18%;
+    color: #fff; font-size: 1.35rem; font-weight: 700; line-height: 1; text-align: center;
+    font-variant-numeric: tabular-nums; pointer-events: none;
+  }
+  .door-unit.selectable .door:hover { box-shadow: 0 0 0 3px rgba(29,78,216,.28); }
+  .door-unit.chosen .door-frame { box-shadow: 0 0 0 3px var(--accent); }
+  .door-unit .tag { display: table; min-height: 1.6em; margin: 8px auto 0; padding: 2px 10px; border-radius: 999px; background: #DBEAFE; color: var(--accent); font-size: .78rem; }
+  .door-unit .tag:empty { visibility: hidden; }
+
+  button { border-radius: 8px; box-shadow: none !important; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-secondary { background: #fff; color: var(--ink); border: 1px solid var(--card-border); }
+  .btn-sim { padding: 6px 14px; border: 1px solid var(--card-border); color: var(--ink); }
+  .btn-sim:hover { border-color: var(--accent); }
+  .flow-note button { background: #fff; color: var(--ink); border: 1px solid var(--card-border); }
+  .actions button { min-width: 0; }
+  #btnSwitch, #btnStay, #btnExtStay { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  #btnSwitch::before { content: "⇄"; color: inherit; font-size: 1.25em; line-height: 1; }
+  #btnStay { color: #C2410C; border: 2px solid #C2410C; background: #fff; }
+  #btnStay::before, #btnExtStay::before {
+    content: ""; display: inline-block; flex: none; width: 16px; height: 18px; background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M16 2h-2V1h-4v1H8v7l-3 5v2h5v7h4v-7h5v-2l-3-5z'/%3E%3C/svg%3E") center/contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M16 2h-2V1h-4v1H8v7l-3 5v2h5v7h4v-7h5v-2l-3-5z'/%3E%3C/svg%3E") center/contain no-repeat;
+  }
+  #btnExtStay { color: #C2410C; border: 2px solid #C2410C; background: #fff; }
+  #decisionArea button { flex: 0 1 250px; }
+
+  .result-banner { border-radius: 8px; border: 1px solid transparent; }
+  .result-banner.win { background: #FEF3C7; border-color: #FCD34D; color: var(--ink); }
+  .result-banner.lose { background: #F1F5F9; border-color: var(--card-border); color: #475569; }
+  table { font-variant-numeric: tabular-nums; }
+  th, td { padding: 8px 7px; }
+  td:not(.strategy) { white-space: nowrap; }
+  td.strategy { min-width: 0; white-space: normal; }
+  .strategy .dot.switch + span, .bar-name .dot.switch + span { color: var(--series-switch); }
+  .strategy .dot.stay + span, .bar-name .dot.stay + span { color: var(--series-stay); }
+  .dot {
+    width: 16px; height: 16px; margin-inline-end: 5px; vertical-align: -3px;
+    border-radius: 0; background: currentColor !important;
+    -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; -webkit-mask-size: contain;
+    mask-position: center; mask-repeat: no-repeat; mask-size: contain;
+  }
+  .dot.switch {
+    color: var(--series-switch);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M4 6h13l-3-3 1.4-1.4L21 7l-5.6 5.4L14 11l3-3H4zm16 12H7l3 3-1.4 1.4L3 17l5.6-5.4L10 13l-3 3h13z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M4 6h13l-3-3 1.4-1.4L21 7l-5.6 5.4L14 11l3-3H4zm16 12H7l3 3-1.4 1.4L3 17l5.6-5.4L10 13l-3 3h13z'/%3E%3C/svg%3E");
+  }
+  .dot.stay {
+    color: var(--series-stay);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M16 2h-2V1h-4v1H8v7l-3 5v2h5v7h4v-7h5v-2l-3-5z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M16 2h-2V1h-4v1H8v7l-3 5v2h5v7h4v-7h5v-2l-3-5z'/%3E%3C/svg%3E");
+  }
+  .bar-fill.switch { background: var(--series-switch); }
+  .bar-fill.stay { background: repeating-linear-gradient(45deg, #C2410C 0 5px, #F3D2C2 5px 9px); }
+  .chart { background: #fff; padding: 16px 14px 28px; }
+  .bar-track { background: #F1F5F9; }
+  .ref-line { border-inline-start: 2px dotted var(--ink); }
+  .bar-val { min-width: 0; }
+
+  .dash { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-bottom: 24px; }
+  .dash > .card { min-width: 0; margin: 0; }
+  .dash .actions { gap: 8px; }
+  .dash .actions .btn-secondary { padding: 6px 14px !important; border: 1px solid var(--card-border); }
+  .dash .bar-row .bar-name { width: 104px; white-space: normal; }
+  .dash .bar-val { font-size: .76rem; }
+  .ext-controls { background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 10px; }
+  .chip { background: #F8FAFC; border: 1px solid var(--card-border); border-radius: 8px; }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .mini { background: var(--door); border: 1px solid var(--door-edge); border-radius: 3px; color: #fff; }
+  .mini .knob-dot { background: #CBD5E1; border: 0; }
+  .mini.open { background: #fff; border: 1px solid var(--card-border); }
+  .mini.picked { box-shadow: 0 0 0 3px var(--accent); }
+  .mini.final { box-shadow: 0 0 0 3px var(--ink); }
+  .ext-stage.pickable .mini:hover,
+  .ext-stage.switchable .mini:not(.open):not(.picked):hover { box-shadow: 0 0 0 3px rgba(29,78,216,.3); }
+  .mini-door { background: var(--door); border: 1px solid var(--door-edge); border-radius: 3px; }
+  .mini-door.revealed { background: #fff; border: 1px solid var(--card-border); }
+  .why-case { background: #fff; }
+  .why-text .outcome-win { color: var(--ink); background: #FEF3C7; }
+  .why-text .outcome-lose { color: #64748B; }
+
+  @media (max-width: 900px) { .dash { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    body { padding: 0 10px 48px; }
+    .header-bar { min-height: 58px; padding-inline: 10px; }
+    header h1 { font-size: 1.15rem; }
+    header p { padding-inline: 10px; }
+    .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .step { align-items: flex-start; gap: 6px; padding: 8px; border: 1px solid var(--card-border); border-radius: 8px; background: #fff; }
+    .step.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step.done { background: #fff; border-color: var(--ink); color: var(--ink); }
+    .card { padding: 16px; }
+    .stage { gap: 8px; }
+    .door-frame { width: 88px; height: 128px; }
+    .prize-img { width: 70px; }
+    .host-face { width: 52px; height: 52px; }
+    #decisionArea { flex-direction: column; }
+    #decisionArea button { flex: 1 1 auto; width: 100%; }
+    .dash .bar-row .bar-name { width: auto; }
+    .dash .bar-val { min-width: 0; }
+    [dir="rtl"] .bar-row .bar-name { text-align: start; }
+    [dir="rtl"] .bar-val { text-align: left; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <div class="langbar">
-    <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-        <circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
-        <ellipse cx="12" cy="12" rx="4" ry="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
-        <path d="M3.2 9.2h17.6M3.2 14.8h17.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
-      </svg>
-      <span id="langBtnLabel">Language</span>
-      <span class="caret" aria-hidden="true">▾</span>
-    </button>
-    <ul class="lang-menu" id="langMenu" role="listbox" aria-label="Language" hidden></ul>
-  </div>
-
   <header>
-    <h1><span aria-hidden="true">🚪</span> <span data-i18n="header.title"></span></h1>
+    <div class="header-bar">
+      <h1 data-i18n="header.title"></h1>
+      <div class="langbar">
+        <button class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <ellipse cx="12" cy="12" rx="4" ry="9.2" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M3.2 9.2h17.6M3.2 14.8h17.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+          <span id="langBtnLabel">Language</span>
+          <span class="caret" aria-hidden="true">▾</span>
+        </button>
+        <ul class="lang-menu" id="langMenu" role="listbox" aria-label="Language" hidden></ul>
+      </div>
+    </div>
     <p data-i18n="header.sub"></p>
   </header>
 
   <!-- 手順 -->
-  <section class="card">
-    <h2 data-i18n="steps.title"></h2>
+  <section class="steps-section">
+    <h2 class="sr-only" data-i18n="steps.title"></h2>
     <div class="steps">
       <div class="step" id="step1"><div class="num"><span>1</span></div><div data-i18n="steps.s1"></div></div>
       <div class="step" id="step2"><div class="num"><span>2</span></div><div data-i18n="steps.s2"></div></div>
@@ -628,6 +792,7 @@
     <p class="flow-note" id="flowNote" style="display:none;"><span data-i18n="flow.autoNow"></span><button id="btnStepMode" data-i18n="flow.btnStep"></button></p>
   </section>
 
+  <div class="dash">
   <!-- 手であそんだ記録 -->
   <section class="card">
     <h2 data-i18n="record.title"></h2>
@@ -699,6 +864,7 @@
       </tbody>
     </table>
   </section>
+  </div>
 
   <!-- 扉の数を変える拡張版 -->
   <section class="card">
@@ -2177,12 +2343,12 @@
       unit.className = "door-unit selectable";
       unit.dataset.index = i;
       unit.innerHTML = `
-        <div class="door-label">${t("game.doorLabel", { n: i + 1 })}</div>
+        <div class="door-label sr-only">${t("game.doorLabel", { n: i + 1 })}</div>
         <div class="door-frame">
           <div class="prize"><img class="prize-img" src="${i === carDoor ? ASSETS.car : ASSETS.goat}" alt="" aria-hidden="true" width="86">
             <span class="prize-name">${i === carDoor ? t("game.prizeCar") : t("game.prizeGoat")}</span></div>
           <div class="door" role="button" tabindex="0" aria-label="${t("game.pickAria", { n: i + 1 })}">
-            <div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
+            <span class="plate" aria-hidden="true">${i + 1}</span><div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
           </div>
         </div>
         <div class="tag"></div>`;
@@ -2414,13 +2580,13 @@
       unit.className = "door-unit" + (isYours ? " chosen" : " selectable");
       unit.dataset.index = idx;
       unit.innerHTML = `
-        <div class="door-label">${t("game.doorLabel", { n: idx + 1 })}</div>
+        <div class="door-label sr-only">${t("game.doorLabel", { n: idx + 1 })}</div>
         <div class="door-frame">
           <div class="prize"><img class="prize-img" src="${idx === ext.car ? ASSETS.car : ASSETS.goat}" alt="" aria-hidden="true" width="86">
             <span class="prize-name">${idx === ext.car ? t("game.prizeCar") : t("game.prizeGoat")}</span></div>
           <div class="door" role="button" tabindex="0" aria-label="${
             isYours ? t("game.doorLabel", { n: idx + 1 }) : t("game.pickAria", { n: idx + 1 })}">
-            <div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
+            <span class="plate" aria-hidden="true">${idx + 1}</span><div class="panel top"></div><div class="panel bottom"></div><div class="knob"></div>
           </div>
         </div>
         <div class="tag">${isYours ? t("game.tagYours") : ""}</div>`;
